@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { navLinks } from "@/lib/data";
 import { Menu, X } from "lucide-react";
 import ThemeToggle from "@/components/ThemeToggle";
+import Image from "next/image";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -49,13 +50,17 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
         <a
           href="#"
-          className="group flex items-center gap-0 hover:opacity-90 transition-opacity"
+          className="hover:opacity-80 transition-opacity"
         >
-          <span className="relative flex items-center justify-center w-9 h-9 rounded-lg border border-accent/60 bg-accent/10 group-hover:border-accent group-hover:bg-accent/20 transition-all duration-300">
-            <span className="font-bold text-sm tracking-tight text-accent">
-              LR
-            </span>
-          </span>
+          <Image
+            src="/logo.png"
+            alt="LR logo"
+            width={60}
+            height={60}
+            className="w-[60px] h-[60px] object-contain"
+            unoptimized
+            priority
+          />
         </a>
 
         {/* Desktop links */}
