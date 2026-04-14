@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="300" viewBox="0 0 800 300">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@1,700&amp;display=swap');
+  </style>
+  <text x="400" y="175" text-anchor="middle" font-family="'Inter', system-ui, sans-serif" font-size="80" font-weight="700" font-style="italic" fill="#00d4aa">PathwayR</text>
+</svg>
