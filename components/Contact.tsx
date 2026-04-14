@@ -197,7 +197,7 @@ export default function Contact() {
                   rel="noopener noreferrer"
                   className="text-sm text-foreground hover:text-accent transition-colors"
                 >
-                  lucasrocchetti
+                  rocchettilucas
                 </a>
               </div>
             </div>
