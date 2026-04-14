@@ -41,6 +41,12 @@ CLAUDE.md
 AGENTS.md
 .claude/
 
+# source files
+LucasRocchetti_2026.pdf
+LR_Resume.pdf
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+.vercel
