@@ -7,5 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
     },
     sitemap: "https://lucasrocchetti.com/sitemap.xml",
+    host: "https://lucasrocchetti.com",
   };
 }
