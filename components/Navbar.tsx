@@ -79,7 +79,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="/resume.pdf"
+            href="/Lucas%20Rocchetti%20Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="text-sm px-4 py-2 rounded-lg border border-accent text-accent hover:bg-accent hover:text-background transition-all"
@@ -117,7 +117,7 @@ export default function Navbar() {
             </a>
           ))}
           <a
-            href="/resume.pdf"
+            href="/Lucas%20Rocchetti%20Resume.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="block py-2 text-sm text-accent"

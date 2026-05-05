@@ -93,7 +93,7 @@ export default function Hero() {
               View Projects
             </a>
             <a
-              href="/resume.pdf"
+              href="/Lucas%20Rocchetti%20Resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
               className="px-6 py-3 border border-accent text-accent font-medium rounded-lg hover:bg-accent/10 transition-colors flex items-center gap-2"
