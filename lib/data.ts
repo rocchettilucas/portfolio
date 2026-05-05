@@ -66,6 +66,17 @@ export const projects: Project[] = [
     date: "Apr 2026 – Present",
   },
   {
+    title: "RocSpace",
+    description: "",
+    bullets: [],
+    tech: [],
+    image: "/projects/rocspace-logo.png",
+    imageContain: true,
+    liveUrl: "#",
+    githubUrl: "#",
+    date: "",
+  },
+  {
     title: "NHL Player Dashboard",
     description:
       "A sports analytics tool that lets you search any NHL player and instantly view their career stats, game logs, and interactive performance charts.",
