@@ -73,7 +73,7 @@ export const projects: Project[] = [
     image: "/projects/rocspace-logo.png",
     imageContain: true,
     liveUrl: "#",
-    githubUrl: "#",
+    githubUrl: "https://github.com/rocchettilucas/RocSpace",
     date: "",
   },
   {

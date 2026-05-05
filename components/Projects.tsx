@@ -36,7 +36,8 @@ function ProjectCard({
     cardRef.current.style.background = "var(--card)";
   };
 
-  const href = project.liveUrl && project.liveUrl !== "#" ? project.liveUrl : undefined;
+  const validUrl = (u?: string) => (u && u !== "#" ? u : undefined);
+  const href = validUrl(project.liveUrl) ?? validUrl(project.githubUrl);
 
   const card = (
     <div
@@ -69,13 +70,23 @@ function ProjectCard({
       viewport={{ once: true, margin: "-100px" }}
       transition={{ duration: 0.5, delay: index * 0.15 }}
     >
-      {href ? (
-        <a href={href} target="_blank" rel="noopener noreferrer" className="block">
-          {card}
-        </a>
-      ) : (
-        card
-      )}
+      <motion.div
+        animate={{ y: [0, -10, 0] }}
+        transition={{
+          duration: 4 + index * 0.3,
+          repeat: Infinity,
+          ease: "easeInOut",
+          delay: index * 0.5,
+        }}
+      >
+        {href ? (
+          <a href={href} target="_blank" rel="noopener noreferrer" className="block">
+            {card}
+          </a>
+        ) : (
+          card
+        )}
+      </motion.div>
     </motion.div>
   );
 }
@@ -97,7 +108,7 @@ export default function Projects() {
           <p className="text-muted mt-2">Things I&apos;ve worked on</p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {projects.map((project, i) => (
             <ProjectCard key={project.title} project={project} index={i} />
           ))}
