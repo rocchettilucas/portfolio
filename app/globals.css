@@ -37,7 +37,10 @@ html {
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
+  background-image: radial-gradient(rgba(59, 130, 246, 0.18) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
@@ -68,4 +71,36 @@ body {
 
 .cursor-blink {
   animation: blink 1s infinite;
+}
+
+/* Animated gradient border (e.g. featured experience card) */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-rotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.animated-border-glow {
+  background: conic-gradient(
+    from var(--border-angle),
+    color-mix(in srgb, var(--accent) 15%, transparent) 0deg,
+    color-mix(in srgb, var(--accent) 70%, transparent) 70deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 150deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 220deg,
+    color-mix(in srgb, var(--accent) 55%, transparent) 290deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 360deg
+  );
+  animation: border-rotate 10s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-border-glow {
+    animation: none;
+  }
 }

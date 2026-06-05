@@ -16,15 +16,17 @@ const siteUrl = "https://lucasrocchetti.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Lucas Rocchetti | Software Engineer",
+  title: "Lucas Rocchetti",
   description:
-    "Lucas Rocchetti — Computer Science graduate from the University of Toronto. Full-stack developer specializing in React, TypeScript, and cloud-native applications.",
+    "Computer Science and Information Technology graduate from the University of Toronto, focused on designing and building full-stack applications. Open to software engineering roles.",
   keywords: [
     "Lucas Rocchetti",
     "lucas rocchetti",
     "Lucas Rocchetti portfolio",
     "Lucas Rocchetti software engineer",
     "Software Engineer",
+    "Solutions Engineer",
+    "Systems Engineer",
     "Full Stack Developer",
     "React Developer",
     "TypeScript",
@@ -37,9 +39,9 @@ export const metadata: Metadata = {
     canonical: siteUrl,
   },
   openGraph: {
-    title: "Lucas Rocchetti | Software Engineer",
+    title: "Lucas Rocchetti",
     description:
-      "Lucas Rocchetti — Computer Science graduate from UofT. Building full-stack applications with React, TypeScript, and modern cloud platforms.",
+      "Computer Science and Information Technology graduate from the University of Toronto, focused on designing and building full-stack applications. Open to software engineering roles.",
     url: siteUrl,
     siteName: "Lucas Rocchetti",
     locale: "en_US",
@@ -47,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Lucas Rocchetti | Software Engineer",
+    title: "Lucas Rocchetti",
     description:
-      "Computer Science graduate from UofT. Full-stack developer specializing in React, TypeScript, and cloud-native applications.",
+      "Computer Science and Information Technology graduate from the University of Toronto, focused on designing and building full-stack applications. Open to software engineering roles.",
   },
   robots: {
     index: true,
@@ -74,7 +76,7 @@ const jsonLd = {
   url: siteUrl,
   jobTitle: "Software Engineer",
   description:
-    "Computer Science graduate from the University of Toronto. Full-stack developer specializing in React, TypeScript, and cloud-native applications.",
+    "Computer Science and Information Technology graduate from the University of Toronto, focused on designing and building full-stack applications. Open to software engineering roles.",
   alumniOf: {
     "@type": "CollegeOrUniversity",
     name: "University of Toronto",
