@@ -1,0 +1,106 @@
+@import "tailwindcss";
+
+:root {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --card: #111111;
+  --card-border: #1e1e1e;
+  --muted: #888888;
+}
+
+html.light {
+  --background: #f8f9fa;
+  --foreground: #1a1a1a;
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --card: #ffffff;
+  --card-border: #e2e2e2;
+  --muted: #6b7280;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-card: var(--card);
+  --color-card-border: var(--card-border);
+  --color-muted: var(--muted);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--background);
+  background-image: radial-gradient(rgba(59, 130, 246, 0.18) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Typing cursor animation */
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.cursor-blink {
+  animation: blink 1s infinite;
+}
+
+/* Animated gradient border (e.g. featured experience card) */
+@property --border-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes border-rotate {
+  to {
+    --border-angle: 360deg;
+  }
+}
+
+.animated-border-glow {
+  background: conic-gradient(
+    from var(--border-angle),
+    color-mix(in srgb, var(--accent) 15%, transparent) 0deg,
+    color-mix(in srgb, var(--accent) 70%, transparent) 70deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 150deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 220deg,
+    color-mix(in srgb, var(--accent) 55%, transparent) 290deg,
+    color-mix(in srgb, var(--accent) 15%, transparent) 360deg
+  );
+  animation: border-rotate 10s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animated-border-glow {
+    animation: none;
+  }
+}
