@@ -93,7 +93,7 @@ export default function Nav() {
             {LINKS.map((l) => (
               <a key={l.id} href={href(l.id)} onClick={() => setOpen(false)} className="block py-3 text-base text-text">{l.label}</a>
             ))}
-            <a href={site.resumePath} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="btn-outline mt-2 !py-2.5">Résumé</a>
+            <a href={site.resumePath} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="btn-outline mt-2 py-2.5">Résumé</a>
           </div>
         )}
       </nav>
