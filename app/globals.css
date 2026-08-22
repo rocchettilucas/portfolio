@@ -58,6 +58,12 @@
   .reveal { opacity: 0; transform: translateY(20px); transition: opacity 600ms var(--ease-reveal), transform 600ms var(--ease-reveal); transition-delay: var(--reveal-delay, 0ms); }
   .reveal.is-visible { opacity: 1; transform: none; }
 
+  /* The portrait's CSS box is media-query driven so it never resizes after hydration;
+     AsciiPortrait only sizes the canvas backing store to match. */
+  .ascii-portrait { width: 400px; height: 400px; display: block; }
+  @media (max-width: 768px) { .ascii-portrait { width: 280px; height: 280px; } }
+  @media (max-width: 480px) { .ascii-portrait { width: 220px; height: 220px; } }
+
   .btn-outline {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 8px 14px; border: 1px solid var(--accent); border-radius: 4px;

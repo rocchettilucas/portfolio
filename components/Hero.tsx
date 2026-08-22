@@ -17,17 +17,17 @@ export default function Hero() {
           on iOS and Android to a desktop workspace for coding agents.
         </p>
         <ul className="flex gap-6 text-[15px]">
-          {site.socials.map((s) => (
-            <li key={s.label}>
-              <a
-                href={s.href}
-                target={s.href.startsWith("mailto:") ? undefined : "_blank"}
-                rel="noopener noreferrer"
-              >
-                {s.label}
-              </a>
-            </li>
-          ))}
+          {site.socials.map((s) => {
+            // rel is only meaningful alongside target=_blank; the mailto link gets neither.
+            const external = !s.href.startsWith("mailto:");
+            return (
+              <li key={s.label}>
+                <a href={s.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+                  {s.label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
       <div className="max-md:order-1">
