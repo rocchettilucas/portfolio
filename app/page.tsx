@@ -6,6 +6,22 @@ import Experience from "@/components/Experience";
 import About from "@/components/About";
 import Education from "@/components/Education";
 import Contact from "@/components/Contact";
+import { projects } from "@/lib/data";
+
+// The two apps worth describing to search engines as products. Everything here is already
+// visible on the page — title, blurb, platform, link — nothing internal.
+const appsJsonLd = projects
+  .filter((p) => ["gasmap", "rocspace"].includes(p.slug))
+  .map((p) => ({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: p.title,
+    description: p.blurb,
+    applicationCategory: p.slug === "gasmap" ? "TravelApplication" : "DeveloperApplication",
+    operatingSystem: p.slug === "gasmap" ? "iOS, Android" : "macOS, Windows, Linux",
+    url: p.links.site ?? p.links.github,
+    author: { "@type": "Person", name: "Lucas Rocchetti" },
+  }));
 
 export default function Home() {
   return (
@@ -18,6 +34,10 @@ export default function Home() {
         <About />
         <Education />
         <Contact />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(appsJsonLd) }}
+        />
       </main>
       <Footer />
     </>
