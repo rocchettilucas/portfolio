@@ -8,6 +8,6 @@ export const site = {
     { label: "LinkedIn", href: "https://linkedin.com/in/lucasrocchetti" },
     { label: "Email", href: "mailto:lucasrocchetti@outlook.com" },
   ] as const,
-  description: "Software engineer in Toronto building apps and tools people actually use — GasMap, WinLane.GG, RocSpace. Open to software engineering roles.",
+  description: "Software engineer in Toronto building apps and tools people actually use — GasMap, WinLane.GG, RocSpace.",
 };
 

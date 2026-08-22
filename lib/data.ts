@@ -74,7 +74,7 @@ export const projects: Project[] = [
   {
     slug: "portfolio-v2",
     title: "Portfolio v2",
-    blurb: "This site — the second iteration of my portfolio, rebuilt from the ground up, with the previous version still on GitHub.",
+    blurb: "This site — the second iteration of my portfolio, rebuilt from the ground up with Next.js.",
     tech: ["Next.js", "React", "TypeScript", "Tailwind"],
     links: { github: "https://github.com/rocchettilucas/portfolio-v2" },
     image: { kind: "folder" },
@@ -91,7 +91,7 @@ export const experience: Role[] = [
   {
     company: "WinLane.GG",
     title: "Software Engineer",
-    dates: "2025 – present",
+    dates: "Apr 2026 – present",
     site: "https://winlane.gg",
     bullets: [
       "League of Legends matchup analytics used by 500+ players every month.",
