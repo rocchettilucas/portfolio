@@ -22,7 +22,8 @@ export default function Hero() {
             const external = !s.href.startsWith("mailto:");
             return (
               <li key={s.label}>
-                <a href={s.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>
+                <a href={s.href} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}
+                   className="inline-block py-1">
                   {s.label}
                 </a>
               </li>

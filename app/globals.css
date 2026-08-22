@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* The plan and spec under docs/ are prose, not markup — without this Tailwind scans them
+   and emits a real utility for every class name they merely quote. */
+@source not "../docs";
 
 :root {
   --bg: #0B1526;

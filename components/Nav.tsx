@@ -85,7 +85,9 @@ export default function Nav() {
           <a href={site.resumePath} target="_blank" rel="noopener noreferrer" className="btn-outline py-1.5">Résumé</a>
         </div>
         <button ref={btnRef} type="button" className="hidden h-11 w-11 items-center justify-center text-text max-md:flex"
-                aria-label="Menu" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen((o) => !o)}>
+                aria-label="Menu" aria-expanded={open}
+                // The panel is only in the DOM while open, so the reference only points at it then.
+                aria-controls={open ? "mobile-menu" : undefined} onClick={() => setOpen((o) => !o)}>
           <span aria-hidden className="text-2xl leading-none">{open ? "×" : "≡"}</span>
         </button>
         {open && (
