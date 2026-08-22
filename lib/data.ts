@@ -68,7 +68,7 @@ export const projects: Project[] = [
     tech: ["React", "TypeScript"],
     links: { site: "https://pathwayr.com" },
     logo: "/projects/pathwayr-192.png",
-    image: { kind: "spotlight", src: "/projects/pathwayr-home.png", alt: "PathwayR homepage" },
+    image: { kind: "spotlight", src: "/projects/pathwayr-spotlight.png", alt: "The PathwayR homepage, headlined “Research is a people’s game”" },
     placement: "all",
   },
   {

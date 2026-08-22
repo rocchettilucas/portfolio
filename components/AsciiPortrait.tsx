@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { calculateSize, type AsciiSize } from "@/lib/ascii-size";
+import { ASCII_TXT } from "@/lib/ascii/tone400";
 import p400 from "@/lib/ascii/tone_400.json";
 import p280 from "@/lib/ascii/tone_280.json";
 import p220 from "@/lib/ascii/tone_220.json";
@@ -63,6 +64,14 @@ export default function AsciiPortrait() {
   return (
     <figure className="m-0 flex justify-center">
       <canvas ref={ref} width={400} height={400} aria-hidden="true" className="ascii-portrait" />
+      {/* Inert whenever JS runs — the canvas above is the real portrait then (spec §7).
+          Without JS the canvas can never be painted, so it is hidden and the <pre> takes its place. */}
+      <noscript>
+        <style>{`.ascii-portrait{display:none}`}</style>
+        <pre aria-hidden="true" className="ascii-fallback">
+          {ASCII_TXT}
+        </pre>
+      </noscript>
       <figcaption className="sr-only">Portrait of Lucas Rocchetti rendered in ASCII characters</figcaption>
     </figure>
   );

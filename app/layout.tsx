@@ -55,6 +55,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={plex.variable}>
       <body>
+        {/* Without JS the IntersectionObserver in Reveal never runs, so every revealed
+            section would stay at opacity 0. This lands them in their final state. */}
+        <noscript>
+          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <a href="#main" className="skip-link">
           Skip to content
         </a>

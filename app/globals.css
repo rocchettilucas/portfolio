@@ -55,7 +55,7 @@
   /* Gazi-style quiet motion */
   .lift { transition: transform 250ms var(--ease-hover), background-color 250ms var(--ease-hover); }
   .lift:hover { transform: translateY(-5px); }
-  .arrow-link { display: inline-flex; align-items: center; gap: 6px; transition: transform 250ms ease, color 200ms ease; }
+  .arrow-link { display: inline-flex; align-items: center; gap: 6px; transition: transform 250ms var(--ease-hover), color 200ms ease; }
   .arrow-link:hover { transform: translateX(5px); }
 
   .reveal { opacity: 0; transform: translateY(20px); transition: opacity 600ms var(--ease-reveal), transform 600ms var(--ease-reveal); transition-delay: var(--reveal-delay, 0ms); }
@@ -66,6 +66,10 @@
   .ascii-portrait { width: 400px; height: 400px; display: block; }
   @media (max-width: 768px) { .ascii-portrait { width: 280px; height: 280px; } }
   @media (max-width: 480px) { .ascii-portrait { width: 220px; height: 220px; } }
+
+  /* The <noscript> twin of the canvas (spec §7). The letter-spacing widens the 7px
+     monospace grid back toward square so the portrait isn't squashed horizontally. */
+  .ascii-fallback { font: 7px/1.1 ui-monospace, Menlo, monospace; letter-spacing: .098em; color: var(--accent); white-space: pre; margin: 0; }
 
   .btn-outline {
     display: inline-flex; align-items: center; gap: 8px;

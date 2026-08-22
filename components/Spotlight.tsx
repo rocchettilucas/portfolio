@@ -12,13 +12,17 @@ export default function Spotlight({
   const { title, blurb, tech, links, meta, image } = project;
   return (
     // From lg up: a 2/1 banner with the caption overlaid on its lower third, carrying its own
-    // gradient sized to the text. Below lg the caption flows *under* the image instead — the
-    // banner is too short there to hold the caption plus a readable fade without veiling the
-    // whole image — so the article grows and the image carries a scrim that lands on the same
-    // --bg the caption sits on.
+    // gradient sized to the text. The gradient holds full --bg through the bottom 35% and is
+    // still at 90% at 60% — so the whole caption block, meta line included, reads on a dark
+    // ground no matter how bright the art behind it is — and only fades out above the text.
+    // Below lg the caption flows *under* the image instead — the banner is too short there to
+    // hold the caption plus a readable fade without veiling the whole image — so the article
+    // grows and the image carries a scrim that lands on the same --bg the caption sits on.
     <article className="relative overflow-hidden rounded-[20px] bg-bg lg:bg-surface">
       <div className="relative aspect-[4/3] md:aspect-[2/1]">
-        {/* The logo is deliberately not drawn over a spotlight image — that banner already contains it. */}
+        {/* The logo is deliberately not drawn over a spotlight image — that banner already contains it.
+            Glyph frames are centred in the upper 62% at lg so they clear the overlaid caption;
+            below lg the caption is in flow, so the glyph gets the whole frame. */}
         {image.kind === "spotlight" && (
           <Image
             src={image.src}
@@ -30,7 +34,7 @@ export default function Spotlight({
           />
         )}
         {image.kind === "logo" && (
-          <div className="absolute inset-0 flex items-center justify-center">
+          <div className="absolute inset-0 flex items-center justify-center lg:bottom-auto lg:h-[62%]">
             <Image
               src={image.src}
               alt={image.alt}
@@ -42,7 +46,7 @@ export default function Spotlight({
           </div>
         )}
         {image.kind === "folder" && (
-          <div className="absolute inset-0 flex items-center justify-center text-accent">
+          <div className="absolute inset-0 flex items-center justify-center text-accent lg:bottom-auto lg:h-[62%]">
             <FolderIcon width={120} height={120} strokeWidth={1.2} />
           </div>
         )}
@@ -51,7 +55,7 @@ export default function Spotlight({
           className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-bg via-bg/80 to-transparent lg:hidden"
         />
       </div>
-      <div className="px-5 pb-6 pt-3 text-center lg:absolute lg:inset-x-0 lg:bottom-0 lg:bg-gradient-to-t lg:from-bg lg:via-bg/80 lg:to-transparent lg:px-10 lg:pb-7 lg:pt-28">
+      <div className="px-5 pb-6 pt-3 text-center lg:absolute lg:inset-x-0 lg:bottom-0 lg:bg-gradient-to-t lg:from-bg lg:from-35% lg:via-bg/90 lg:via-60% lg:to-transparent lg:px-10 lg:pb-7 lg:pt-32">
         {meta && <p className="mb-1 text-sm text-muted">{meta}</p>}
         <h3 className="mb-1.5 text-2xl font-medium leading-tight md:text-[32px]">{title}</h3>
         <p className="mx-auto mb-1.5 max-w-[60ch] text-[15px] text-text/90 md:text-base">{blurb}</p>
