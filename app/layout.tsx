@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Sans } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
+import { jsonLd } from "@/lib/jsonld";
 
 const plex = IBM_Plex_Sans({
   subsets: ["latin"],
@@ -60,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         {children}
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(personJsonLd) }}
         />
       </body>
     </html>

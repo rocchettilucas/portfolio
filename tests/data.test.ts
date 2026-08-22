@@ -1,3 +1,5 @@
+import fs from "node:fs";
+import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { projects, homeSpotlight, homeCards, allProjects, experience, education, coreStack } from "@/lib/data";
 
@@ -53,5 +55,18 @@ describe("education & stack", () => {
   it("core stack is exactly six items with icon paths under /icons/", () => {
     expect(coreStack).toHaveLength(6);
     for (const s of coreStack) expect(s.icon).toMatch(/^\/icons\/.+\.svg$/);
+  });
+});
+
+describe("static assets", () => {
+  const inPublic = (p: string) => fs.existsSync(path.join(process.cwd(), "public", p));
+
+  it("every referenced icon, logo and image exists under public/", () => {
+    for (const s of coreStack) expect(inPublic(s.icon), s.icon).toBe(true);
+    for (const e of education) expect(inPublic(e.logo), e.logo).toBe(true);
+    for (const p of projects) {
+      if (p.logo) expect(inPublic(p.logo), p.logo).toBe(true);
+      if (p.image.kind !== "folder") expect(inPublic(p.image.src), p.image.src).toBe(true);
+    }
   });
 });

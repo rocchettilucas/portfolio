@@ -18,13 +18,14 @@ export default function Contact() {
             <a href={`mailto:${site.email}`} className="btn-outline">
               <MailIcon /> Say hi
             </a>
-            <a href={github.href} target="_blank" rel="noopener noreferrer">
+            {/* py-1 inline-block so each text link clears a 24px pointer target. */}
+            <a href={github.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
               GitHub
             </a>
-            <a href={linkedin.href} target="_blank" rel="noopener noreferrer">
+            <a href={linkedin.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
               LinkedIn
             </a>
-            <a href={site.resumePath} target="_blank" rel="noopener noreferrer">
+            <a href={site.resumePath} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
               Résumé
             </a>
           </div>

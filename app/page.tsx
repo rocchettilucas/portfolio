@@ -7,6 +7,7 @@ import About from "@/components/About";
 import Education from "@/components/Education";
 import Contact from "@/components/Contact";
 import { projects } from "@/lib/data";
+import { jsonLd } from "@/lib/jsonld";
 
 // The two apps worth describing to search engines as products. Everything here is already
 // visible on the page — title, blurb, platform, link — nothing internal.
@@ -36,7 +37,7 @@ export default function Home() {
         <Contact />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(appsJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLd(appsJsonLd) }}
         />
       </main>
       <Footer />

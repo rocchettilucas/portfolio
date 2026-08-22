@@ -27,6 +27,8 @@ export default function ExperienceTabs({ roles }: { roles: Role[] }) {
     <div className="grid grid-cols-[200px_1fr] gap-10 max-md:grid-cols-1 max-md:gap-6">
       <div
         role="tablist"
+        // Below md the rail lays out horizontally, but both arrow axes move the selection,
+        // so the declared orientation stays vertical rather than tracking the breakpoint.
         aria-orientation="vertical"
         aria-label="Employers"
         onKeyDown={onKey}
@@ -42,7 +44,8 @@ export default function ExperienceTabs({ roles }: { roles: Role[] }) {
             role="tab"
             id={`${base}-tab-${idx}`}
             aria-selected={idx === i}
-            aria-controls={`${base}-panel-${idx}`}
+            // Only the selected panel is rendered, so only the selected tab can point at one.
+            aria-controls={idx === i ? `${base}-panel-${idx}` : undefined}
             tabIndex={idx === i ? 0 : -1}
             onClick={() => setI(idx)}
             className={`-ml-px border-l-2 px-5 py-3 text-left text-[15px] transition-colors max-md:-mb-px max-md:ml-0 max-md:whitespace-nowrap max-md:border-b-2 max-md:border-l-0 ${
@@ -60,6 +63,8 @@ export default function ExperienceTabs({ roles }: { roles: Role[] }) {
         role="tabpanel"
         id={`${base}-panel-${i}`}
         aria-labelledby={`${base}-tab-${i}`}
+        // A panel whose only link is absent holds nothing focusable, so it takes focus itself.
+        tabIndex={r.site ? undefined : 0}
         className="min-h-[260px]"
       >
         <h3 className="text-[22px] font-medium">

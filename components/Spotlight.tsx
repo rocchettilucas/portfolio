@@ -36,6 +36,7 @@ export default function Spotlight({
               alt={image.alt}
               width={160}
               height={160}
+              priority={priority}
               className="h-40 w-40 object-contain opacity-90"
             />
           </div>
