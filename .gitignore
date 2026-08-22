@@ -50,3 +50,7 @@ LR_Resume.pdf
 next-env.d.ts
 
 .vercel
+.superpowers/
+
+.playwright-mcp/
+*.log
