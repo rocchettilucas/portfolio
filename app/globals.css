@@ -80,9 +80,23 @@
   .btn-outline:hover { background: var(--accent-tint); color: var(--accent); transform: translateY(-3px); }
 }
 
+/* Hero wave: pivots at the wrist, two waves then a rest, looping. */
+.wave { display: inline-block; transform-origin: 70% 70%; animation: wave 2.5s ease-in-out infinite; }
+@keyframes wave {
+  0%   { transform: rotate(0deg); }
+  10%  { transform: rotate(14deg); }
+  20%  { transform: rotate(-8deg); }
+  30%  { transform: rotate(14deg); }
+  40%  { transform: rotate(-4deg); }
+  50%  { transform: rotate(10deg); }
+  60%  { transform: rotate(0deg); }
+  100% { transform: rotate(0deg); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
   .reveal { opacity: 1; transform: none; }
   .lift:hover, .arrow-link:hover, .btn-outline:hover { transform: none; }
+  .wave { animation: none; }
 }

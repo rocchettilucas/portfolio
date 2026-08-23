@@ -14,7 +14,7 @@ export default function Hero() {
       </div>
       <div>
         <h1 className="mb-5 text-[56px] font-medium leading-[1.1] tracking-[-0.01em] max-sm:text-[40px]">
-          <span aria-hidden>👋 </span>Hi, I&apos;m <span className="text-accent">Lucas</span>
+          <span aria-hidden className="wave">👋 </span>Hi, I&apos;m <span className="text-accent">Lucas</span>
         </h1>
         <p className="mb-6 max-w-[560px] text-lg leading-relaxed text-muted">
           I&apos;m a software developer based in Toronto, focused on designing and building full-stack applications. I
