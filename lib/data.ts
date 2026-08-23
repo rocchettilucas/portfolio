@@ -34,7 +34,7 @@ export const projects: Project[] = [
   {
     slug: "rocspace",
     title: "RocSpace",
-    blurb: "A desktop workspace for running Claude Code, Codex and other coding agents side by side.",
+    blurb: "An agentic development environment for running Claude Code, Codex and other coding agents side by side.",
     tech: ["Rust", "Tauri", "React", "TypeScript"],
     links: { github: "https://github.com/rocchettilucas/RocSpace" },
     logo: "/projects/rocspace-192.png",
