@@ -2,7 +2,6 @@ export const site = {
   name: "Lucas Rocchetti",
   url: "https://lucasrocchetti.com",
   email: "lucasrocchetti@outlook.com",
-  resumePath: "/Lucas_Rocchetti_Resume.pdf",
   socials: [
     { label: "GitHub", href: "https://github.com/rocchettilucas" },
     { label: "LinkedIn", href: "https://linkedin.com/in/lucasrocchetti" },

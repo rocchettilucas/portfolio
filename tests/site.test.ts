@@ -7,7 +7,6 @@ describe("site", () => {
     expect(site.name).toBe("Lucas Rocchetti");
     expect(site.description).not.toMatch(/open to/i);
     expect(site.email).toBe("lucasrocchetti@outlook.com");
-    expect(site.resumePath).toBe("/Lucas_Rocchetti_Resume.pdf");
     for (const s of site.socials) expect(s.href, s.label).toMatch(/^(https:\/\/|mailto:)/);
   });
 });

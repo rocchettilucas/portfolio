@@ -4,13 +4,16 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
+import { GitHubIcon, LinkedInIcon } from "./icons";
 
 const LINKS = [
-  { id: "software", label: "Software" },
-  { id: "experience", label: "Experience" },
   { id: "about", label: "About" },
+  { id: "work", label: "Selected Work" },
   { id: "contact", label: "Contact" },
 ];
+
+const github = site.socials.find((s) => s.label === "GitHub")!;
+const linkedin = site.socials.find((s) => s.label === "LinkedIn")!;
 
 // Scroll offset below which the hero still owns the viewport, so no section is marked active.
 const HERO_CLEAR = 200;
@@ -82,7 +85,15 @@ export default function Nav() {
               {l.label}
             </a>
           ))}
-          <a href={site.resumePath} target="_blank" rel="noopener noreferrer" className="btn-outline py-1.5">Résumé</a>
+          {/* p-1 around a 20px glyph clears a 24px pointer target. */}
+          <div className="flex items-center gap-3">
+            <a href={github.href} aria-label="GitHub" target="_blank" rel="noopener noreferrer" className="p-1 text-accent hover:text-text">
+              <GitHubIcon />
+            </a>
+            <a href={linkedin.href} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" className="p-1 text-accent hover:text-text">
+              <LinkedInIcon />
+            </a>
+          </div>
         </div>
         <button ref={btnRef} type="button" className="hidden h-11 w-11 items-center justify-center text-text max-md:flex"
                 aria-label="Menu" aria-expanded={open}
@@ -95,7 +106,14 @@ export default function Nav() {
             {LINKS.map((l) => (
               <a key={l.id} href={href(l.id)} onClick={() => setOpen(false)} className="block py-3 text-base text-text">{l.label}</a>
             ))}
-            <a href={site.resumePath} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="btn-outline mt-2 py-2.5">Résumé</a>
+            <div className="mt-2 flex items-center gap-5">
+              <a href={github.href} aria-label="GitHub" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="p-1 text-accent hover:text-text">
+                <GitHubIcon width={24} height={24} />
+              </a>
+              <a href={linkedin.href} aria-label="LinkedIn" target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="p-1 text-accent hover:text-text">
+                <LinkedInIcon width={24} height={24} />
+              </a>
+            </div>
           </div>
         )}
       </nav>

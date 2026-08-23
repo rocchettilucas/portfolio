@@ -4,9 +4,6 @@ import { site } from "@/lib/site";
 import { MailIcon } from "./icons";
 
 export default function Contact() {
-  const github = site.socials.find((s) => s.label === "GitHub")!;
-  const linkedin = site.socials.find((s) => s.label === "LinkedIn")!;
-
   return (
     <Section id="contact" title="Get in touch">
       <Reveal>
@@ -17,16 +14,6 @@ export default function Contact() {
           <div className="flex flex-wrap items-center gap-6">
             <a href={`mailto:${site.email}`} className="btn-outline">
               <MailIcon /> Say hi
-            </a>
-            {/* py-1 inline-block so each text link clears a 24px pointer target. */}
-            <a href={github.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
-              GitHub
-            </a>
-            <a href={linkedin.href} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
-              LinkedIn
-            </a>
-            <a href={site.resumePath} target="_blank" rel="noopener noreferrer" className="inline-block py-1">
-              Résumé
             </a>
           </div>
         </div>

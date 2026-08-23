@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
-import { projects, homeSpotlight, homeCards, allProjects, experience, education, coreStack } from "@/lib/data";
+import { projects, homeSpotlight, homeCards, allProjects, education, coreStack } from "@/lib/data";
 
 const BANNED = /sole engineer|co-founder|open to work|open to roles|scrap|crawler/i;
 const ONE_SENTENCE = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length === 1;
@@ -32,17 +32,6 @@ describe("projects", () => {
     const n = projects.find(p => p.slug === "nhl-dashboard")!;
     expect(n.links.github).toBe("https://github.com/rocchettilucas/NHL-Player-Dashboard");
     for (const p of projects) for (const v of Object.values(p.links)) expect(v).not.toBe("#");
-  });
-});
-
-describe("experience", () => {
-  it("has three roles with 2-4 bullets each and no banned phrases", () => {
-    expect(experience.map(r => r.company)).toEqual(["WinLane.GG", "City of Mississauga", "Best Buy"]);
-    for (const r of experience) {
-      expect(r.bullets.length).toBeGreaterThanOrEqual(2);
-      expect(r.bullets.length).toBeLessThanOrEqual(4);
-      expect(BANNED.test(r.title + r.bullets.join(" "))).toBe(false);
-    }
   });
 });
 

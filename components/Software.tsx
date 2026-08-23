@@ -6,7 +6,7 @@ import { homeSpotlight, homeCards } from "@/lib/data";
 
 export default function Software() {
   return (
-    <Section id="software" title="Software" action={{ label: "View all projects", href: "/projects" }}>
+    <Section id="work" title="Selected Work" action={{ label: "View all projects", href: "/projects" }}>
       <Reveal>
         <Spotlight project={homeSpotlight} />
       </Reveal>

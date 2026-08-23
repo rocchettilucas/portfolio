@@ -86,41 +86,6 @@ export const homeSpotlight = projects.find((p) => p.placement === "spotlight")!;
 export const homeCards = projects.filter((p) => p.placement === "card");
 export const allProjects = projects.filter((p) => p.placement === "all");
 
-export type Role = { company: string; title: string; dates: string; bullets: string[]; site?: string };
-export const experience: Role[] = [
-  {
-    company: "WinLane.GG",
-    title: "Software Engineer",
-    dates: "Apr 2026 – present",
-    site: "https://winlane.gg",
-    bullets: [
-      "League of Legends matchup analytics used by 500+ players every month.",
-      "Versioned REST API over a normalized PostgreSQL schema, deployed on Vercel and Render.",
-      "A daily pipeline precomputes thousands of matchups so responses return in under five seconds.",
-      "Ranking model recalibrates automatically on every Riot data release.",
-    ],
-  },
-  {
-    company: "City of Mississauga",
-    title: "Technical Operations",
-    dates: "Jun 2023 – present",
-    bullets: [
-      "Technical setup, stage transitions and A/V for 70+ live events — Raptors 905, Toronto Rock, Steelheads and the Scotties Tournament of Hearts — at venues hosting 5,000+ attendees.",
-      "Live coordination across 5+ departments during events.",
-    ],
-  },
-  {
-    company: "Best Buy",
-    title: "Geek Squad Consultation Agent",
-    dates: "Oct 2020 – Feb 2021",
-    bullets: [
-      "Root-cause diagnosis of hardware, software and network issues across Windows, macOS and mobile.",
-      "OS installs, component-level upgrades and data recovery with verified integrity.",
-      "Explained technical findings to non-technical customers.",
-    ],
-  },
-];
-
 export type School = { name: string; logo: string; degree?: string; dates: string; lines: string[] };
 export const education: School[] = [
   {
