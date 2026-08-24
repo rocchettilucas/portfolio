@@ -2,14 +2,30 @@ import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Education from "@/components/Education";
 import Hero from "@/components/Hero";
+import Projects from "@/components/Projects";
 import Skills from "@/components/Skills";
 import TopBar from "@/components/terminal/TopBar";
 import BottomBar from "@/components/terminal/BottomBar";
+import { projects } from "@/lib/data";
+import { jsonLd } from "@/lib/jsonld";
+
+// The two apps worth describing to search engines as products. Everything here is already
+// visible on the page — title, blurb, platform, link — nothing internal.
+const appsJsonLd = projects
+  .filter((p) => ["gasmap", "rocspace"].includes(p.slug))
+  .map((p) => ({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: p.title,
+    description: p.blurb,
+    applicationCategory: p.slug === "gasmap" ? "TravelApplication" : "DeveloperApplication",
+    operatingSystem: p.slug === "gasmap" ? "iOS, Android" : "macOS, Windows, Linux",
+    url: p.links.site ?? p.links.github,
+    author: { "@type": "Person", name: "Lucas Rocchetti" },
+  }));
 
 // The sections land inside <main> one task at a time; the chrome around them is final.
-// Still to come, in the gaps their comments mark: Projects (task 8) and Experience
-// (task 9). The `appsJsonLd` block that used to live here comes back with the Projects
-// section (recover it from `git show 0fe716f:app/page.tsx`).
+// Still to come, in the gap its comment marks: Experience (task 9).
 export default function Home() {
   return (
     <>
@@ -17,11 +33,15 @@ export default function Home() {
       <main id="main" className="page">
         <Hero />
         <About />
-        {/* Projects — task 8 */}
+        <Projects />
         {/* Experience — task 9 */}
         <Skills />
         <Education />
         <Contact />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: jsonLd(appsJsonLd) }}
+        />
       </main>
       <BottomBar />
     </>
