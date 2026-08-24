@@ -12,13 +12,18 @@ import figlet from "figlet";
 /** The two lines of the banner, stacked. */
 export const WORDS = ["LUCAS", "ROCCHETTI"];
 
-/** The blocky Dracula-friendly face; "Big" is the plain fallback if it ever goes missing. */
-export const FONT = "ANSI Shadow";
+/**
+ * Plain ASCII art. The blockier faces are drawn from U+2588/U+2550 box glyphs, which the
+ * Google JetBrains Mono webfont does not ship — they fall through to a fallback face at a
+ * different advance and the grid shears apart. "Standard" and "Big" are both ASCII-only,
+ * so the site font renders them itself.
+ */
+export const FONT = "Standard";
 export const FALLBACK_FONT = "Big";
 
 /**
- * The widest the banner may get. At the ~0.6em advance of a monospace cell, 72 columns is
- * what still fits a 390px phone at a legible size; past that the type gets too small.
+ * The widest the banner may get. At the ~0.6em advance of a JetBrains Mono cell, 72 columns
+ * is what still fits a 390px phone at a legible size; past that the type gets too small.
  */
 export const MAX_COLS = 72;
 
@@ -42,12 +47,13 @@ function renderRows(word, font) {
  * @returns {{ words: string[]; cols: number }}
  */
 export function buildBanner() {
-  let rendered;
-  try {
-    rendered = WORDS.map((word) => renderRows(word, FONT));
-  } catch {
-    rendered = WORDS.map((word) => renderRows(word, FALLBACK_FONT));
+  // Ask figlet what it actually has rather than rendering and catching: a bad font is the
+  // one failure worth falling back from, and a blanket catch would hide every other one.
+  const font = figlet.fontsSync().includes(FONT) ? FONT : FALLBACK_FONT;
+  if (font !== FONT) {
+    console.warn(`figlet has no "${FONT}" font — falling back to "${FALLBACK_FONT}"`);
   }
+  const rendered = WORDS.map((word) => renderRows(word, font));
 
   const cols = Math.max(...rendered.flat().map((row) => row.length));
   if (cols > MAX_COLS) {

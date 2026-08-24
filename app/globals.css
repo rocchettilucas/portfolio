@@ -112,19 +112,17 @@
      past the element's own — enough for a stray scrollbar that then eats a column. */
   .banner { container-type: inline-size; overflow: hidden; }
   .banner pre {
-    /* A monospace cell advances ~0.6em, so cols * 0.6 * font-size is the block's width:
-       this is the largest size that still fits, capped at the design's 14px. */
+    /* A JetBrains Mono cell advances ~0.6em, so cols * 0.6 * font-size is the block's
+       width: this is the largest size that still fits, capped at the design's 14px. */
     font-size: min(14px, calc(100cqw / (var(--banner-cols) * 0.6)));
     line-height: 1;
     color: var(--accent);
     margin: 0;
-    /* Deliberately NOT var(--font-jb). The Google webfont only ships U+0000-00FF and a
-       handful of symbols, so the block and box-drawing glyphs this art is made of
-       (U+2588, U+2550, U+2554…) miss it and land on next/font's size-adjusted fallback,
-       whose 0.95em advance shears the grid apart. Every system monospace here carries
-       those glyphs at the same ~0.6em advance the sizing above assumes. */
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      "DejaVu Sans Mono", monospace;
+    /* The site font, spelled out because a <pre> otherwise takes the UA's monospace. The
+       art is plain ASCII precisely so this can be the site font: the block-glyph figlet
+       faces are drawn from U+2588/U+2550, which the Google webfont does not ship, and
+       those fall through to a fallback face at a wider advance that shears the grid. */
+    font-family: var(--font-jb), ui-monospace, SFMono-Regular, Menlo, monospace;
   }
 
   /* The portrait's CSS box is media-query driven so it never resizes after hydration;

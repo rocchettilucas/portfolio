@@ -18,7 +18,15 @@ describe("banner", () => {
     }
   });
 
+  // The art has to be printable ASCII: the site font is the Google JetBrains Mono webfont,
+  // whose subsets stop at U+00FF, so a block-glyph face would silently fall back to another
+  // font at another advance and shear the grid apart.
+  it("is printable ASCII only", () => {
+    for (const row of rows) expect(row).toMatch(/^[\x20-\x7e]*$/);
+  });
+
   it("fits the column cap", () => {
+    expect(banner.cols).toBeGreaterThan(0);
     expect(banner.cols).toBeLessThanOrEqual(MAX_COLS);
   });
 
