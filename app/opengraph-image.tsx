@@ -28,8 +28,18 @@ const FONT_DIR = path.join(
   "files"
 );
 
-function loadFont(weight: 400 | 700) {
-  return readFile(path.join(FONT_DIR, `jetbrains-mono-latin-${weight}-normal.woff`));
+async function loadFont(weight: 400 | 700) {
+  const file = `jetbrains-mono-latin-${weight}-normal.woff`;
+  try {
+    return await readFile(path.join(FONT_DIR, file));
+  } catch (cause) {
+    // Hard failure on purpose: a fallback font would ship a silently wrong card.
+    throw new Error(
+      `Could not read ${file} from @fontsource/jetbrains-mono (looked in ${FONT_DIR}). ` +
+        `The OG card needs it at build time — check the package is installed as a runtime dependency.`,
+      { cause }
+    );
+  }
 }
 
 export default async function OG() {
