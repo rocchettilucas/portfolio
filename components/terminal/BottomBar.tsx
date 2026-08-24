@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { GitHubIcon, LinkedInIcon } from "@/components/icons";
+import VisitorCount from "@/components/VisitorCount";
 
 const github = site.socials.find((s) => s.label === "GitHub")!;
 const linkedin = site.socials.find((s) => s.label === "LinkedIn")!;
@@ -31,11 +32,7 @@ export default function BottomBar() {
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <span>v{site.version}</span>
-          {/* Placeholder only. A later task swaps this span for the <VisitorCount /> client
-              component, which starts from this same em dash, fills in the count from
-              POST /api/visit, and hides itself when the counter cannot be read. Keep the
-              wrapper shape identical so the bar does not shift when it hydrates. */}
-          <span>visitors: —</span>
+          <VisitorCount />
           <span className="flex items-center gap-1">
             <a
               href={github.href}
