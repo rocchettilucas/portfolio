@@ -9,8 +9,8 @@ import { SECTIONS } from "@/lib/sections";
 // Scroll offset below which the hero still owns the viewport, so no section is marked active.
 const HERO_CLEAR = 200;
 
-// Nothing listens for this yet — the command palette (a later task) mounts the handler.
-// Firing it into the void is harmless and keeps the bar free of palette internals.
+// CommandPalette (mounted in the root layout) listens for this. Going through an event
+// rather than a prop keeps the bar free of palette internals and free of shared state.
 function openPalette() {
   window.dispatchEvent(new CustomEvent("palette:open"));
 }

@@ -3,6 +3,7 @@ import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { jsonLd } from "@/lib/jsonld";
+import CommandPalette from "@/components/CommandPalette";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -59,6 +60,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
+        {/* Mounted once, beside the page rather than inside it: the palette is chrome that
+            overlays whatever route is rendered, and it draws nothing until it is opened. */}
+        <CommandPalette />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(personJsonLd) }}
