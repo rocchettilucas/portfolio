@@ -1,13 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Sans } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { site } from "@/lib/site";
 import { jsonLd } from "@/lib/jsonld";
 
-const plex = IBM_Plex_Sans({
+const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  variable: "--font-plex",
+  weight: ["400", "700"],
+  variable: "--font-jb",
   display: "swap",
 });
 
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   verification: { google: "42jWGrZFkr7LCa8ZL_G3-bRhJ5conGlHnLX_EuVk4S0" },
 };
 
-export const viewport: Viewport = { themeColor: "#0B1526", colorScheme: "dark" };
+export const viewport: Viewport = { themeColor: "#1a1b26", colorScheme: "dark" };
 
 const personJsonLd = {
   "@context": "https://schema.org",
@@ -53,13 +53,8 @@ const personJsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={plex.variable}>
+    <html lang="en" className={jetbrainsMono.variable}>
       <body>
-        {/* Without JS the IntersectionObserver in Reveal never runs, so every revealed
-            section would stay at opacity 0. This lands them in their final state. */}
-        <noscript>
-          <style>{`.reveal{opacity:1!important;transform:none!important}`}</style>
-        </noscript>
         <a href="#main" className="skip-link">
           Skip to content
         </a>

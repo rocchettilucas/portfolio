@@ -1,44 +1,6 @@
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import Hero from "@/components/Hero";
-import Software from "@/components/Software";
-import About from "@/components/About";
-import Education from "@/components/Education";
-import Contact from "@/components/Contact";
-import { projects } from "@/lib/data";
-import { jsonLd } from "@/lib/jsonld";
-
-// The two apps worth describing to search engines as products. Everything here is already
-// visible on the page — title, blurb, platform, link — nothing internal.
-const appsJsonLd = projects
-  .filter((p) => ["gasmap", "rocspace"].includes(p.slug))
-  .map((p) => ({
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: p.title,
-    description: p.blurb,
-    applicationCategory: p.slug === "gasmap" ? "TravelApplication" : "DeveloperApplication",
-    operatingSystem: p.slug === "gasmap" ? "iOS, Android" : "macOS, Windows, Linux",
-    url: p.links.site ?? p.links.github,
-    author: { "@type": "Person", name: "Lucas Rocchetti" },
-  }));
-
+// The v3 terminal shell lands the sections here one task at a time. Until then the page is
+// deliberately empty — the `appsJsonLd` block that used to live here comes back with the
+// Projects section (recover it from `git show 0fe716f:app/page.tsx`).
 export default function Home() {
-  return (
-    <>
-      <Nav />
-      <main id="main">
-        <Hero />
-        <About />
-        <Software />
-        <Education />
-        <Contact />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLd(appsJsonLd) }}
-        />
-      </main>
-      <Footer />
-    </>
-  );
+  return <main id="main" />;
 }

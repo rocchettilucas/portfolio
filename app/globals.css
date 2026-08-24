@@ -3,63 +3,78 @@
    and emits a real utility for every class name they merely quote. */
 @source not "../docs";
 
+/* Dracula, disciplined. Purple is the one accent; pink is reserved for the `$` glyph and
+   the active nav item, cyan for links, green for the status dot. Nothing else gets colour.
+   Variant B (swap in place, one block): --bg:#16161e; --accent:#c9a6ff; --accent-rgb:201 166 255; */
 :root {
-  --bg: #0B1526;
-  --surface: #121D33;
-  --hover: #1A2742;
-  --text: #E6ECF5;
-  --muted: #8D9BB5;
-  --accent: #5AEBCA;
-  --accent-tint: rgba(90, 235, 202, 0.10);
-  --rule: rgba(230, 236, 245, 0.12);
-  --ease-hover: cubic-bezier(0.645, 0.045, 0.355, 1);
-  --ease-reveal: cubic-bezier(0.16, 1, 0.3, 1);
+  --bg: #1a1b26;
+  --surface: #282a36;
+  --fg: #f8f8f2;
+  --muted: #6272a4;
+  /* #6272a4 is only 3.6:1 on the ground, so it is limited to box titles and hints;
+     dates, tech lists and other meta text use --muted-strong. */
+  --muted-strong: #8b98c9;
+  --border: rgba(248, 248, 242, 0.12);
+  --accent: #bd93f9;
+  --accent-rgb: 189 147 249;
+  --accent-tint: rgba(189, 147, 249, 0.10);
+  --pink: #ff79c6;
+  --cyan: #8be9fd;
+  --green: #50fa7b;
+  --selection: rgba(189, 147, 249, 0.25);
 }
 
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
-  --color-hover: var(--hover);
-  --color-text: var(--text);
+  --color-fg: var(--fg);
   --color-muted: var(--muted);
+  --color-muted-strong: var(--muted-strong);
+  --color-border: var(--border);
   --color-accent: var(--accent);
-  --color-rule: var(--rule);
-  --font-sans: var(--font-plex);
+  --color-pink: var(--pink);
+  --color-cyan: var(--cyan);
+  --color-green: var(--green);
+  --font-mono: var(--font-jb);
 }
 
 @layer base {
   html { color-scheme: dark; scroll-behavior: smooth; }
   body {
     background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-plex), system-ui, sans-serif;
-    font-size: 17px;
+    color: var(--fg);
+    font-family: var(--font-jb), ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
   }
-  [id] { scroll-margin-top: 80px; }
-  a { color: var(--accent); text-decoration: none; transition: color 200ms ease; }
-  a:hover { color: var(--text); }
-  :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  ::selection { background: var(--hover); }
+  /* Cleared by the 40px top bar plus a little air. */
+  [id] { scroll-margin-top: 56px; }
+  a { color: var(--cyan); text-decoration: none; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  ::selection { background: var(--selection); }
 }
 
 @layer components {
   .skip-link {
     position: absolute; left: 16px; top: -48px; z-index: 100;
-    background: var(--accent); color: var(--bg); padding: 8px 12px; border-radius: 4px; font-weight: 500;
+    background: var(--accent); color: var(--bg); padding: 8px 12px; border-radius: 4px;
   }
   .skip-link:hover, .skip-link:focus { color: var(--bg); }
   .skip-link:focus { top: 12px; }
 
-  /* Gazi-style quiet motion */
-  .lift { transition: transform 250ms var(--ease-hover), background-color 250ms var(--ease-hover); }
-  .lift:hover { transform: translateY(-5px); }
-  .arrow-link { display: inline-flex; align-items: center; gap: 6px; transition: transform 250ms var(--ease-hover), color 200ms ease; }
-  .arrow-link:hover { transform: translateX(5px); }
+  /* Every framed region on the page: a 1px rule and nothing else. No shadow, no blur,
+     no gradient, and 4px is the largest radius anywhere in the design. */
+  .tbox { border: 1px solid var(--border); border-radius: 4px; background: transparent; }
 
-  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 600ms var(--ease-reveal), transform 600ms var(--ease-reveal); transition-delay: var(--reveal-delay, 0ms); }
-  .reveal.is-visible { opacity: 1; transform: none; }
+  /* The `$` that opens a prompt line — the only place pink appears outside active nav. */
+  .prompt { color: var(--pink); user-select: none; }
+
+  /* Blinks three times on load, then rests solid, the way a real shell caret settles. */
+  .caret {
+    display: inline-block; width: 0.55em; height: 1.05em; vertical-align: -0.16em;
+    background: var(--accent); animation: caret-blink 1s steps(2) 3;
+  }
 
   /* The portrait's CSS box is media-query driven so it never resizes after hydration;
      AsciiPortrait only sizes the canvas backing store to match. */
@@ -69,34 +84,20 @@
 
   /* The <noscript> twin of the canvas (spec §7). The letter-spacing widens the 7px
      monospace grid back toward square so the portrait isn't squashed horizontally. */
-  .ascii-fallback { font: 7px/1.1 ui-monospace, Menlo, monospace; letter-spacing: .098em; color: var(--accent); white-space: pre; margin: 0; }
-
-  .btn-outline {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 8px 14px; border: 1px solid var(--accent); border-radius: 4px;
-    color: var(--accent); font-size: 14px; font-weight: 500;
-    transition: background-color 250ms var(--ease-hover), transform 250ms var(--ease-hover), color 200ms ease;
+  .ascii-fallback {
+    font: 7px/1.1 ui-monospace, Menlo, monospace; letter-spacing: .098em;
+    color: var(--accent); white-space: pre; margin: 0;
   }
-  .btn-outline:hover { background: var(--accent-tint); color: var(--accent); transform: translateY(-3px); }
 }
 
-/* Hero wave: pivots at the wrist, two waves then a rest, looping. */
-.wave { display: inline-block; transform-origin: 70% 70%; animation: wave 2.5s ease-in-out infinite; }
-@keyframes wave {
-  0%   { transform: rotate(0deg); }
-  10%  { transform: rotate(14deg); }
-  20%  { transform: rotate(-8deg); }
-  30%  { transform: rotate(14deg); }
-  40%  { transform: rotate(-4deg); }
-  50%  { transform: rotate(10deg); }
-  60%  { transform: rotate(0deg); }
-  100% { transform: rotate(0deg); }
-}
+@keyframes caret-blink { to { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; }
-  .reveal { opacity: 1; transform: none; }
-  .lift:hover, .arrow-link:hover, .btn-outline:hover { transform: none; }
-  .wave { animation: none; }
+  *, *::before, *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+  .caret { animation: none; }
 }

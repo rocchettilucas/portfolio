@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     short_name: "Lucas",
     start_url: "/",
     display: "standalone",
-    background_color: "#0B1526",
-    theme_color: "#0B1526",
+    background_color: "#1a1b26",
+    theme_color: "#1a1b26",
     icons: [{ src: "/icon.png", sizes: "512x512", type: "image/png" }],
   };
 }
