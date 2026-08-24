@@ -71,6 +71,11 @@ def main():
     ap.add_argument("--erode", type=int, default=6,
                     help="px to choke the matte by, undoing the outward "
                          "pull of the mask blur (0 disables)")
+    ap.add_argument("--headroom", type=float, default=0.12,
+                    help="empty space kept above the hair, as a fraction of "
+                         "the face height. 0.26 was Gazi's framing; the v3 "
+                         "hero box is cut to the canvas, so that much air "
+                         "reads as a dead strip at the top of the frame.")
     ap.add_argument("--min-px", type=int, default=200,
                     help="report alpha components smaller than this")
     a = ap.parse_args()
@@ -127,7 +132,7 @@ def main():
     # ---- 4:5 crop: head + shoulders, a little headroom ----
     colband = m[:, max(0, fcx - face_h // 2): fcx + face_h // 2]
     hair_top = int(np.where(colband.sum(axis=1) > 5)[0].min())
-    headroom = int(face_h * 0.26)
+    headroom = int(face_h * a.headroom)
     y0 = max(0, hair_top - headroom)
     ch = int(face_h * 2.00)   # head + shoulders; tuned against Gazi coverage
     y1 = min(H, y0 + ch)

@@ -5,7 +5,7 @@ Faithful port of gazijarin.com's AsciiPortrait.jsx sampling loop.
 
 Reference algorithm (Gazi-V2 / AsciiPortrait.jsx):
     size      = 400 desktop | 280 tablet | 220 mobile   (square canvas)
-    draw      = image aspect-fit into `size`, times 0.8, centred
+    draw      = image aspect-fit into `size`, times 0.8, centred  (--fill)
     fontSize  = 7  (5 when size <= 280)
     colGap    = fontSize * 0.7
     rowGap    = fontSize * 1.1
@@ -147,13 +147,21 @@ def apply_gazi_tone(im, lut, strength=1.0):
     return Image.fromarray(out.astype(np.uint8), "RGBA")
 
 
-def compose(src, size):
-    """Aspect-fit `src` into a size x size RGBA canvas at scale 0.8, centred.
+# Gazi's original draw scale; kept as the default so an argument-free run is a
+# faithful port. The shipped portrait overrides it (see README).
+DEFAULT_FILL = 0.8
 
-    Mirrors ctx.drawImage(img, dx, dy, dw, dh) on a transparent canvas.
+
+def compose(src, size, fill=DEFAULT_FILL):
+    """Aspect-fit `src` into a size x size RGBA canvas at scale `fill`, centred.
+
+    Mirrors ctx.drawImage(img, dx, dy, dw, dh) on a transparent canvas. Gazi
+    drew at 0.8 of the fitted box; the v3 hero frames the portrait in a box cut
+    to the canvas, so the slack that used to be breathing room now reads as an
+    empty strip above the head. `--fill` reclaims it.
     """
     iw, ih = src.size
-    scale = min(size / iw, size / ih) * 0.8
+    scale = min(size / iw, size / ih) * fill
     dw, dh = max(1, int(round(iw * scale))), max(1, int(round(ih * scale)))
     dx, dy = int(round((size - dw) / 2)), int(round((size - dh) / 2))
     canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
@@ -199,7 +207,12 @@ def sample(canvas, font_size, gamma=1.0, gain=1.0):
                 "c": ch,
                 "x": round(x, 2),
                 "y": round(y, 2),
-                "a": round(alpha, 3),
+                # 2 dp, not 3: the alpha is multiplied by ALPHA_GAIN and painted
+                # into an 8-bit channel, so the third decimal is worth at most
+                # 1.5/255 and can never be seen — but it is the payload's main
+                # source of entropy. Dropping it is what keeps tone_400.json
+                # inside the 8 KB gzip budget at --fill 0.92.
+                "a": round(alpha, 2),
             })
         rows.append("".join(line).rstrip())
 
@@ -269,7 +282,7 @@ _TONE_CACHE = {}
 
 
 def build(src_path, outdir, size, variant, palettes, ss=4, write_data=True,
-          lut=None):
+          lut=None, fill=DEFAULT_FILL):
     gamma, dfs, tone = VARIANTS[variant]
     fs = default_font_size(size) + dfs
     key = (src_path, tone)
@@ -279,11 +292,12 @@ def build(src_path, outdir, size, variant, palettes, ss=4, write_data=True,
             im = apply_gazi_tone(im, lut if lut is not None else load_tone_lut())
         _TONE_CACHE[key] = im
     src = _TONE_CACHE[key]
-    canvas = compose(src, size)
+    canvas = compose(src, size, fill=fill)
     particles, rows, stats = sample(canvas, fs, gamma=gamma)
     stats["variant"] = variant
     stats["gamma"] = gamma
     stats["tone"] = tone
+    stats["fill"] = fill
 
     os.makedirs(outdir, exist_ok=True)
     stem = f"{variant}_{size}"
@@ -321,6 +335,9 @@ def main():
     ap.add_argument("--variants", default="baseline,gain,big,tone,tonebig")
     ap.add_argument("--palettes", default="DR")
     ap.add_argument("--ss", type=int, default=4)
+    ap.add_argument("--fill", type=float, default=DEFAULT_FILL,
+                    help="fraction of the square the aspect-fit image fills "
+                         "(default {} = Gazi's value; the shipped portrait uses 0.92)".format(DEFAULT_FILL))
     ap.add_argument("--profile", default=None,
                     help="rebuild the tone LUT from this reference PNG "
                          "instead of loading gazi_tone_lut.json")
@@ -342,7 +359,8 @@ def main():
     all_stats = []
     for v in variants:
         for s in sizes:
-            st = build(a.src, a.outdir, s, v, palettes, ss=a.ss, lut=lut)
+            st = build(a.src, a.outdir, s, v, palettes, ss=a.ss, lut=lut,
+                       fill=a.fill)
             all_stats.append(st)
             print(f"{v:9s} {s:3d}px font={st['font_size']}px "
                   f"grid={st['grid'][0]}x{st['grid'][1]} "

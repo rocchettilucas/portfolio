@@ -21,10 +21,10 @@ Then, from the repo root:
 
 ```bash
 # 1. cutout: public/about/lucas.jpg -> scripts/ascii/portrait.png (1200x1500, 4:5)
-scripts/ascii/.venv/bin/python scripts/ascii/cutout3.py
+scripts/ascii/.venv/bin/python scripts/ascii/cutout3.py --erode 7
 
 # 2. generate: portrait.png -> scripts/ascii/out/baseline_{400,280,220}.{json,txt} + DR previews
-scripts/ascii/.venv/bin/python scripts/ascii/gazi_ascii.py --variants baseline --sizes 400,280,220 --palettes DR
+scripts/ascii/.venv/bin/python scripts/ascii/gazi_ascii.py --variants baseline --sizes 400,280,220 --palettes DR --fill 0.92
 
 # 3. copy into the app under the tone_* names the component imports
 for s in 400 280 220; do cp scripts/ascii/out/baseline_$s.json lib/ascii/tone_$s.json; done
@@ -45,7 +45,17 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
   and then blurred, which pulls the matte outward over the background, dragging
   a bright rim along the top of the dark suit shoulder into the cutout where it
   samples as stray glyphs. 6px is that boundary uncertainty (~2px from the
-  half-res upscale, ~4px from the sigma-2 blur). Intermediates land in `out/`.
+  half-res upscale, ~4px from the sigma-2 blur). **The shipped portrait uses 7**
+  — at `--fill 0.92` the subject is drawn large enough that 6px still left one
+  isolated glyph out at x=338 of 400, and the 7th pixel removes it for the cost
+  of 11 of 1187 ink glyphs (the silhouette's bounds do not move).
+  Intermediates land in `out/`.
+- `--headroom` (default 0.12) is the empty space kept above the hair, as a
+  fraction of the face height, and `--fill` (default 0.8 — Gazi's value; the
+  shipped portrait uses **0.92**) is how much of the square the aspect-fit image
+  covers. Both were loosened for v3: the hero frames the portrait in a box cut
+  to the canvas, so Gazi's slack read as a dead strip above the head. Together
+  they take the subject from 67% to 85% of the canvas height.
 - The `tone`/`tonebig` variants (not shipped, kept for a future front-lit photo)
   histogram-match the portrait's luminance to a reference distribution baked
   into `gazi_tone_lut.json`, which is why no reference photo lives in the repo.
@@ -54,4 +64,8 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
 - `--palettes DR` is the v3 terminal palette (ground `#1a1b26`, accent
   `#bd93f9`); previews are only a visual check and are never shipped.
 - Keep `lib/ascii/tone_400.json` under 8 KB gzipped (`gzip -c
-  lib/ascii/tone_400.json | wc -c`) — it ships to every visitor.
+  lib/ascii/tone_400.json | wc -c`) — it ships to every visitor. Currently
+  7,783 B. Filling the canvas raised the particle count by ~45%, so the
+  sampler now rounds each alpha to 2 dp rather than 3: the value is scaled by
+  `ALPHA_GAIN` and painted into an 8-bit channel, where the third decimal is
+  worth at most 1.5/255, and it was the payload's main source of entropy.
