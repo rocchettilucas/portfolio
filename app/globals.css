@@ -65,7 +65,7 @@
 
   /* Every framed region on the page: a 1px rule and nothing else. No shadow, no blur,
      no gradient, and 4px is the largest radius anywhere in the design. */
-  .tbox { border: 1px solid var(--border); border-radius: 4px; background: transparent; }
+  .tbox { border: 1px solid var(--border); border-radius: 4px; }
 
   /* The `$` that opens a prompt line — the only place pink appears outside active nav. */
   .prompt { color: var(--pink); user-select: none; }
@@ -73,7 +73,7 @@
   /* Blinks three times on load, then rests solid, the way a real shell caret settles. */
   .caret {
     display: inline-block; width: 0.55em; height: 1.05em; vertical-align: -0.16em;
-    background: var(--accent); animation: caret-blink 1s steps(2) 3;
+    background: var(--accent); animation: caret-blink 1s step-end 3;
   }
 
   /* The portrait's CSS box is media-query driven so it never resizes after hydration;
@@ -90,7 +90,13 @@
   }
 }
 
-@keyframes caret-blink { to { opacity: 0; } }
+/* Two explicit states, hard-cut by step-end: half a second lit, half a second gone. A
+   single `to` keyframe would instead stair-step the interpolated opacity and only read as
+   a dim pulse. The animation ends back at the element's own opacity: 1, hence "then solid". */
+@keyframes caret-blink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
