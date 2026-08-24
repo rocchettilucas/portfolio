@@ -89,6 +89,14 @@ describe("complete", () => {
   it("returns an empty array when nothing matches", () => {
     expect(complete("x")).toEqual([]);
   });
+
+  it("matches on the first token only, ignoring trailing args", () => {
+    expect(complete("e xyz")).toEqual(["education", "experience"]);
+  });
+
+  it("matches on the first token case-insensitively when args follow", () => {
+    expect(complete("PROJ x")).toEqual(["projects"]);
+  });
 });
 
 // Invariant: every SectionId must also be a valid command name, so scroll targets never

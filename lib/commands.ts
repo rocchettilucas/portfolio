@@ -91,6 +91,6 @@ export function runCommand(input: string): Action {
 }
 
 export function complete(input: string): string[] {
-  const prefix = input.trim().toLowerCase();
+  const prefix = (input.trim().split(/\s+/)[0] ?? "").toLowerCase();
   return [...COMMANDS].filter(cmd => cmd.startsWith(prefix)).sort();
 }
