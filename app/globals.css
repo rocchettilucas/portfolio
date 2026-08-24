@@ -8,7 +8,6 @@
    Variant B (swap in place, one block): --bg:#16161e; --accent:#c9a6ff; --accent-rgb:201 166 255; */
 :root {
   --bg: #1a1b26;
-  --surface: #282a36;
   --fg: #f8f8f2;
   --muted: #6272a4;
   /* #6272a4 is only 3.6:1 on the ground, so it is limited to box titles and hints;
@@ -26,7 +25,6 @@
 
 @theme inline {
   --color-bg: var(--bg);
-  --color-surface: var(--surface);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-muted-strong: var(--muted-strong);

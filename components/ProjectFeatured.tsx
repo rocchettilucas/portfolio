@@ -15,7 +15,7 @@ import type { Project } from "@/lib/data";
 export default function ProjectFeatured({ project }: { project: Project }) {
   const { slug, title, blurb, tech, links, logo, meta } = project;
   const button =
-    "inline-flex min-h-6 items-center rounded-[4px] border border-border px-2.5 py-0.5 text-cyan transition-colors duration-[250ms] hover:bg-[var(--accent-tint)]";
+    "inline-flex min-h-6 items-center rounded-[4px] border border-border px-2.5 py-0.5 text-cyan transition-[background-color,border-color,color] duration-[250ms] hover:bg-[var(--accent-tint)]";
 
   return (
     <Box title={`${slug}/`}>

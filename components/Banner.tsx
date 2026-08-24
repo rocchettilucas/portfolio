@@ -9,7 +9,7 @@ import { banner } from "@/lib/banner";
  * Sizing is a container query, not a viewport one: the banner shrinks to fit whatever
  * column it is dropped into. `--banner-cols` is the glyph width of the block, and a
  * JetBrains Mono cell advances ~0.6em, so `100cqw / (cols * 0.6)` is the largest font size
- * that still fits the widest row — capped at 14px so it never outgrows the design.
+ * that still fits the widest row — capped at 16px so it never outgrows the design.
  */
 export default function Banner() {
   return (

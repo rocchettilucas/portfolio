@@ -1,23 +1,22 @@
 import Link from "next/link";
-import { site } from "@/lib/site";
+import { site, socialHref } from "@/lib/site";
 import { GitHubIcon, LinkedInIcon } from "@/components/icons";
 import VisitorCount from "@/components/VisitorCount";
-
-const github = site.socials.find((s) => s.label === "GitHub")!;
-const linkedin = site.socials.find((s) => s.label === "LinkedIn")!;
 
 export default function BottomBar() {
   return (
     <footer className="bar bar-bottom">
       <div className="bar-inner justify-between gap-2 text-[11px] text-muted-strong sm:gap-3 sm:text-[12px]">
         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
-          {/* Below 640px the whole link goes and only the dot survives, so the dot is what
-              carries the name — an empty link would be worse than no link. */}
+          {/* The dot is decoration: the link beside it already names the site, and a
+              second announcement of "site status" would carry no value with it. Below
+              640px the link is hidden and only the dot is drawn — the © name in the same
+              row still names the site there. */}
           <span className="flex items-center gap-1.5">
-            <span role="img" aria-label="site status" className="text-green">
+            <span aria-hidden className="text-green">
               ●
             </span>
-            <Link href="/" className="text-muted-strong hover:text-fg max-sm:hidden">
+            <Link href="/" className="min-h-6 py-1 text-muted-strong hover:text-fg max-sm:hidden">
               lucasrocchetti.com
             </Link>
           </span>
@@ -35,7 +34,7 @@ export default function BottomBar() {
           <VisitorCount />
           <span className="flex items-center gap-1">
             <a
-              href={github.href}
+              href={socialHref("GitHub")}
               aria-label="GitHub"
               target="_blank"
               rel="noopener noreferrer"
@@ -44,7 +43,7 @@ export default function BottomBar() {
               <GitHubIcon width={18} height={18} />
             </a>
             <a
-              href={linkedin.href}
+              href={socialHref("LinkedIn")}
               aria-label="LinkedIn"
               target="_blank"
               rel="noopener noreferrer"

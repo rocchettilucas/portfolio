@@ -1,17 +1,22 @@
 import Box from "@/components/terminal/Box";
 import Section from "@/components/terminal/Section";
 import { ExternalIcon } from "@/components/icons";
-import { site } from "@/lib/site";
+import { socialHref } from "@/lib/site";
 
-const social = (label: string) => site.socials.find((s) => s.label === label)!.href;
+// The displayed text of every row is its own href with the parts a reader does not need
+// taken off, so the two can never say different things: `mailto:` / `https://` / `www.`
+// carry no information here, and a trailing slash is noise.
+function display(href: string): string {
+  return href.replace(/^(?:https?:\/\/|mailto:)/, "").replace(/^www\./, "").replace(/\/$/, "");
+}
 
 // The address bar of a message that has been started but not sent: one header line per way
 // to reach me. The displayed text is the address itself, so each link says where it goes
 // without an aria-label having to say it again.
-const ROWS: ReadonlyArray<{ key: string; href: string; text: string; external: boolean }> = [
-  { key: "To:", href: `mailto:${site.email}`, text: site.email, external: false },
-  { key: "GitHub:", href: social("GitHub"), text: "github.com/rocchettilucas", external: true },
-  { key: "LinkedIn:", href: social("LinkedIn"), text: "linkedin.com/in/lucasrocchetti", external: true },
+const ROWS: ReadonlyArray<{ key: string; href: string; external: boolean }> = [
+  { key: "To:", href: socialHref("Email"), external: false },
+  { key: "GitHub:", href: socialHref("GitHub"), external: true },
+  { key: "LinkedIn:", href: socialHref("LinkedIn"), external: true },
 ];
 
 /**
@@ -39,7 +44,7 @@ export default function Contact() {
                   href={row.href}
                   {...(row.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
                 >
-                  {row.text}
+                  {display(row.href)}
                   {row.external ? (
                     <ExternalIcon width={12} height={12} className="ml-1.5 inline align-baseline" />
                   ) : null}

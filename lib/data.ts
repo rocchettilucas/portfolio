@@ -62,9 +62,9 @@ export const projects: Project[] = [
     placement: "card",
   },
   {
-    slug: "portfolio-v3",
-    title: "Portfolio v3",
-    blurb: "This site — the third iteration of my portfolio, rebuilt as a terminal with Next.js.",
+    slug: "portfolio-v2",
+    title: "Portfolio v2",
+    blurb: "This site — the second iteration of my portfolio, rebuilt as a terminal with Next.js.",
     tech: ["Next.js", "React", "TypeScript", "Tailwind"],
     links: { github: "https://github.com/rocchettilucas/portfolio-v2" },
     placement: "card",

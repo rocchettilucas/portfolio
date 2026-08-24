@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Prompt from "@/components/terminal/Prompt";
 import { complete, runCommand } from "@/lib/commands";
@@ -32,6 +33,7 @@ function prefersReducedMotion(): boolean {
 }
 
 export default function CommandPalette() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [log, setLog] = useState<Entry[]>([HINT]);
@@ -146,15 +148,21 @@ export default function CommandPalette() {
         // Deferred a frame so the scroll lock is already lifted — a smooth scroll started
         // while <body> is still `overflow: hidden` goes nowhere.
         requestAnimationFrame(() => {
-          document
-            .getElementById(id)
-            ?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+          const target = document.getElementById(id);
+          // The sections only exist on the home page. Off it there is nothing to scroll
+          // to, and writing the hash alone would leave the address bar pointing at an
+          // anchor this document does not have — navigate home instead.
+          if (!target) {
+            router.push(`/#${id}`);
+            return;
+          }
+          target.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
           history.replaceState(null, "", `#${id}`);
         });
         break;
       }
     }
-  }, [append, closePalette, input]);
+  }, [append, closePalette, input, router]);
 
   const onInputKeyDown = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {

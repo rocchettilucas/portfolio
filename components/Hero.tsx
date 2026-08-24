@@ -16,15 +16,19 @@ const FACTS: ReadonlyArray<readonly [string, string]> = [
  * portrait on the right. Not a `Section` — this one carries the document's single `<h1>`
  * (inside `Banner`), not a command heading, so it opts out of that wrapper's `<h2>`.
  *
- * Below 768px the two stack with the portrait first: it is the image that says who this
+ * Below 900px the two stack with the portrait first: it is the image that says who this
  * is, and it should be the thing on screen before the fold on a phone. The reorder is
  * visual only — the `<h1>` stays first in the DOM so the outline and the reading order
  * start where they should, and the portrait is decorative (aria-hidden) either way.
+ *
+ * 900px, not the `md` 768px: the portrait's CSS box jumps to its full 400px at 769px, so
+ * splitting at `md` hands the text column ~281px and squeezes the banner and the whoami
+ * box into a ribbon until ~900px. At 900 the text column starts at ~408px instead.
  */
 export default function Hero() {
   return (
-    <section id="top" className="grid gap-8 px-6 py-14 max-md:py-10 max-sm:px-4 md:grid-cols-[1fr_auto] md:gap-10">
-      <div className="min-w-0 max-md:order-2">
+    <section id="top" className="grid gap-8 px-6 py-14 max-md:py-10 max-sm:px-4 min-[900px]:grid-cols-[1fr_auto] min-[900px]:gap-10">
+      <div className="min-w-0 max-[899px]:order-2">
         <Banner />
         <Box className="mt-6">
           <p>
@@ -46,7 +50,7 @@ export default function Hero() {
       </div>
 
       {/* `justify-self` keeps the box hugging the canvas instead of stretching to the column. */}
-      <div className="justify-self-center max-md:order-1">
+      <div className="justify-self-center max-[899px]:order-1">
         <Box title="~/lucas.jpg" padding="none">
           <AsciiPortrait />
         </Box>

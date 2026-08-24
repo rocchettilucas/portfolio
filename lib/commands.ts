@@ -1,5 +1,5 @@
 import { SECTIONS, type SectionId } from "@/lib/sections";
-import { site } from "@/lib/site";
+import { socialHref } from "@/lib/site";
 
 // Pure command parser for the command palette. No DOM/window imports here — this module
 // must run in any JS environment (tests, SSR) and stay UI-free.
@@ -45,12 +45,6 @@ const DESCRIPTIONS: Record<Command, string> = {
   whoami: "print identity",
 };
 
-function href(label: "GitHub" | "LinkedIn"): string {
-  const social = site.socials.find(s => s.label === label);
-  if (!social) throw new Error(`missing social link for ${label}`);
-  return social.href;
-}
-
 function isSectionId(name: string): name is SectionId {
   return (SECTIONS as readonly string[]).includes(name);
 }
@@ -65,9 +59,9 @@ export function runCommand(input: string): Action {
 
   switch (name as Command) {
     case "github":
-      return { kind: "open", href: href("GitHub") };
+      return { kind: "open", href: socialHref("GitHub") };
     case "linkedin":
-      return { kind: "open", href: href("LinkedIn") };
+      return { kind: "open", href: socialHref("LinkedIn") };
     case "help":
       return {
         kind: "print",

@@ -23,7 +23,9 @@ export default function NotFound() {
           <span aria-hidden className="prompt">
             $
           </span>{" "}
-          <Link href="/">cd ~</Link>
+          <Link href="/" aria-label="Back to the home page">
+            cd ~
+          </Link>
           <span className="text-muted-strong"> — back to the home page</span>
         </p>
       </main>

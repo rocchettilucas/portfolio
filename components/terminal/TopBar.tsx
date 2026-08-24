@@ -63,7 +63,9 @@ export default function TopBar() {
         <Link
           href="/"
           aria-label={`${site.name} — home`}
-          className="flex shrink-0 items-center gap-2 text-fg hover:text-accent"
+          // py-1 is not decoration: it is what takes the 20px logo row up to a 24px+ target
+          // inside a bar whose own height is fixed at 40px, so nothing below moves.
+          className="flex min-h-6 shrink-0 items-center gap-2 py-1 text-fg hover:text-accent"
         >
           <Image src="/logo.png" alt="" width={20} height={20} priority />
           <span aria-hidden className="whitespace-nowrap">
@@ -80,7 +82,9 @@ export default function TopBar() {
               aria-current={active === id ? "location" : undefined}
               // --muted is only 3.6:1 on the ground, so nav labels take --muted-strong;
               // --muted stays for the hint button, which is a hint and not a destination.
-              className={`whitespace-nowrap ${active === id ? "text-pink" : "text-muted-strong hover:text-fg"}`}
+              // `py-1` (with the blockifying flex parent) is what makes a 20.8px line box
+              // into a 28.8px target; the bar's height is fixed, so it costs no chrome.
+              className={`whitespace-nowrap py-1 ${active === id ? "text-pink" : "text-muted-strong hover:text-fg"}`}
             >
               {id}
             </a>
@@ -94,7 +98,7 @@ export default function TopBar() {
         <button
           type="button"
           onClick={openPalette}
-          className="shrink-0 whitespace-nowrap text-muted hover:text-fg max-[860px]:hidden"
+          className="min-h-6 shrink-0 whitespace-nowrap py-1 text-muted hover:text-fg max-[860px]:hidden"
         >
           press / for commands
         </button>
