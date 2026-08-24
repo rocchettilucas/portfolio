@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""EXIF-correct load -> rembg cutout -> 4:5 head+shoulders crop.
+"""EXIF-correct load -> rembg cutout -> matte cleanup -> 4:5 head+shoulders crop.
 
 Source defaults to public/about/lucas.jpg (the suit photo). Outputs
 portrait.png (4:5 crop, 1200x1500 RGBA) next to this script -- that file is
@@ -18,24 +18,46 @@ DEFAULT_SRC = os.path.normpath(
     os.path.join(HERE, "..", "..", "public", "about", "lucas.jpg"))
 
 
-def largest_component(alpha, thresh=100):
-    """Keep only the biggest blob of alpha > thresh; zero the rest.
+def clean_alpha(alpha, thresh=100, erode=6, min_px=200):
+    """Harden the rembg matte: drop sub-threshold noise, choke the edge, keep
+    only the biggest blob.
 
-    rembg occasionally leaves specks (a hand at the frame edge, background
-    texture read as subject). The face anchor and the crop maths both key off
-    the alpha bbox, so one stray speck would drag the crop off the head.
+    Three separate problems, in order:
+
+    1. Sub-threshold noise. Everything at or below `thresh` is zeroed
+       unconditionally, so faint background haze never reaches portrait.png.
+    2. Edge fringe. The mask is inferred at half resolution, upscaled and then
+       GaussianBlur(2)-ed, which pulls the matte a few pixels OUTWARD over the
+       background. On this photo that drags a bright rim along the top of the
+       dark suit shoulder inside the cutout, where it samples as stray glyphs
+       against an otherwise blank suit. Eroding by `erode` px undoes the blur's
+       outward pull. This is the fix that matters visually. The default 6
+       is the pipeline's own boundary uncertainty: ~2px from inferring the
+       mask at half resolution and upscaling it, plus ~4px from the sigma-2
+       blur applied afterwards.
+    3. Specks. Erosion also severs the thin alpha bridges that would otherwise
+       keep a detached blob attached to the subject, so labelling afterwards
+       actually separates them. Components under `min_px` are reported, and
+       everything but the largest is dropped -- the face anchor and the crop
+       maths key off the alpha bbox, so one stray blob would drag the crop off
+       the head.
     """
     from scipy import ndimage
-    m = alpha > thresh
-    lab, n = ndimage.label(m)
-    if n <= 1:
-        print(f"components: {n} (no pruning needed)")
-        return alpha
+    out = alpha.copy()
+    m = out > thresh
+    out[~m] = 0                                  # (1) unconditional
+
+    if erode:                                    # (2)
+        m = ndimage.binary_erosion(m, np.ones((3, 3)), iterations=erode)
+
+    lab, n = ndimage.label(m)                    # (3)
+    if n == 0:
+        raise SystemExit("cutout produced an empty mask -- check --src/--erode")
     sizes = ndimage.sum(m, lab, range(1, n + 1))
     keep = int(np.argmax(sizes)) + 1
-    print(f"components: {n}, keeping #{keep} "
-          f"({int(sizes[keep - 1])}px of {int(sizes.sum())}px)")
-    out = alpha.copy()
+    print(f"components: {n} (dropping {n - 1}, "
+          f"{int((sizes < min_px).sum())} of them under {min_px}px); "
+          f"keeping #{keep} = {int(sizes[keep - 1])}px of {int(sizes.sum())}px")
     out[lab != keep] = 0
     return out
 
@@ -46,6 +68,11 @@ def main():
     ap.add_argument("--out", default=os.path.join(HERE, "portrait.png"))
     ap.add_argument("--outdir", default=os.path.join(HERE, "out"))
     ap.add_argument("--model", default="u2net_human_seg")
+    ap.add_argument("--erode", type=int, default=6,
+                    help="px to choke the matte by, undoing the outward "
+                         "pull of the mask blur (0 disables)")
+    ap.add_argument("--min-px", type=int, default=200,
+                    help="report alpha components smaller than this")
     a = ap.parse_args()
     os.makedirs(a.outdir, exist_ok=True)
 
@@ -63,7 +90,8 @@ def main():
     mask = mask.filter(ImageFilter.GaussianBlur(2))
     cut = img.convert("RGBA")
     arr = np.asarray(cut).copy()
-    arr[:, :, 3] = largest_component(np.asarray(mask))
+    arr[:, :, 3] = clean_alpha(np.asarray(mask), erode=a.erode,
+                               min_px=a.min_px)
     cut = Image.fromarray(arr)
     cut.save(os.path.join(a.outdir, "cutout_full.png"))
 

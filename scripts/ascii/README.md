@@ -38,9 +38,14 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
 
 ## Notes
 
-- `cutout3.py --src <path>` overrides the source photo. It keeps only the
-  largest connected alpha component, so stray rembg specks cannot drag the
-  head-and-shoulders crop off centre. Intermediates land in `out/`.
+- `cutout3.py --src <path>` overrides the source photo. Its `clean_alpha()`
+  pass zeroes all sub-threshold alpha, chokes the matte by `--erode` px
+  (default 6) and keeps only the largest connected component. The erode is the
+  one that matters visually: the mask is inferred at half resolution, upscaled
+  and then blurred, which pulls the matte outward over the background, dragging
+  a bright rim along the top of the dark suit shoulder into the cutout where it
+  samples as stray glyphs. 6px is that boundary uncertainty (~2px from the
+  half-res upscale, ~4px from the sigma-2 blur). Intermediates land in `out/`.
 - The `tone`/`tonebig` variants (not shipped, kept for a future front-lit photo)
   histogram-match the portrait's luminance to a reference distribution baked
   into `gazi_tone_lut.json`, which is why no reference photo lives in the repo.
