@@ -16,6 +16,10 @@ describe("projects", () => {
     expect(projects).toHaveLength(6);
     expect(cardProjects.map(p => p.slug)).toEqual(["rocspace", "winlane", "nhl-dashboard", "pathwayr", "portfolio-v3"]);
   });
+  it("every project has `logo` except portfolio-v3", () => {
+    for (const p of projects.filter(p => p.slug !== "portfolio-v3")) expect(p.logo, p.slug).toBeTruthy();
+    expect(projects.find(p => p.slug === "portfolio-v3")!.logo).toBeUndefined();
+  });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
     for (const p of projects) {
       expect(ONE_SENTENCE(p.blurb), p.slug).toBe(true);
