@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""THROWAWAY SPIKE (v3).
+"""ASCII portrait sampler for the v3 terminal portfolio.
 
 Faithful port of gazijarin.com's AsciiPortrait.jsx sampling loop.
 
@@ -23,6 +23,11 @@ Outputs, per (size, variant):
     <stem>.txt    plain character grid for a <pre> fallback (alpha dropped)
 and per (size, variant, palette):
     <stem>.png    true-size preview, Menlo, per-glyph alpha, on the ground colour
+
+The "tone" variants histogram-match the source luminance to a reference profile.
+That reference is baked into the committed gazi_tone_lut.json, so no reference
+photo has to live in the repo. Pass --profile <png> to rebuild the LUT from an
+image instead, and --save-lut <json> to write the rebuilt LUT back out.
 """
 import argparse
 import gzip
@@ -44,14 +49,16 @@ PALETTES = {
     "P2": ("#0E1B1E", "#7ED4C3"),
     "P3": ("#0E1420", "#8FB8F5"),
     "GZ": ("#0a192f", "#64ffda"),   # Gazi's own colours, calibration reference
+    "DR": ("#1a1b26", "#bd93f9"),   # v3 terminal: Dracula ground + purple accent
 }
 
 VARIANTS = {
     # name: (gamma, font-size delta, tone)
     #   tone "none" -> use the source luminance as-is (exact Gazi pipeline)
-    #   tone "gazi" -> histogram-match the source luminance to Gazi's own
-    #                  profile.png before sampling, so the char histogram lands
-    #                  on his ~85% "." look. Same algorithm, normalised input.
+    #   tone "gazi" -> histogram-match the source luminance to the reference
+    #                  distribution in gazi_tone_lut.json before sampling, so
+    #                  the char histogram lands on the ~85% "." look. Same
+    #                  algorithm, normalised input.
     "baseline": (1.0, 0, "none"),
     "gain": (0.8, 0, "none"),
     "big": (1.0, 1, "none"),
@@ -59,8 +66,7 @@ VARIANTS = {
     "tonebig": (1.0, 1, "gazi"),
 }
 
-GAZI_PROFILE = os.path.normpath(
-    os.path.join(HERE, "..", "research-gazi", "profile.png"))
+TONE_LUT_JSON = os.path.join(HERE, "gazi_tone_lut.json")
 
 
 def hex_rgb(h):
@@ -81,9 +87,10 @@ def masked_brightness(im):
     return b, m
 
 
-def gazi_tone_lut(ref_path=GAZI_PROFILE, bins=512):
-    """Build a 256-entry LUT that maps our luminance onto Gazi's luminance
-    distribution (classic histogram matching over the alpha-masked region)."""
+def gazi_tone_lut(ref_path, bins=512):
+    """Build a `bins`-entry LUT that maps our luminance onto the reference
+    photo's luminance distribution (classic histogram matching over the
+    alpha-masked region)."""
     rb, rm = masked_brightness(Image.open(ref_path))
     ref = np.sort(rb[rm])
     # target value for each quantile q in [0,1]
@@ -92,13 +99,36 @@ def gazi_tone_lut(ref_path=GAZI_PROFILE, bins=512):
     return q, tgt
 
 
-def apply_gazi_tone(im, lut=None, strength=1.0):
-    """Return a copy of `im` whose masked luminance histogram matches Gazi's.
+def load_tone_lut(profile=None, path=TONE_LUT_JSON):
+    """The baked LUT by default; rebuilt from `profile` (a PNG) when given."""
+    if profile:
+        return gazi_tone_lut(profile)
+    with open(path) as f:
+        d = json.load(f)
+    return np.asarray(d["q"], dtype=np.float64), \
+        np.asarray(d["tgt"], dtype=np.float64)
+
+
+def save_tone_lut(lut, path=TONE_LUT_JSON):
+    q, tgt = lut
+    with open(path, "w") as f:
+        json.dump({
+            "note": "Histogram-matching LUT for the 'tone' variants: quantile "
+                    "q -> target masked luminance. Baked from the reference "
+                    "profile photo; rebuild with --profile <png> --save-lut.",
+            "bins": len(q),
+            "q": [round(float(v), 6) for v in q],
+            "tgt": [round(float(v), 6) for v in tgt],
+        }, f)
+    return path
+
+
+def apply_gazi_tone(im, lut, strength=1.0):
+    """Return a copy of `im` whose masked luminance histogram matches the
+    reference distribution held in `lut`.
     Chroma is preserved by scaling RGB about the new luminance.
     `strength` blends between the original luminance (0) and the full match (1);
     values below 1 keep more of the face's own contrast."""
-    if lut is None:
-        lut = gazi_tone_lut()
     q, tgt = lut
     a = np.asarray(im.convert("RGBA")).astype(np.float32)
     m = a[:, :, 3] > 128
@@ -238,13 +268,16 @@ def render(particles, size, font_size, ground, accent, ss=4):
 _TONE_CACHE = {}
 
 
-def build(src_path, outdir, size, variant, palettes, ss=4, write_data=True):
+def build(src_path, outdir, size, variant, palettes, ss=4, write_data=True,
+          lut=None):
     gamma, dfs, tone = VARIANTS[variant]
     fs = default_font_size(size) + dfs
     key = (src_path, tone)
     if key not in _TONE_CACHE:
         im = Image.open(src_path).convert("RGBA")
-        _TONE_CACHE[key] = apply_gazi_tone(im) if tone == "gazi" else im
+        if tone == "gazi":
+            im = apply_gazi_tone(im, lut if lut is not None else load_tone_lut())
+        _TONE_CACHE[key] = im
     src = _TONE_CACHE[key]
     canvas = compose(src, size)
     particles, rows, stats = sample(canvas, fs, gamma=gamma)
@@ -286,18 +319,30 @@ def main():
     ap.add_argument("--outdir", default=os.path.join(HERE, "out"))
     ap.add_argument("--sizes", default="400,280,220")
     ap.add_argument("--variants", default="baseline,gain,big,tone,tonebig")
-    ap.add_argument("--palettes", default="P1,P2,P3,GZ")
+    ap.add_argument("--palettes", default="DR")
     ap.add_argument("--ss", type=int, default=4)
+    ap.add_argument("--profile", default=None,
+                    help="rebuild the tone LUT from this reference PNG "
+                         "instead of loading gazi_tone_lut.json")
+    ap.add_argument("--save-lut", nargs="?", const=TONE_LUT_JSON, default=None,
+                    help="write the LUT built from --profile to this path "
+                         f"(default {TONE_LUT_JSON})")
     a = ap.parse_args()
 
     sizes = [int(s) for s in a.sizes.split(",")]
     variants = a.variants.split(",")
     palettes = a.palettes.split(",")
 
+    lut = None
+    if any(VARIANTS[v][2] == "gazi" for v in variants) or a.save_lut:
+        lut = load_tone_lut(a.profile)
+        if a.save_lut:
+            print("wrote", save_tone_lut(lut, a.save_lut))
+
     all_stats = []
     for v in variants:
         for s in sizes:
-            st = build(a.src, a.outdir, s, v, palettes, ss=a.ss)
+            st = build(a.src, a.outdir, s, v, palettes, ss=a.ss, lut=lut)
             all_stats.append(st)
             print(f"{v:9s} {s:3d}px font={st['font_size']}px "
                   f"grid={st['grid'][0]}x{st['grid'][1]} "

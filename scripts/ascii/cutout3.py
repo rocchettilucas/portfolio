@@ -1,38 +1,75 @@
 #!/usr/bin/env python
-"""THROWAWAY SPIKE (v3). EXIF-correct load -> rembg cutout -> 4:5 head+shoulders crop.
+"""EXIF-correct load -> rembg cutout -> 4:5 head+shoulders crop.
 
-Adapted from ascii-v2/cutout2.py. Source is selfie.png (1116x1960).
-Outputs cutout_full.png (full-frame RGBA cutout) and portrait.png (4:5 crop, 1200x1500).
+Source defaults to public/about/lucas.jpg (the suit photo). Outputs
+portrait.png (4:5 crop, 1200x1500 RGBA) next to this script -- that file is
+committed and is the source of truth for gazi_ascii.py. Intermediates
+(cutout_full.png, portrait_on_{light,dark}.png) go to --outdir, which is
+gitignored.
 """
+import argparse
 import os
+
 import numpy as np
 from PIL import Image, ImageOps, ImageFilter
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SRC = os.path.join(HERE, "selfie.png")
+DEFAULT_SRC = os.path.normpath(
+    os.path.join(HERE, "..", "..", "public", "about", "lucas.jpg"))
+
+
+def largest_component(alpha, thresh=100):
+    """Keep only the biggest blob of alpha > thresh; zero the rest.
+
+    rembg occasionally leaves specks (a hand at the frame edge, background
+    texture read as subject). The face anchor and the crop maths both key off
+    the alpha bbox, so one stray speck would drag the crop off the head.
+    """
+    from scipy import ndimage
+    m = alpha > thresh
+    lab, n = ndimage.label(m)
+    if n <= 1:
+        print(f"components: {n} (no pruning needed)")
+        return alpha
+    sizes = ndimage.sum(m, lab, range(1, n + 1))
+    keep = int(np.argmax(sizes)) + 1
+    print(f"components: {n}, keeping #{keep} "
+          f"({int(sizes[keep - 1])}px of {int(sizes.sum())}px)")
+    out = alpha.copy()
+    out[lab != keep] = 0
+    return out
 
 
 def main():
-    raw = Image.open(SRC)
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--src", default=DEFAULT_SRC)
+    ap.add_argument("--out", default=os.path.join(HERE, "portrait.png"))
+    ap.add_argument("--outdir", default=os.path.join(HERE, "out"))
+    ap.add_argument("--model", default="u2net_human_seg")
+    a = ap.parse_args()
+    os.makedirs(a.outdir, exist_ok=True)
+
+    raw = Image.open(a.src)
+    print("src", a.src)
     print("raw size", raw.size, "exif orientation", raw.getexif().get(274))
     img = ImageOps.exif_transpose(raw).convert("RGB")
     print("upright size", img.size)
 
     from rembg import remove, new_session
-    sess = new_session("u2net_human_seg")
+    sess = new_session(a.model)
     small = img.resize((img.width // 2, img.height // 2), Image.LANCZOS)
     cut_s = remove(small, session=sess, post_process_mask=True).convert("RGBA")
     mask = Image.fromarray(np.asarray(cut_s)[:, :, 3]).resize(img.size, Image.LANCZOS)
     mask = mask.filter(ImageFilter.GaussianBlur(2))
     cut = img.convert("RGBA")
     arr = np.asarray(cut).copy()
-    arr[:, :, 3] = np.asarray(mask)
+    arr[:, :, 3] = largest_component(np.asarray(mask))
     cut = Image.fromarray(arr)
-    cut.save(os.path.join(HERE, "cutout_full.png"))
+    cut.save(os.path.join(a.outdir, "cutout_full.png"))
 
-    a = np.asarray(cut)[:, :, 3]
+    alpha = np.asarray(cut)[:, :, 3]
     W, H = cut.size
-    m = a > 100
+    m = alpha > 100
     rows = np.where(m.sum(axis=1) > 8)[0]
     cols = np.where(m.sum(axis=0) > 8)[0]
     top, bot = int(rows.min()), int(rows.max())
@@ -82,12 +119,13 @@ def main():
     print("crop box", box, "->", (x1 - x0, y1 - y0), "ratio", (x1 - x0) / (y1 - y0))
     c = cut.crop(box)
     c = c.resize((1200, 1500), Image.LANCZOS)
-    c.save(os.path.join(HERE, "portrait.png"))
-    for name, bg in (("light", (247, 249, 248)), ("dark", (16, 25, 29))):
+    c.save(a.out)
+    for name, bg in (("light", (247, 249, 248)), ("dark", (26, 27, 38))):
         p = Image.new("RGB", c.size, bg)
         p.paste(c, (0, 0), c)
-        p.save(os.path.join(HERE, f"portrait_on_{name}.png"))
-    print("wrote portrait.png", c.size)
+        p.save(os.path.join(a.outdir, f"portrait_on_{name}.png"))
+    print("wrote", a.out, c.size)
 
 
-main()
+if __name__ == "__main__":
+    main()

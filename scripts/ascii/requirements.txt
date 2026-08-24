@@ -1,0 +1,9 @@
+# Python deps for the ASCII portrait pipeline (verified on Python 3.14).
+#   python3 -m venv scripts/ascii/.venv
+#   scripts/ascii/.venv/bin/pip install -r scripts/ascii/requirements.txt
+# Only cutout3.py needs rembg/onnxruntime; gazi_ascii.py needs numpy + Pillow.
+numpy==2.5.2
+pillow==12.3.0
+scipy==1.18.1
+rembg==2.0.81
+onnxruntime==1.29.0
