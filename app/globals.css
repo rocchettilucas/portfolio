@@ -47,6 +47,9 @@
     font-size: 15px;
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    /* Both bars are fixed, so the document reserves their 40px itself. The bottom bar
+       grows by the home-indicator inset on iOS, and the page has to clear that too. */
+    padding-block: 40px calc(40px + env(safe-area-inset-bottom));
   }
   /* Cleared by the 40px top bar plus a little air. */
   [id] { scroll-margin-top: 56px; }
@@ -66,6 +69,32 @@
   /* Every framed region on the page: a 1px rule and nothing else. No shadow, no blur,
      no gradient, and 4px is the largest radius anywhere in the design. */
   .tbox { border: 1px solid var(--border); border-radius: 4px; }
+
+  /* The two status bars. Opaque ground, one hairline on the inner edge, nothing else —
+     no blur, no shadow. 40px each, matching the body padding that reserves them. */
+  .bar { position: fixed; inset-inline: 0; z-index: 40; background: var(--bg); }
+  .bar-top { top: 0; border-bottom: 1px solid var(--border); }
+  .bar-bottom { bottom: 0; border-top: 1px solid var(--border); padding-bottom: env(safe-area-inset-bottom); }
+  .bar-inner {
+    display: flex; align-items: center; height: 40px;
+    max-width: 1040px; margin-inline: auto; padding-inline: 24px;
+    /* Matches the column's side rules below, so bar text and section text share one
+       left edge whether or not those rules are being drawn. */
+    border-inline: 1px solid transparent;
+  }
+  @media (max-width: 640px) { .bar-inner { padding-inline: 16px; } }
+
+  /* One frame: the content column carries the side rules that meet both bars' ends, so the
+     whole page reads as a single terminal window once there is room for them. */
+  .page {
+    max-width: 1040px; margin-inline: auto; min-height: calc(100dvh - 80px);
+    border-inline: 1px solid transparent;
+  }
+  @media (min-width: 1040px) { .page { border-inline-color: var(--border); } }
+
+  /* The nav turns into a swipeable strip on phones; a scrollbar there would eat the 40px. */
+  .strip { overflow-x: auto; scrollbar-width: none; }
+  .strip::-webkit-scrollbar { display: none; }
 
   /* The `$` that opens a prompt line — the only place pink appears outside active nav. */
   .prompt { color: var(--pink); user-select: none; }

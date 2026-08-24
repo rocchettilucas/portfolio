@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import TopBar from "@/components/terminal/TopBar";
+import BottomBar from "@/components/terminal/BottomBar";
+import Prompt from "@/components/terminal/Prompt";
 
 // A 404 is not a page anyone should reach from search.
 export const metadata: Metadata = {
@@ -9,15 +12,22 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <main
-      id="main"
-      className="mx-auto flex min-h-[70vh] max-w-[1040px] flex-col items-start justify-center px-6"
-    >
-      <p className="mb-3 text-muted">
-        <span className="prompt">$</span> cd ~/404
-      </p>
-      <h1 className="mb-4 text-2xl">That page doesn&apos;t exist.</h1>
-      <Link href="/">cd ~</Link>
-    </main>
+    <>
+      <TopBar />
+      <main id="main" className="page flex flex-col justify-center px-6 py-14 max-sm:px-4">
+        <h1 aria-label="Page not found" className="text-[15px] font-normal">
+          <Prompt command="cat /404" />
+        </h1>
+        <p className="mt-3 text-muted-strong">cat: /404: No such file or directory</p>
+        <p className="mt-6">
+          <span aria-hidden className="prompt">
+            $
+          </span>{" "}
+          <Link href="/">cd ~</Link>
+          <span className="text-muted-strong"> — back to the home page</span>
+        </p>
+      </main>
+      <BottomBar />
+    </>
   );
 }
