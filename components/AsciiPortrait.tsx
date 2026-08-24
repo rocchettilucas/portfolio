@@ -11,9 +11,31 @@ type Particle = { c: string; x: number; y: number; a: number };
 type AsciiData = { size: number; fontSize: number; particles: Particle[] };
 
 const DATA: Record<AsciiSize, AsciiData> = { 400: p400, 280: p280, 220: p220 };
-const ACCENT = [90, 235, 202] as const; // --accent #5AEBCA
+type Rgb = readonly [number, number, number];
+
+const ACCENT_FALLBACK: Rgb = [189, 147, 249]; // --accent #bd93f9
 // Owner-requested brightness lift over Gazi's original alphas.
 const ALPHA_GAIN = 1.15;
+
+/**
+ * The tint comes from the stylesheet, not from a second copy of the palette here: swapping
+ * the `--accent-rgb` block in `globals.css` retints the portrait with it. `getComputedStyle`
+ * is a layout read, so it happens once for the life of the page (the token is not themed at
+ * runtime) rather than on every resize bucket change.
+ */
+let cachedAccent: Rgb | null = null;
+
+function readAccent(): Rgb {
+  const raw = getComputedStyle(document.documentElement).getPropertyValue("--accent-rgb");
+  const parts = raw.trim().split(/[\s,]+/).map(Number);
+  if (parts.length !== 3 || parts.some((n) => !Number.isFinite(n))) return ACCENT_FALLBACK;
+  return [parts[0], parts[1], parts[2]];
+}
+
+function accent(): Rgb {
+  cachedAccent ??= readAccent();
+  return cachedAccent;
+}
 
 // Hover repulsion, tuned at size 400 and scaled by size/400 for the smaller buckets.
 const RADIUS = 90; // px around the pointer that reacts
@@ -42,6 +64,7 @@ function makePainter(
   y: Float32Array,
   a: Float32Array,
   glyph: Uint8Array,
+  tint: Rgb,
 ) {
   ctx.font = `${fontSize}px ui-monospace, Menlo, monospace`;
   ctx.textAlign = "center";
@@ -49,7 +72,7 @@ function makePainter(
   return () => {
     ctx.clearRect(0, 0, size, size);
     for (let i = 0; i < n; i++) {
-      ctx.fillStyle = `rgba(${ACCENT[0]},${ACCENT[1]},${ACCENT[2]},${a[i]})`;
+      ctx.fillStyle = `rgba(${tint[0]},${tint[1]},${tint[2]},${a[i]})`;
       ctx.fillText(chars[glyph[i]], x[i], y[i]);
     }
   };
@@ -106,7 +129,7 @@ export default function AsciiPortrait() {
     const curY = Float32Array.from(homeY);
     const curA = Float32Array.from(homeA);
 
-    const paint = makePainter(ctx, size, fontSize, chars, n, curX, curY, curA, glyph);
+    const paint = makePainter(ctx, size, fontSize, chars, n, curX, curY, curA, glyph, accent());
     paint();
 
     // Gate: pointer devices that can actually hover, and only where motion is welcome.

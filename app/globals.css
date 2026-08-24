@@ -113,8 +113,10 @@
   .banner { container-type: inline-size; overflow: hidden; }
   .banner pre {
     /* A JetBrains Mono cell advances ~0.6em, so cols * 0.6 * font-size is the block's
-       width: this is the largest size that still fits, capped at the design's 14px. */
-    font-size: min(14px, calc(100cqw / (var(--banner-cols) * 0.6)));
+       width: this is the largest size that still fits. The 16px cap is what the hero's
+       left column can actually hold at 1440 (53 cols * 0.6 * 16px = 509px of a 548px
+       column); at 14px the name read undersized against the whoami box beneath it. */
+    font-size: min(16px, calc(100cqw / (var(--banner-cols) * 0.6)));
     line-height: 1;
     color: var(--accent);
     margin: 0;

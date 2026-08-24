@@ -1,4 +1,4 @@
-import Banner from "@/components/Banner";
+import Hero from "@/components/Hero";
 import TopBar from "@/components/terminal/TopBar";
 import BottomBar from "@/components/terminal/BottomBar";
 
@@ -10,10 +10,7 @@ export default function Home() {
     <>
       <TopBar />
       <main id="main" className="page">
-        {/* Temporary mount so the banner can be seen; the Hero takes it over next task. */}
-        <div className="px-4 pt-10 sm:px-6">
-          <Banner />
-        </div>
+        <Hero />
       </main>
       <BottomBar />
     </>
