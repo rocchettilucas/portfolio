@@ -4,6 +4,13 @@ Regenerates the hero portrait data in `lib/ascii/`. Only needed when the source
 photo changes — the generated files are committed, so a normal build never runs
 this.
 
+**The shipped files are the `baseline` variant** (the exact Gazi pipeline, no
+tone LUT). They keep the historical `tone_*` filenames because
+`components/AsciiPortrait.tsx` imports those paths — do not rename them. The
+`tone` variants histogram-match onto a front-lit reference; the suit photo is
+backlit, so `tone` flattened the face into a silhouette and `baseline` keeps the
+brow, eyes, jaw and collar readable.
+
 Setup once (see `requirements.txt`; `.venv/` and `out/` are gitignored):
 
 ```
@@ -16,11 +23,12 @@ Then, from the repo root:
 # 1. cutout: public/about/lucas.jpg -> scripts/ascii/portrait.png (1200x1500, 4:5)
 scripts/ascii/.venv/bin/python scripts/ascii/cutout3.py
 
-# 2. generate: portrait.png -> scripts/ascii/out/tone_{400,280,220}.{json,txt} + DR previews
-scripts/ascii/.venv/bin/python scripts/ascii/gazi_ascii.py --variants tone --sizes 400,280,220 --palettes DR
+# 2. generate: portrait.png -> scripts/ascii/out/baseline_{400,280,220}.{json,txt} + DR previews
+scripts/ascii/.venv/bin/python scripts/ascii/gazi_ascii.py --variants baseline --sizes 400,280,220 --palettes DR
 
-# 3. copy into the app, then regenerate the <noscript> fallback module
-cp scripts/ascii/out/tone_{400,280,220}.json scripts/ascii/out/tone_400.txt lib/ascii/
+# 3. copy into the app under the tone_* names the component imports
+for s in 400 280 220; do cp scripts/ascii/out/baseline_$s.json lib/ascii/tone_$s.json; done
+cp scripts/ascii/out/baseline_400.txt lib/ascii/tone_400.txt
 ```
 
 After step 3, rewrite `lib/ascii/tone400.ts` so its `ASCII_TXT` template literal
@@ -33,10 +41,11 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
 - `cutout3.py --src <path>` overrides the source photo. It keeps only the
   largest connected alpha component, so stray rembg specks cannot drag the
   head-and-shoulders crop off centre. Intermediates land in `out/`.
-- The `tone`/`tonebig` variants histogram-match the portrait's luminance to a
-  reference distribution baked into `gazi_tone_lut.json`, which is why no
-  reference photo lives in the repo. `--profile <png>` rebuilds that LUT from an
-  image and `--save-lut` writes it back.
+- The `tone`/`tonebig` variants (not shipped, kept for a future front-lit photo)
+  histogram-match the portrait's luminance to a reference distribution baked
+  into `gazi_tone_lut.json`, which is why no reference photo lives in the repo.
+  `--profile <png>` rebuilds that LUT from an image and `--save-lut` writes it
+  back.
 - `--palettes DR` is the v3 terminal palette (ground `#1a1b26`, accent
   `#bd93f9`); previews are only a visual check and are never shipped.
 - Keep `lib/ascii/tone_400.json` under 8 KB gzipped (`gzip -c

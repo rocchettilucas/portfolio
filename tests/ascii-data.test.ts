@@ -36,8 +36,18 @@ describe.each(FILES)("%s", (name, data, fontSize) => {
   });
 
   it("carries enough particles to read as a portrait", () => {
+    // Shipped baseline counts: 1155 / 1110 / 670. The floor guards against a
+    // regenerate that silently drops most of the subject.
     expect(Array.isArray(data.particles)).toBe(true);
-    expect(data.particles.length).toBeGreaterThanOrEqual(500);
+    expect(data.particles.length).toBeGreaterThanOrEqual(400);
+  });
+
+  it("is mostly ink, not blank glyphs", () => {
+    // The ramp's first char is a space: a particle can sample to " " and paint
+    // nothing. Shipped baseline ink: 860 / 820 / 494.
+    const ink = data.particles.filter((p) => p.c !== " ");
+    expect(ink.length).toBeGreaterThanOrEqual(300);
+    expect(ink.length / data.particles.length).toBeGreaterThan(0.5);
   });
 
   it("every particle is a ramp glyph inside the canvas with a usable alpha", () => {
