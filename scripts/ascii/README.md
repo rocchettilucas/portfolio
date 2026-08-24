@@ -53,7 +53,7 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
 - `--headroom` (default 0.12) is the empty space kept above the hair, as a
   fraction of the face height, and `--fill` (default 0.8 — Gazi's value; the
   shipped portrait uses **0.92**) is how much of the square the aspect-fit image
-  covers. Both were loosened for v3: the hero frames the portrait in a box cut
+  covers. Both were loosened for v2: the hero frames the portrait in a box cut
   to the canvas, so Gazi's slack read as a dead strip above the head. Together
   they take the subject from 67% to 85% of the canvas height.
 - The `tone`/`tonebig` variants (not shipped, kept for a future front-lit photo)
@@ -61,7 +61,7 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
   into `gazi_tone_lut.json`, which is why no reference photo lives in the repo.
   `--profile <png>` rebuilds that LUT from an image and `--save-lut` writes it
   back.
-- `--palettes DR` is the v3 terminal palette (ground `#1a1b26`, accent
+- `--palettes DR` is the v2 terminal palette (ground `#1a1b26`, accent
   `#bd93f9`); previews are only a visual check and are never shipped.
 - Keep `lib/ascii/tone_400.json` under 8 KB gzipped (`gzip -c
   lib/ascii/tone_400.json | wc -c`) — it ships to every visitor. Currently
