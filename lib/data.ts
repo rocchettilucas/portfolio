@@ -1,8 +1,4 @@
 export type ProjectLinks = { github?: string; site?: string; appStore?: string; googlePlay?: string };
-export type ProjectImage =
-  | { kind: "spotlight"; src: string; alt: string }
-  | { kind: "logo"; src: string; alt: string }
-  | { kind: "folder" };
 export type Project = {
   slug: string;
   title: string;
@@ -10,9 +6,8 @@ export type Project = {
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
-  image: ProjectImage;      // for Spotlight
   meta?: string;            // small muted line, product facts only
-  placement: "spotlight" | "card" | "all";
+  placement: "featured" | "card";
 };
 
 export const projects: Project[] = [
@@ -27,9 +22,8 @@ export const projects: Project[] = [
       googlePlay: "https://play.google.com/store/apps/details?id=com.olivanceplatforms.gasmap",
     },
     logo: "/projects/gasmap-192.png",
-    image: { kind: "spotlight", src: "/projects/gasmap-spotlight.png", alt: "GasMap's map screen showing live station prices" },
     meta: "iOS and Android · 5.0 on the App Store",
-    placement: "spotlight",
+    placement: "featured",
   },
   {
     slug: "rocspace",
@@ -38,7 +32,6 @@ export const projects: Project[] = [
     tech: ["Rust", "Tauri", "React", "TypeScript"],
     links: { github: "https://github.com/rocchettilucas/RocSpace" },
     logo: "/projects/rocspace-192.png",
-    image: { kind: "logo", src: "/projects/rocspace-192.png", alt: "RocSpace logo" },
     placement: "card",
   },
   {
@@ -48,7 +41,6 @@ export const projects: Project[] = [
     tech: ["React", "Python", "FastAPI", "PostgreSQL"],
     links: { site: "https://winlane.gg" },
     logo: "/projects/winlane-192.png",
-    image: { kind: "logo", src: "/projects/winlane-192.png", alt: "WinLane.GG logo" },
     placement: "card",
   },
   {
@@ -58,8 +50,7 @@ export const projects: Project[] = [
     tech: ["React", "JavaScript", "NHL API"],
     links: { github: "https://github.com/rocchettilucas/NHL-Player-Dashboard", site: "https://nhl-player-dashboard.vercel.app" },
     logo: "/projects/nhl-192.png",
-    image: { kind: "logo", src: "/projects/nhl-192.png", alt: "NHL Player Dashboard logo" },
-    placement: "all",
+    placement: "card",
   },
   {
     slug: "pathwayr",
@@ -68,23 +59,55 @@ export const projects: Project[] = [
     tech: ["React", "TypeScript"],
     links: { site: "https://pathwayr.com" },
     logo: "/projects/pathwayr-192.png",
-    image: { kind: "spotlight", src: "/projects/pathwayr-spotlight.png", alt: "The PathwayR homepage, headlined “Research is a people’s game”" },
-    placement: "all",
+    placement: "card",
   },
   {
-    slug: "portfolio-v2",
-    title: "Portfolio v2",
-    blurb: "This site — the second iteration of my portfolio, rebuilt from the ground up with Next.js.",
+    slug: "portfolio-v3",
+    title: "Portfolio v3",
+    blurb: "This site — the third iteration of my portfolio, rebuilt as a terminal with Next.js.",
     tech: ["Next.js", "React", "TypeScript", "Tailwind"],
     links: { github: "https://github.com/rocchettilucas/portfolio-v2" },
-    image: { kind: "folder" },
-    placement: "all",
+    placement: "card",
   },
 ];
 
-export const homeSpotlight = projects.find((p) => p.placement === "spotlight")!;
-export const homeCards = projects.filter((p) => p.placement === "card");
-export const allProjects = projects.filter((p) => p.placement === "all");
+export const featuredProject = projects.find((p) => p.placement === "featured")!;
+export const cardProjects = projects.filter((p) => p.placement === "card");
+
+export type Role = { company: string; title: string; dates: string; site?: string; bullets: string[] };
+export const experience: Role[] = [
+  {
+    company: "WinLane.GG",
+    title: "Software Engineer",
+    dates: "Apr 2026 – present",
+    site: "https://winlane.gg",
+    bullets: [
+      "League of Legends matchup analytics used by 500+ players every month.",
+      "Versioned REST API over a normalized PostgreSQL schema, deployed on Vercel and Render.",
+      "A daily pipeline precomputes thousands of matchups so responses return in under five seconds.",
+      "Ranking model recalibrates automatically on every Riot data release.",
+    ],
+  },
+  {
+    company: "City of Mississauga",
+    title: "Technical Operations",
+    dates: "Jun 2023 – present",
+    bullets: [
+      "Technical setup, stage transitions and A/V for 70+ live events — Raptors 905, Toronto Rock, Steelheads and the Scotties Tournament of Hearts — at venues hosting 5,000+ attendees.",
+      "Live coordination across 5+ departments during events.",
+    ],
+  },
+  {
+    company: "Best Buy",
+    title: "Geek Squad Consultation Agent",
+    dates: "Oct 2020 – Feb 2021",
+    bullets: [
+      "Root-cause diagnosis of hardware, software and network issues across Windows, macOS and mobile.",
+      "OS installs, component-level upgrades and data recovery with verified integrity.",
+      "Explained technical findings to non-technical customers.",
+    ],
+  },
+];
 
 export type School = { name: string; logo: string; degree?: string; dates: string; lines: string[] };
 export const education: School[] = [
