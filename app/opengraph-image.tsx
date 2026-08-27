@@ -9,12 +9,12 @@ export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
 const BG = "#1a1b26";
-const FG = "#f8f8f2";
-const MUTED_STRONG = "#8b98c9";
-const BORDER = "rgba(248,248,242,0.12)";
-const ACCENT = "#bd93f9";
-const PINK = "#ff79c6";
-const CYAN = "#8be9fd";
+const FG = "#c0caf5";
+const MUTED_STRONG = "#8089b3";
+const BORDER = "rgba(192,202,245,0.13)";
+const ACCENT = "#7aa2f7";
+const PINK = "#bb9af7";
+const CYAN = "#7dcfff";
 const MONO = "JetBrains Mono";
 
 // Satori reads WOFF (not WOFF2), so the .woff copies from @fontsource are what get

@@ -13,7 +13,7 @@ type AsciiData = { size: number; fontSize: number; particles: Particle[] };
 const DATA: Record<AsciiSize, AsciiData> = { 400: p400, 280: p280, 220: p220 };
 type Rgb = readonly [number, number, number];
 
-const ACCENT_FALLBACK: Rgb = [189, 147, 249]; // --accent #bd93f9
+const ACCENT_FALLBACK: Rgb = [122, 162, 247]; // --accent #7aa2f7
 // Owner-requested brightness lift over Gazi's original alphas.
 const ALPHA_GAIN = 1.15;
 

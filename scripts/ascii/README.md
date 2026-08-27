@@ -62,7 +62,7 @@ bounds and that `tone400.ts` and `tone_400.txt` still agree.
   `--profile <png>` rebuilds that LUT from an image and `--save-lut` writes it
   back.
 - `--palettes DR` is the v2 terminal palette (ground `#1a1b26`, accent
-  `#bd93f9`); previews are only a visual check and are never shipped.
+  `#7aa2f7`); previews are only a visual check and are never shipped.
 - Keep `lib/ascii/tone_400.json` under 8 KB gzipped (`gzip -c
   lib/ascii/tone_400.json | wc -c`) — it ships to every visitor. Currently
   7,783 B. Filling the canvas raised the particle count by ~45%, so the

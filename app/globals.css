@@ -3,25 +3,25 @@
    and emits a real utility for every class name they merely quote. */
 @source not "../docs";
 
-/* Dracula, disciplined. Purple is the one accent — cyan for links, green for the status
-   dot, and pink is now reserved for the `$` glyph alone: the active nav item is a purple
-   glow pill (`.nav-item` below), not pink text. Nothing else gets colour.
-   Variant B (swap in place, one block): --bg:#16161e; --accent:#c9a6ff; --accent-rgb:201 166 255; */
+/* Tokyo Night, disciplined. Blue is the one accent — teal for links, green for the status
+   dot, and the theme's purple is reserved for the `$` glyph alone (it keeps the `--pink`
+   name so the utility classes did not have to move): the active nav item is a blue glow
+   pill (`.nav-item` below). Nothing else gets colour. */
 :root {
   --bg: #1a1b26;
-  --fg: #f8f8f2;
-  --muted: #6272a4;
-  /* #6272a4 is only 3.6:1 on the ground, so it is limited to box titles and hints;
+  --fg: #c0caf5;
+  --muted: #6a739c;
+  /* #6a739c is only ~3.7:1 on the ground, so it is limited to box titles and hints;
      dates, tech lists and other meta text use --muted-strong. */
-  --muted-strong: #8b98c9;
-  --border: rgba(248, 248, 242, 0.12);
-  --accent: #bd93f9;
-  --accent-rgb: 189 147 249;
-  --accent-tint: rgba(189, 147, 249, 0.10);
-  --pink: #ff79c6;
-  --cyan: #8be9fd;
-  --green: #50fa7b;
-  --selection: rgba(189, 147, 249, 0.25);
+  --muted-strong: #8089b3;
+  --border: rgba(192, 202, 245, 0.13);
+  --accent: #7aa2f7;
+  --accent-rgb: 122 162 247;
+  --accent-tint: rgba(122, 162, 247, 0.10);
+  --pink: #bb9af7;
+  --cyan: #7dcfff;
+  --green: #9ece6a;
+  --selection: rgba(122, 162, 247, 0.25);
 }
 
 @theme inline {
@@ -111,9 +111,9 @@
   }
   .nav-item:hover { background: var(--accent-tint); color: var(--accent); }
   .nav-item[aria-current] {
-    background: rgba(189, 147, 249, .18);
+    background: rgba(122, 162, 247, .18);
     color: var(--accent);
-    box-shadow: 0 0 0 1px rgba(189, 147, 249, .35), 0 0 14px rgba(189, 147, 249, .35);
+    box-shadow: 0 0 0 1px rgba(122, 162, 247, .35), 0 0 14px rgba(122, 162, 247, .35);
   }
   /* Below 900px the icons stay and the words go: with labels the five items need ~540px,
      which only clears beside the name and the right cluster at ~900px. Phones fit the
