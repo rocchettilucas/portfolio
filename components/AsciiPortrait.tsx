@@ -44,6 +44,16 @@ const EASE = 0.15; // per-frame approach to the target, position and alpha alike
 const SETTLED_PX = 0.05; // closer to home than this and the glyph counts as parked
 const SETTLED_ALPHA = 0.003;
 
+// Load-in: every glyph starts somewhere inside a +/-60px box around its home (at size 400,
+// scaled with the bucket) at alpha 0 and is carried in by the same easing the hover repel
+// uses. INTRO_EASE is gentler than EASE because the settle here is the whole effect rather
+// than a recovery nobody watches: an exponential approach from 60px needs
+// log(SETTLED_PX / 60) / log(1 - ease) frames to park, which is ~44 frames (0.73s at 60fps)
+// at EASE 0.15 — quick enough to read as a snap. 0.12 stretches that to ~55 frames, ~0.9s.
+// It applies only until the intro has settled once; the hover repel then runs at EASE.
+const SCATTER = 60;
+const INTRO_EASE = 0.12;
+
 /**
  * Builds the per-frame painter. Deliberately `fillText` with an `rgba(accent, a)` fill — the
  * exact call the static-only version made — so the resting frame is byte-identical to it.
@@ -78,6 +88,19 @@ function makePainter(
   };
 }
 
+/**
+ * The portrait, painted as ~1100 accent-tinted glyphs on a canvas.
+ *
+ * Two pieces of motion, both driven by the same one-pole easing in `advance` and the same
+ * on-demand rAF loop, which only runs while something is off its resting position:
+ *
+ *  - a load-in, once per size bucket: the glyphs are seeded scattered and invisible and
+ *    drift home over ~0.9s. The loop's final act is to snap `cur` onto `home` and repaint,
+ *    so the frame it leaves behind is byte-identical to the plain static draw.
+ *  - the hover repel, on pointer devices, which then takes over for the rest of the visit.
+ *
+ * Under `prefers-reduced-motion` neither happens: the portrait is drawn once, at rest.
+ */
 export default function AsciiPortrait() {
   const ref = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState<AsciiSize>(400);
@@ -110,7 +133,8 @@ export default function AsciiPortrait() {
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Flatten the particle objects once. `home` is the resting state the portrait always
-    // returns to; `cur` is what actually gets painted.
+    // returns to — from the load-in scatter and from every hover — and `cur` is what
+    // actually gets painted.
     const chars = [...new Set(particles.map((p) => p.c))];
     const slot = new Map(chars.map((c, i) => [c, i]));
     const n = particles.length;
@@ -130,13 +154,13 @@ export default function AsciiPortrait() {
     const curA = Float32Array.from(homeA);
 
     const paint = makePainter(ctx, size, fontSize, chars, n, curX, curY, curA, glyph, accent());
-    paint();
 
-    // Gate: pointer devices that can actually hover, and only where motion is welcome.
-    // Everywhere else the single static draw above is the whole story, exactly as before.
-    const hoverable = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (!hoverable || reduced) return;
+    // Where motion is unwelcome the portrait is a single static draw and nothing else —
+    // no scatter, no loop, no listeners.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      paint();
+      return;
+    }
 
     const scale = size / 400;
     const radius = RADIUS * scale;
@@ -145,10 +169,23 @@ export default function AsciiPortrait() {
     let px = 0;
     let py = 0;
     let inside = false;
+    // True until the glyphs have parked once. `advance` eases at INTRO_EASE while it is set.
+    let intro = true;
+
+    // Blow the portrait apart before the first frame. Offsets are drawn here rather than
+    // baked into the data because they must differ per visit — and this only runs on the
+    // client, so `Math.random` can never disagree with anything the server rendered.
+    const spread = SCATTER * scale;
+    for (let i = 0; i < n; i++) {
+      curX[i] = homeX[i] + (Math.random() * 2 - 1) * spread;
+      curY[i] = homeY[i] + (Math.random() * 2 - 1) * spread;
+      curA[i] = 0;
+    }
 
     /** Eases every glyph one frame toward its target. Returns true while anything is off home. */
     const advance = () => {
       let moving = false;
+      const ease = intro ? INTRO_EASE : EASE;
       for (let i = 0; i < n; i++) {
         let tx = homeX[i];
         let ty = homeY[i];
@@ -167,9 +204,9 @@ export default function AsciiPortrait() {
             ta += (1 - ta) * s; // and brightened toward full accent
           }
         }
-        const nx = curX[i] + (tx - curX[i]) * EASE;
-        const ny = curY[i] + (ty - curY[i]) * EASE;
-        const na = curA[i] + (ta - curA[i]) * EASE;
+        const nx = curX[i] + (tx - curX[i]) * ease;
+        const ny = curY[i] + (ty - curY[i]) * ease;
+        const na = curA[i] + (ta - curA[i]) * ease;
         curX[i] = nx;
         curY[i] = ny;
         curA[i] = na;
@@ -194,6 +231,7 @@ export default function AsciiPortrait() {
     const tick = () => {
       raf = 0;
       const moving = advance();
+      if (!moving) intro = false; // the load-in is over the first time everything parks
       paint();
       // No idle animation: the loop lives only while the pointer is here or things are settling.
       if (inside || moving) raf = requestAnimationFrame(tick);
@@ -201,6 +239,11 @@ export default function AsciiPortrait() {
     const wake = () => {
       if (!raf) raf = requestAnimationFrame(tick);
     };
+
+    // Nothing is painted yet: the scattered state is at alpha 0, so the first visible frame
+    // is the one this loop produces. It ends by snapping to `home` and repainting, which
+    // makes the resting frame byte-identical to the static draw above.
+    wake();
 
     const onMove = (e: PointerEvent) => {
       // The CSS box is exactly `size`, so client coords map 1:1 onto particle coords.
@@ -215,13 +258,20 @@ export default function AsciiPortrait() {
       wake(); // keep running just long enough to ease everything home
     };
 
-    canvas.addEventListener("pointermove", onMove);
-    canvas.addEventListener("pointerleave", onLeave);
-    canvas.addEventListener("pointercancel", onLeave);
+    // The repel is for pointer devices that can actually hover; on touch the load-in above
+    // is the whole story and the portrait then rests.
+    const hoverable = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+    if (hoverable) {
+      canvas.addEventListener("pointermove", onMove);
+      canvas.addEventListener("pointerleave", onLeave);
+      canvas.addEventListener("pointercancel", onLeave);
+    }
     return () => {
-      canvas.removeEventListener("pointermove", onMove);
-      canvas.removeEventListener("pointerleave", onLeave);
-      canvas.removeEventListener("pointercancel", onLeave);
+      if (hoverable) {
+        canvas.removeEventListener("pointermove", onMove);
+        canvas.removeEventListener("pointerleave", onLeave);
+        canvas.removeEventListener("pointercancel", onLeave);
+      }
       if (raf) cancelAnimationFrame(raf);
     };
   }, [size]);
