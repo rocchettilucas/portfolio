@@ -1,5 +1,6 @@
 import AsciiPortrait from "@/components/AsciiPortrait";
 import Box from "@/components/terminal/Box";
+import { MailIcon } from "@/components/icons";
 import { site } from "@/lib/site";
 
 /**
@@ -30,7 +31,7 @@ export default function Hero() {
 
       <div className="hero-in min-w-0">
         <h1 className="text-[40px] font-bold leading-tight max-sm:text-[30px]">
-          Hey, I&apos;m <span className="text-accent">Lucas</span>
+          Hi, I&apos;m <span className="text-accent">Lucas</span>
           <span aria-hidden className="caret caret-hero" />
         </h1>
         <p className="mt-4 max-w-[60ch]">
@@ -38,7 +39,8 @@ export default function Hero() {
           most recently GasMap, a gas-price app for iOS and Android, and RocSpace, a desktop workspace
           for coding agents. Recent Computer Science graduate from the University of Toronto.
         </p>
-        <a href={`mailto:${site.email}`} className="btn mt-6">
+        <a href={`mailto:${site.email}`} className="btn mt-8">
+          <MailIcon width={16} height={16} aria-hidden />
           Email me
         </a>
       </div>

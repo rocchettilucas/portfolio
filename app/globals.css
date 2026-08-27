@@ -133,7 +133,7 @@
      prompt rather than a finished line. Slightly narrower and shorter than the default
      because it sits against 40px display type instead of 15px body text. */
   .caret-hero {
-    width: 0.6em; height: 0.95em; margin-left: 0.15em; vertical-align: -0.08em;
+    width: 0.6em; height: 0.95em; margin-left: 0.35em; vertical-align: -0.08em;
     animation: caret-blink 1s step-end infinite;
   }
 
@@ -186,6 +186,9 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
-  .caret, .caret-hero { animation: none; }
+  .caret { animation: none; }
+  /* The hero caret keeps blinking even here: one 1em block at 1Hz is a terminal idiom,
+     not motion that moves content, and without it the greeting reads as a typo. */
+  .caret-hero { animation: caret-blink 1s step-end infinite !important; }
   .hero-in { animation: none; }
 }
