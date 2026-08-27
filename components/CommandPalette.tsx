@@ -5,7 +5,7 @@ import Prompt from "@/components/terminal/Prompt";
 import { complete, runCommand } from "@/lib/commands";
 
 // The hidden terminal. It is mounted once in the root layout and renders nothing until
-// someone presses `/` (or `~`, or the top bar's `>_` button), so it costs one keydown
+// someone presses `/` (or `~`), so it costs one keydown
 // listener on a page that otherwise works entirely without it — nothing here is a gate in
 // front of content, it is a shortcut past the scrolling.
 
@@ -79,10 +79,8 @@ export default function CommandPalette() {
       openPalette();
     };
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("palette:open", openPalette);
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("palette:open", openPalette);
     };
   }, [openPalette]);
 
