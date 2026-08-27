@@ -4,12 +4,11 @@ import Section from "@/components/terminal/Section";
 import { education } from "@/lib/data";
 
 // The heading is `ls ~/education`, so each entry is framed as one of the directories that
-// listing would have printed. The names are too long (and, for the club, too acronym-heavy)
-// to slugify into anything readable, so the short form is spelled out per school; anything
-// added to the data without an entry here falls back to a slug of its name.
+// listing would have printed. The names are too long to slugify into anything readable, so
+// the short form is spelled out per school; anything added to the data without an entry
+// here falls back to a slug of its name.
 const DIRS: Record<string, string> = {
   "University of Toronto": "university-of-toronto",
-  "Google Developer Student Club — UTM": "gdsc-utm",
 };
 
 function dirName(name: string) {
@@ -18,9 +17,8 @@ function dirName(name: string) {
 }
 
 /**
- * `ls ~/education` — the degree and the club, one box each. The logos are the only images
- * on the page below the hero; they sit on white because both marks are drawn for a light
- * ground and would otherwise lose their outlines against the terminal.
+ * `ls ~/education` — the degree, one box. The logo sits on white because the mark is drawn
+ * for a light ground and would otherwise lose its outline against the terminal.
  */
 export default function Education() {
   return (
