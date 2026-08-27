@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
-import { projects, featuredProject, cardProjects, experience, education, coreStack } from "@/lib/data";
+import { projects, featuredProject, cardProjects, experience, education, skillGroups } from "@/lib/data";
 
 const BANNED = /sole engineer|co-founder|open to work|open to roles|scrap|crawler/i;
-const ONE_SENTENCE = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length === 1;
+const SENTENCES = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length;
 
 describe("projects", () => {
   it("has exactly one featured project (GasMap), listed first", () => {
@@ -12,19 +12,31 @@ describe("projects", () => {
     expect(projects[0].slug).toBe("gasmap");
     expect(projects.filter(p => p.placement === "featured")).toHaveLength(1);
   });
-  it("lists all six projects, the other five as cards in order", () => {
-    expect(projects).toHaveLength(6);
-    expect(cardProjects.map(p => p.slug)).toEqual(["rocspace", "winlane", "nhl-dashboard", "pathwayr", "portfolio-v2"]);
+  it("lists the four projects in order, with rocspace and winlane as home cards", () => {
+    expect(projects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane", "pathwayr"]);
+    expect(cardProjects.map(p => p.slug)).toEqual(["rocspace", "winlane"]);
   });
-  it("every project has `logo` except portfolio-v2", () => {
-    for (const p of projects.filter(p => p.slug !== "portfolio-v2")) expect(p.logo, p.slug).toBeTruthy();
-    expect(projects.find(p => p.slug === "portfolio-v2")!.logo).toBeUndefined();
+  it("every project has a logo and a /projects/<slug>-shot.webp screenshot", () => {
+    for (const p of projects) {
+      expect(p.logo, p.slug).toBeTruthy();
+      expect(p.image, p.slug).toBe(`/projects/${p.slug}-shot.webp`);
+    }
   });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
     for (const p of projects) {
-      expect(ONE_SENTENCE(p.blurb), p.slug).toBe(true);
+      expect(SENTENCES(p.blurb), p.slug).toBe(1);
       expect(BANNED.test(p.blurb), p.slug).toBe(false);
       expect(BANNED.test(p.meta ?? ""), p.slug).toBe(false);
+    }
+  });
+  it("every description is 2-3 items, one sentence each, with no banned phrases", () => {
+    for (const p of projects) {
+      expect(p.description.length, p.slug).toBeGreaterThanOrEqual(2);
+      expect(p.description.length, p.slug).toBeLessThanOrEqual(3);
+      for (const line of p.description) {
+        expect(SENTENCES(line), `${p.slug}: ${line}`).toBe(1);
+        expect(BANNED.test(line), `${p.slug}: ${line}`).toBe(false);
+      }
     }
   });
   it("gasmap has store links and site, no github", () => {
@@ -34,44 +46,55 @@ describe("projects", () => {
     expect(g.links.site).toBe("https://gasmap.ai");
     expect(g.links.github).toBeUndefined();
   });
-  it("nhl has a public github link and no '#' sentinels anywhere", () => {
-    const n = projects.find(p => p.slug === "nhl-dashboard")!;
-    expect(n.links.github).toBe("https://github.com/rocchettilucas/NHL-Player-Dashboard");
+  it("rocspace is the only project with a github link, and no '#' sentinels anywhere", () => {
+    expect(projects.filter(p => p.links.github).map(p => p.slug)).toEqual(["rocspace"]);
+    expect(projects.find(p => p.slug === "rocspace")!.links.github).toBe("https://github.com/rocchettilucas/RocSpace");
     for (const p of projects) for (const v of Object.values(p.links)) expect(v).not.toBe("#");
   });
 });
 
 describe("experience", () => {
-  it("has three roles with 2-4 bullets each and no banned phrases", () => {
-    expect(experience.map(r => r.company)).toEqual(["WinLane.GG", "City of Mississauga", "Best Buy"]);
+  it("has the two current roles with 2-3 bullets each and no banned phrases", () => {
+    expect(experience.map(r => r.company)).toEqual(["Olivance Platforms · GasMap", "PathwayR"]);
     for (const r of experience) {
+      expect(r.title, r.company).toBe(r.company === "PathwayR" ? "Software Developer" : "Software Engineer");
+      expect(r.site, r.company).toMatch(/^https:\/\//);
       expect(r.bullets.length).toBeGreaterThanOrEqual(2);
-      expect(r.bullets.length).toBeLessThanOrEqual(4);
+      expect(r.bullets.length).toBeLessThanOrEqual(3);
       expect(BANNED.test(r.title + r.bullets.join(" "))).toBe(false);
     }
   });
 });
 
-describe("education & stack", () => {
-  it("lists UofT with GPA and Dean's List", () => {
-    expect(education[0].name).toBe("University of Toronto");
+describe("education & skills", () => {
+  it("lists University of Toronto only, with GPA and Dean's List", () => {
+    expect(education.map(e => e.name)).toEqual(["University of Toronto"]);
+    expect(education[0].dates).toBe("2021 – 2026");
     expect(education[0].lines.join(" ")).toMatch(/3\.78/);
     expect(education[0].lines.join(" ")).toMatch(/Dean/);
   });
-  it("core stack is exactly six items with icon paths under /icons/", () => {
-    expect(coreStack).toHaveLength(6);
-    for (const s of coreStack) expect(s.icon).toMatch(/^\/icons\/.+\.svg$/);
+  it("groups skills into languages, frameworks and databases", () => {
+    expect(skillGroups.map(g => g.title)).toEqual(["Languages", "Frameworks & runtimes", "Databases & caching"]);
+    expect(skillGroups[0].items.map(s => s.name)).toEqual(["TypeScript", "Python", "JavaScript", "Rust", "SQL", "C#"]);
+    expect(skillGroups[1].items.map(s => s.name)).toEqual(["React", "React Native", "Expo", "Node.js", "FastAPI", "Tauri", "Tokio"]);
+    expect(skillGroups[2].items.map(s => s.name)).toEqual(["PostgreSQL", "PostGIS", "Redis"]);
+  });
+  it("every skill points at an svg under /icons/", () => {
+    for (const g of skillGroups) for (const s of g.items) expect(s.icon, s.name).toMatch(/^\/icons\/[a-z0-9]+\.svg$/);
   });
 });
 
 describe("static assets", () => {
   const inPublic = (p: string) => fs.existsSync(path.join(process.cwd(), "public", p));
 
-  it("every referenced icon and logo exists under public/", () => {
-    for (const s of coreStack) expect(inPublic(s.icon), s.icon).toBe(true);
+  // Screenshots (`image`) and the newer skill icons arrive with their own tasks, so only the
+  // assets this module has always shipped are asserted to exist; the checks above cover shape.
+  it("every referenced logo exists under public/", () => {
     for (const e of education) expect(inPublic(e.logo), e.logo).toBe(true);
-    for (const p of projects) {
-      if (p.logo) expect(inPublic(p.logo), p.logo).toBe(true);
-    }
+    for (const p of projects) if (p.logo) expect(inPublic(p.logo), p.logo).toBe(true);
+  });
+  it("drops the assets of the removed entries", () => {
+    expect(inPublic("/gdsc.png")).toBe(false);
+    expect(inPublic("/projects/nhl-192.png")).toBe(false);
   });
 });

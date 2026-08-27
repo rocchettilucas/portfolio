@@ -23,7 +23,6 @@ describe("runCommand", () => {
     expect(action.lines).toHaveLength(COMMANDS.length);
     const descriptions: Record<(typeof COMMANDS)[number], string> = {
       help: "list commands",
-      about: "who I am",
       projects: "what I've built",
       experience: "where I've worked",
       skills: "what I work with",
@@ -39,14 +38,13 @@ describe("runCommand", () => {
     });
   });
 
-  it("prints whoami with exactly four lines", () => {
+  it("prints whoami with exactly three lines", () => {
     expect(runCommand("whoami")).toEqual({
       kind: "print",
       lines: [
         "Lucas Rocchetti",
-        "Based in: Toronto, Canada",
-        "Role: Software Engineer",
-        "Building apps and tools people actually use — from a gas-price app on iOS and Android to a desktop workspace for coding agents.",
+        "Software engineer · Toronto, Canada",
+        "I'm a software engineer based in Toronto.",
       ],
     });
   });
@@ -65,7 +63,7 @@ describe("runCommand", () => {
   });
 
   it("ignores extra arguments after the first token", () => {
-    expect(runCommand("about me")).toEqual({ kind: "scroll", id: "about" });
+    expect(runCommand("skills please")).toEqual({ kind: "scroll", id: "skills" });
   });
 
   it("returns notfound with the raw first token, preserving case", () => {
@@ -74,6 +72,12 @@ describe("runCommand", () => {
 
   it("returns notfound for an unknown command", () => {
     expect(runCommand("nope")).toEqual({ kind: "notfound", name: "nope" });
+  });
+
+  // `about` was folded into the hero, so it is no longer a section or a command.
+  it("no longer recognizes about", () => {
+    expect(runCommand("about")).toEqual({ kind: "notfound", name: "about" });
+    expect((COMMANDS as readonly string[]).includes("about")).toBe(false);
   });
 });
 

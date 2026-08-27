@@ -17,7 +17,6 @@ export type Action =
 
 export const COMMANDS = [
   "help",
-  "about",
   "projects",
   "experience",
   "skills",
@@ -33,7 +32,6 @@ type Command = (typeof COMMANDS)[number];
 
 const DESCRIPTIONS: Record<Command, string> = {
   help: "list commands",
-  about: "who I am",
   projects: "what I've built",
   experience: "where I've worked",
   skills: "what I work with",
@@ -72,9 +70,8 @@ export function runCommand(input: string): Action {
         kind: "print",
         lines: [
           "Lucas Rocchetti",
-          "Based in: Toronto, Canada",
-          "Role: Software Engineer",
-          "Building apps and tools people actually use — from a gas-price app on iOS and Android to a desktop workspace for coding agents.",
+          "Software engineer · Toronto, Canada",
+          "I'm a software engineer based in Toronto.",
         ],
       };
     case "clear":

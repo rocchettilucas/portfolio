@@ -4,7 +4,10 @@ import { site } from "@/lib/site";
 // Fixed date, bumped by hand: `new Date()` would claim a fresh change on every build.
 const lastModified = new Date("2026-08-24");
 
-// Single-page site — v2 folded `/projects` back into the one scrollable page.
+// The scrollable home page plus the /projects listing.
 export default function sitemap(): MetadataRoute.Sitemap {
-  return [{ url: site.url, lastModified, changeFrequency: "monthly", priority: 1 }];
+  return [
+    { url: site.url, lastModified, changeFrequency: "monthly", priority: 1 },
+    { url: `${site.url}/projects`, lastModified, changeFrequency: "monthly", priority: 0.8 },
+  ];
 }

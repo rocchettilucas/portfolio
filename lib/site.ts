@@ -3,13 +3,13 @@ export const site = {
   url: "https://lucasrocchetti.com",
   email: "lucasrocchetti@outlook.com",
   // Rendered by the bottom status bar as `v2.0.0`. Bump it with the site, not the package.
-  version: "2.0.0",
+  version: "2.1.0",
   socials: [
     { label: "GitHub", href: "https://github.com/rocchettilucas" },
     { label: "LinkedIn", href: "https://linkedin.com/in/lucasrocchetti" },
     { label: "Email", href: "mailto:lucasrocchetti@outlook.com" },
   ] as const,
-  description: "Software engineer in Toronto building apps and tools people actually use — GasMap, WinLane.GG, RocSpace.",
+  description: "Software engineer in Toronto building apps and developer tools — GasMap, RocSpace, WinLane.GG.",
 };
 
 export type SocialLabel = (typeof site.socials)[number]["label"];

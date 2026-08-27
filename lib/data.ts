@@ -2,12 +2,15 @@ export type ProjectLinks = { github?: string; site?: string; appStore?: string; 
 export type Project = {
   slug: string;
   title: string;
-  blurb: string;            // exactly one sentence
+  blurb: string;            // exactly one sentence — the card line
+  description: string[];    // 2-3 short sentences for /projects, one per array item
+  image: string;            // 16/10 screenshot for the /projects spotlight
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
   meta?: string;            // small muted line, product facts only
-  placement: "featured" | "card";
+  // "featured" and "card" are what the home page renders; "list" only appears on /projects.
+  placement: "featured" | "card" | "list";
 };
 
 export const projects: Project[] = [
@@ -15,7 +18,13 @@ export const projects: Project[] = [
     slug: "gasmap",
     title: "GasMap",
     blurb: "Find the cheapest gas nearby, with live prices and trends for every station around you.",
-    tech: ["React Native", "Expo", "Fastify", "PostgreSQL"],
+    description: [
+      "Cross-platform gas-price app for Ontario drivers, with live prices for 3,000+ stations.",
+      "Reached 200+ downloads in its first month and holds a 5.0 rating on the App Store.",
+      "React Native client on a FastAPI geospatial API backed by PostgreSQL/PostGIS and Redis.",
+    ],
+    image: "/projects/gasmap-shot.webp",
+    tech: ["React Native", "Expo", "FastAPI", "PostgreSQL / PostGIS", "Redis"],
     links: {
       site: "https://gasmap.ai",
       appStore: "https://apps.apple.com/ca/app/gasmap/id6789210117",
@@ -28,8 +37,13 @@ export const projects: Project[] = [
   {
     slug: "rocspace",
     title: "RocSpace",
-    blurb: "An agentic development environment for running Claude Code, Codex and other coding agents side by side.",
-    tech: ["Rust", "Tauri", "React", "TypeScript"],
+    blurb: "A macOS agentic development environment that runs coding agents and shells side by side in persistent workspaces.",
+    description: [
+      "Open-source macOS workspace for running Claude Code, Codex and other CLI agents beside real shells, with task tracking that lives in the repository through a bundled MCP server.",
+      "Terminal I/O runs on dedicated threads off the async IPC loop, so 16 concurrent sessions stay responsive.",
+    ],
+    image: "/projects/rocspace-shot.webp",
+    tech: ["Rust", "Tauri 2", "React", "TypeScript"],
     links: { github: "https://github.com/rocchettilucas/RocSpace" },
     logo: "/projects/rocspace-192.png",
     placement: "card",
@@ -37,37 +51,30 @@ export const projects: Project[] = [
   {
     slug: "winlane",
     title: "WinLane.GG",
-    blurb: "Counter-pick analytics for League of Legends, used by 500+ players every month.",
-    tech: ["React", "Python", "FastAPI", "PostgreSQL"],
+    blurb: "Champion-pick recommendations for League of Legends, ranked against the enemy team across 170+ champions.",
+    description: [
+      "Ranks champion picks against an opponent's team composition across five roles, with 4,500+ indexed matchup pages.",
+      "A FastAPI/PostgreSQL pipeline pulls Riot's Data Dragon after each patch and recomputes recommendations.",
+    ],
+    image: "/projects/winlane-shot.webp",
+    tech: ["React", "TypeScript", "FastAPI", "PostgreSQL"],
     links: { site: "https://winlane.gg" },
     logo: "/projects/winlane-192.png",
     placement: "card",
   },
   {
-    slug: "nhl-dashboard",
-    title: "NHL Player Dashboard",
-    blurb: "Career and game-by-game stats for 23,000+ NHL players, with live scores and comparisons.",
-    tech: ["React", "JavaScript", "NHL API"],
-    links: { github: "https://github.com/rocchettilucas/NHL-Player-Dashboard", site: "https://nhl-player-dashboard.vercel.app" },
-    logo: "/projects/nhl-192.png",
-    placement: "card",
-  },
-  {
     slug: "pathwayr",
     title: "PathwayR",
-    blurb: "Authentication and role-based access for a research platform used by students at five universities.",
-    tech: ["React", "TypeScript"],
+    blurb: "Role-based registration and onboarding for a research-opportunity platform used at five Canadian universities.",
+    description: [
+      "Registration and onboarding for students, mentors and professors on a platform serving five universities.",
+      "Institutional-domain verification, admin approval and role-specific flows across 1,500+ professor profiles and 500+ scholarships.",
+    ],
+    image: "/projects/pathwayr-shot.webp",
+    tech: ["React", "Node.js", "PostgreSQL"],
     links: { site: "https://pathwayr.com" },
     logo: "/projects/pathwayr-192.png",
-    placement: "card",
-  },
-  {
-    slug: "portfolio-v2",
-    title: "Portfolio v2",
-    blurb: "This site — the second iteration of my portfolio, rebuilt as a terminal with Next.js.",
-    tech: ["Next.js", "React", "TypeScript", "Tailwind"],
-    links: { github: "https://github.com/rocchettilucas/portfolio-v2" },
-    placement: "card",
+    placement: "list",
   },
 ];
 
@@ -77,34 +84,24 @@ export const cardProjects = projects.filter((p) => p.placement === "card");
 export type Role = { company: string; title: string; dates: string; site?: string; bullets: string[] };
 export const experience: Role[] = [
   {
-    company: "WinLane.GG",
+    company: "Olivance Platforms · GasMap",
     title: "Software Engineer",
-    dates: "Apr 2026 – present",
-    site: "https://winlane.gg",
+    dates: "Jun 2026 – present",
+    site: "https://gasmap.ai",
     bullets: [
-      "League of Legends matchup analytics used by 500+ players every month.",
-      "Versioned REST API over a normalized PostgreSQL schema, deployed on Vercel and Render.",
-      "A daily pipeline precomputes thousands of matchups so responses return in under five seconds.",
-      "Ranking model recalibrates automatically on every Riot data release.",
+      "Built and launched GasMap, a gas-price app for iOS and Android — 200+ downloads across Ontario in its first month.",
+      "React Native client and FastAPI geospatial API serving live prices for 3,000+ stations by radius, map bounds and location-verified reports.",
+      "Cut initial map load from 17.7 s to 234 ms by rewriting the station lookup to use an existing index — no schema change, no downtime.",
     ],
   },
   {
-    company: "City of Mississauga",
-    title: "Technical Operations",
-    dates: "Jun 2023 – present",
+    company: "PathwayR",
+    title: "Software Developer",
+    dates: "Jan 2026 – Apr 2026",
+    site: "https://pathwayr.com",
     bullets: [
-      "Technical setup, stage transitions and A/V for 70+ live events — Raptors 905, Toronto Rock, Steelheads and the Scotties Tournament of Hearts — at venues hosting 5,000+ attendees.",
-      "Live coordination across 5+ departments during events.",
-    ],
-  },
-  {
-    company: "Best Buy",
-    title: "Geek Squad Consultation Agent",
-    dates: "Oct 2020 – Feb 2021",
-    bullets: [
-      "Root-cause diagnosis of hardware, software and network issues across Windows, macOS and mobile.",
-      "OS installs, component-level upgrades and data recovery with verified integrity.",
-      "Explained technical findings to non-technical customers.",
+      "Built role-based registration for students, mentors and professors on a research platform serving five Canadian universities.",
+      "Institutional-domain verification, admin approval and role-specific onboarding across 1,500+ professor profiles.",
     ],
   },
 ];
@@ -115,24 +112,45 @@ export const education: School[] = [
     name: "University of Toronto",
     logo: "/uoft.png",
     degree: "Honours Bachelor of Science, Computer Science & Information Technology",
-    dates: "2026",
-    lines: ["GPA 3.78 / 4.00 · Dean's List", "Data Structures · Algorithms · Operating Systems · Machine Learning · Artificial Intelligence"],
-  },
-  {
-    name: "Google Developer Student Club — UTM",
-    logo: "/gdsc.png",
-    degree: "Student Developer",
-    dates: "Sept 2024 – Apr 2026",
-    lines: ["DeerHacks — Top 3 finish"],
+    dates: "2021 – 2026",
+    lines: ["GPA 3.78 / 4.00 · Dean's List", "Data Structures · Algorithms · Operating Systems · Machine Learning"],
   },
 ];
 
 export type Stack = { name: string; icon: string };
-export const coreStack: Stack[] = [
-  { name: "TypeScript", icon: "/icons/typescript.svg" },
-  { name: "React & React Native", icon: "/icons/react.svg" },
-  { name: "Rust", icon: "/icons/rust.svg" },
-  { name: "Python & FastAPI", icon: "/icons/python.svg" },
-  { name: "PostgreSQL", icon: "/icons/postgresql.svg" },
-  { name: "Node.js", icon: "/icons/nodejs.svg" },
+export type SkillGroup = { title: string; items: Stack[] };
+
+// Three boxes on the page, in this order. Icons live in public/icons/.
+export const skillGroups: SkillGroup[] = [
+  {
+    title: "Languages",
+    items: [
+      { name: "TypeScript", icon: "/icons/typescript.svg" },
+      { name: "Python", icon: "/icons/python.svg" },
+      { name: "JavaScript", icon: "/icons/javascript.svg" },
+      { name: "Rust", icon: "/icons/rust.svg" },
+      { name: "SQL", icon: "/icons/sql.svg" },
+      { name: "C#", icon: "/icons/csharp.svg" },
+    ],
+  },
+  {
+    title: "Frameworks & runtimes",
+    items: [
+      { name: "React", icon: "/icons/react.svg" },
+      { name: "React Native", icon: "/icons/react.svg" },
+      { name: "Expo", icon: "/icons/expo.svg" },
+      { name: "Node.js", icon: "/icons/nodejs.svg" },
+      { name: "FastAPI", icon: "/icons/fastapi.svg" },
+      { name: "Tauri", icon: "/icons/tauri.svg" },
+      { name: "Tokio", icon: "/icons/tokio.svg" },
+    ],
+  },
+  {
+    title: "Databases & caching",
+    items: [
+      { name: "PostgreSQL", icon: "/icons/postgresql.svg" },
+      { name: "PostGIS", icon: "/icons/postgis.svg" },
+      { name: "Redis", icon: "/icons/redis.svg" },
+    ],
+  },
 ];
