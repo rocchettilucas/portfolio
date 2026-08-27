@@ -129,27 +129,28 @@
     background: var(--accent); animation: caret-blink 1s step-end 3;
   }
 
-  /* The figlet name. It sizes off its own column rather than the viewport, so it fits
-     whatever it is dropped into, and the clip swallows the sub-pixel remainder at the width
-     where the block only just fits. Both axes, not just x: `overflow-x: hidden` alone
-     promotes `overflow-y` to `auto`, and twelve line boxes of a fractional height round up
-     past the element's own — enough for a stray scrollbar that then eats a column. */
-  .banner { container-type: inline-size; overflow: hidden; }
-  .banner pre {
-    /* A JetBrains Mono cell advances ~0.6em, so cols * 0.6 * font-size is the block's
-       width: this is the largest size that still fits. The 16px cap is what the hero's
-       left column can actually hold at 1440 (53 cols * 0.6 * 16px = 509px of a 548px
-       column); at 14px the name read undersized against the whoami box beneath it. */
-    font-size: min(16px, calc(100cqw / (var(--banner-cols) * 0.6)));
-    line-height: 1;
-    color: var(--accent);
-    margin: 0;
-    /* The site font, spelled out because a <pre> otherwise takes the UA's monospace. The
-       art is plain ASCII precisely so this can be the site font: the block-glyph figlet
-       faces are drawn from U+2588/U+2550, which the Google webfont does not ship, and
-       those fall through to a fallback face at a wider advance that shears the grid. */
-    font-family: var(--font-jb), ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* The hero caret never settles — it keeps blinking, so the greeting reads as a live
+     prompt rather than a finished line. Slightly narrower and shorter than the default
+     because it sits against 40px display type instead of 15px body text. */
+  .caret-hero {
+    width: 0.6em; height: 0.95em; margin-left: 0.15em; vertical-align: -0.08em;
+    animation: caret-blink 1s step-end infinite;
   }
+
+  /* The only text buttons in the design: a hairline in --border, the same 4px radius as
+     every frame, cyan label. They fill with --accent-tint on hover; nothing lifts, tilts
+     or shadows. Used by the hero, Contact and the store links in ProjectFeatured. */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 24px; padding: 2px 10px;
+    border: 1px solid var(--border); border-radius: 4px; color: var(--cyan);
+    transition: background-color .25s, border-color .25s, color .25s;
+  }
+  .btn:hover { background: var(--accent-tint); }
+
+  /* The hero's text column fades up once the page paints, alongside the portrait's
+     load-in. Opacity only — a translate here would shift the h1 and cost CLS. */
+  .hero-in { animation: hero-in .5s ease-out both; }
 
   /* The portrait's CSS box is media-query driven so it never resizes after hydration;
      AsciiPortrait only sizes the canvas backing store to match. */
@@ -173,6 +174,11 @@
   50%, 100% { opacity: 0; }
 }
 
+@keyframes hero-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
@@ -180,5 +186,6 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
   }
-  .caret { animation: none; }
+  .caret, .caret-hero { animation: none; }
+  .hero-in { animation: none; }
 }

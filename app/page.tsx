@@ -1,4 +1,3 @@
-import About from "@/components/About";
 import Contact from "@/components/Contact";
 import Education from "@/components/Education";
 import Experience from "@/components/Experience";
@@ -31,7 +30,6 @@ export default function Home() {
       <TopBar />
       <main id="main" className="page">
         <Hero />
-        <About />
         <Projects />
         <Experience />
         <Skills />

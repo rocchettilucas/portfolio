@@ -8,14 +8,11 @@ import type { Project } from "@/lib/data";
  * of `lib/data.ts` — GasMap is a commercial product, so the section states only the public
  * product facts recorded there and nothing about how it is built beyond its stack.
  *
- * The store links are the only text buttons in the design: a hairline in --border, the same
- * 4px radius as every frame, cyan label. They fill with --accent-tint on hover; nothing
- * lifts, tilts or shadows.
+ * The store links use the shared `.btn` class from globals.css — the design's one text
+ * button, also used by the hero and Contact.
  */
 export default function ProjectFeatured({ project }: { project: Project }) {
   const { slug, title, blurb, tech, links, logo, meta } = project;
-  const button =
-    "inline-flex min-h-6 items-center rounded-[4px] border border-border px-2.5 py-0.5 text-cyan transition-[background-color,border-color,color] duration-[250ms] hover:bg-[var(--accent-tint)]";
 
   return (
     <Box title={`${slug}/`}>
@@ -36,12 +33,12 @@ export default function ProjectFeatured({ project }: { project: Project }) {
 
       <p className="mt-4 flex flex-wrap items-center gap-3">
         {links.appStore ? (
-          <a href={links.appStore} target="_blank" rel="noopener noreferrer" className={button}>
+          <a href={links.appStore} target="_blank" rel="noopener noreferrer" className="btn">
             App Store
           </a>
         ) : null}
         {links.googlePlay ? (
-          <a href={links.googlePlay} target="_blank" rel="noopener noreferrer" className={button}>
+          <a href={links.googlePlay} target="_blank" rel="noopener noreferrer" className="btn">
             Google Play
           </a>
         ) : null}
