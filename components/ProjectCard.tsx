@@ -18,7 +18,7 @@ import type { Project } from "@/lib/data";
  * column inside pushes that last line down with `mt-auto`.
  */
 export default function ProjectCard({ project }: { project: Project }) {
-  const { slug, title, blurb, image, tech, links, logo, placement } = project;
+  const { slug, title, blurb, image, tech, links, logo, meta, rating, placement } = project;
   const hasStore = Boolean(links.appStore || links.googlePlay);
 
   return (
@@ -93,6 +93,27 @@ export default function ProjectCard({ project }: { project: Project }) {
               ) : null}
             </div>
           </div>
+
+          {/* Store facts only, and the rating behind the star it earned rather than spelled
+              out in words — the glyph is the review site's own shorthand and costs a line
+              nothing. `meta` reads on its own when a project has no rating. */}
+          {meta ? (
+            <p className="mt-1 text-muted-strong">
+              {meta}
+              {rating ? (
+                <>
+                  {" · "}
+                  <StarIcon
+                    aria-hidden
+                    width={12}
+                    height={12}
+                    className="inline-block align-[-0.1em] text-accent"
+                  />{" "}
+                  {rating.toFixed(1)} on the App Store
+                </>
+              ) : null}
+            </p>
+          ) : null}
 
           <p className="mt-3">{blurb}</p>
           {/* The shared `.btn` from globals.css — the design's one text button. Only the

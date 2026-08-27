@@ -9,6 +9,7 @@ export type Project = {
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
   meta?: string;            // small muted line, product facts only
+  rating?: number;          // store rating, rendered after `meta` behind a star
   // "featured" and "card" are what the home page renders; "list" only appears on /projects.
   // The two differ by emphasis, not by size: a featured project gets a star beside its name
   // and nothing else — the three home cards are the same card at the same width.
@@ -33,7 +34,8 @@ export const projects: Project[] = [
       googlePlay: "https://play.google.com/store/apps/details?id=com.olivanceplatforms.gasmap",
     },
     logo: "/projects/gasmap-192.png",
-    meta: "iOS and Android · 5.0 on the App Store",
+    meta: "iOS and Android",
+    rating: 5.0,
     placement: "featured",
   },
   {
@@ -104,22 +106,40 @@ export const experience: Role[] = [
     summary:
       "Built registration and onboarding for a research-opportunity platform used at five Canadian universities — students, mentors and professors, each with their own way in.",
   },
+  {
+    company: "City of Mississauga",
+    title: "Operations Coordinator",
+    dates: "Jun 2023 – present",
+    summary:
+      "Operational planning for 70+ events a year at the Mississauga Sports and Entertainment Centre — venue setup, attendance forecasts and coordination across five municipal departments.",
+  },
 ];
 
-export type School = { name: string; logo: string; degree?: string; dates: string };
+// Read as one line by About — `${degree}, ${name} · ${dates}` — so every field is required.
+export type School = { name: string; degree: string; dates: string };
 export const education: School[] = [
   {
     name: "University of Toronto",
-    logo: "/uoft.png",
     degree: "Honours Bachelor in Computer Science and Information Technology",
     dates: "2021 – 2026",
   },
 ];
 
+// The two paragraphs beside the photo in `about`. Prose, so it lives here rather than in
+// the component: the section is copy with a picture next to it, not a layout with copy in it.
+export const about = {
+  paragraphs: [
+    "I'm a Computer Science and Information Technology graduate from the University of Toronto with a passion for building software. I enjoy designing and developing full-stack applications, solving complex technical challenges, and creating products that deliver real value to users.",
+    "My interests include software engineering, systems design, and product development. I'm always looking for opportunities to learn, build, and contribute to meaningful technology.",
+  ],
+};
+
 export type Stack = { name: string; icon: string };
 export type SkillGroup = { title: string; items: Stack[] };
 
-// Three boxes on the page, in this order. Icons live in public/icons/.
+// The stack, grouped. About renders it as one flat row of chips (`skills` below) and the
+// grouping is what keeps that row in a sensible order — languages, then what they run on,
+// then what they store into. Icons live in public/icons/.
 export const skillGroups: SkillGroup[] = [
   {
     title: "Languages",
@@ -153,3 +173,8 @@ export const skillGroups: SkillGroup[] = [
     ],
   },
 ];
+
+// What About renders: the groups above, flattened in the order they are written. A name may
+// repeat an icon (React and React Native share one mark) — the chips are read as a list of
+// things worked with, not as a set of logos.
+export const skills: Stack[] = skillGroups.flatMap((g) => g.items);

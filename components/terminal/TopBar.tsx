@@ -7,11 +7,10 @@ import { SECTIONS } from "@/lib/sections";
 import VisitorCount from "@/components/VisitorCount";
 import {
   BriefcaseIcon,
-  CodeIcon,
   FolderIcon,
   GitHubIcon,
-  GraduationIcon,
   LinkedInIcon,
+  MailIcon,
   UserIcon,
 } from "@/components/icons";
 
@@ -25,10 +24,9 @@ const ACTIVE_LINE = 0.35;
 // hole where the icon should be — at 900px and up the label carries the meaning either way.
 const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   about: UserIcon,
-  projects: FolderIcon,
+  work: FolderIcon,
   experience: BriefcaseIcon,
-  skills: CodeIcon,
-  education: GraduationIcon,
+  contact: MailIcon,
 };
 
 export default function TopBar() {
@@ -154,14 +152,16 @@ export default function TopBar() {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2 text-muted-strong sm:gap-3">
-          {/* `visitors: 1,024` is ~117px at 13px mono — the one item in the bar that is
-              both optional and wide enough to push the icon row into a scroll on a phone,
-              so it leaves at the same 900px the nav labels do. */}
-          {/* `empty:hidden` because VisitorCount renders nothing when there is no count to
-              show, and a zero-width flex item would still leave its gap behind. */}
-          <span className="max-[899px]:hidden empty:hidden">
+          {/* The counter is a readout, not a destination, so it gets its own chip and a
+              hairline between it and the two links instead of sitting in their row. It is
+              ~120px at 12px mono — the one optional item wide enough to push the icon row
+              into a scroll on a phone — so it leaves at the same 900px the nav labels do.
+              `empty:hidden` because VisitorCount renders nothing when there is no count,
+              and an empty chip would still draw its border. */}
+          <span className="chip max-[899px]:hidden empty:hidden">
             <VisitorCount />
           </span>
+          <span aria-hidden className="h-4 w-px bg-border max-[899px]:hidden" />
           <a
             href={socialHref("GitHub")}
             aria-label="GitHub"

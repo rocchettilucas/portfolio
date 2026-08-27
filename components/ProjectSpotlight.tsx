@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Box from "@/components/terminal/Box";
-import { ExternalIcon, FolderIcon, GitHubIcon } from "@/components/icons";
+import { ExternalIcon, FolderIcon, GitHubIcon, StarIcon } from "@/components/icons";
 import type { Project } from "@/lib/data";
 
 /**
@@ -13,7 +13,7 @@ import type { Project } from "@/lib/data";
  * `fill`, so the 16/10 box is reserved before the file arrives and nothing below it moves.
  */
 export default function ProjectSpotlight({ project }: { project: Project }) {
-  const { slug, title, description, image, tech, links, logo, meta } = project;
+  const { slug, title, description, image, tech, links, logo, meta, rating } = project;
 
   return (
     <Box title={`${slug}/`}>
@@ -61,7 +61,26 @@ export default function ProjectSpotlight({ project }: { project: Project }) {
         </div>
       </div>
 
-      {meta ? <p className="mt-1 text-muted-strong">{meta}</p> : null}
+      {/* Store facts only, and the rating behind the star it earned rather than spelled
+          out in words — the glyph is the review site's own shorthand and costs a line
+          nothing. `meta` reads on its own when a project has no rating. */}
+      {meta ? (
+        <p className="mt-1 text-muted-strong">
+          {meta}
+          {rating ? (
+            <>
+              {" · "}
+              <StarIcon
+                aria-hidden
+                width={12}
+                height={12}
+                className="inline-block align-[-0.1em] text-accent"
+              />{" "}
+              {rating.toFixed(1)} on the App Store
+            </>
+          ) : null}
+        </p>
+      ) : null}
 
       {/* `description` is stored a sentence per entry so the copy stays editable line by
           line, but it is written as continuous prose — joined here rather than set as a

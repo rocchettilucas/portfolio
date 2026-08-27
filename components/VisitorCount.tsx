@@ -44,6 +44,9 @@ export default function VisitorCount() {
   if (count === null) return null;
 
   return (
-    <span aria-live="off">visitors: {count === "loading" ? "—" : count.toLocaleString("en-CA")}</span>
+    <span aria-live="off">
+      <span aria-hidden className="chip-dot" />
+      {count === "loading" ? "—" : count.toLocaleString("en-CA")} visitors
+    </span>
   );
 }

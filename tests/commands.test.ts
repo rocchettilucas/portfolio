@@ -23,10 +23,10 @@ describe("runCommand", () => {
     expect(action.lines).toHaveLength(COMMANDS.length);
     const descriptions: Record<(typeof COMMANDS)[number], string> = {
       help: "list commands",
-      projects: "what I've built",
+      about: "who I am",
+      work: "selected work",
       experience: "where I've worked",
-      skills: "what I work with",
-      education: "where I studied",
+      contact: "get in touch",
       github: "open GitHub",
       linkedin: "open LinkedIn",
       clear: "clear the screen",
@@ -58,11 +58,11 @@ describe("runCommand", () => {
   });
 
   it("trims and lower-cases the command", () => {
-    expect(runCommand("  PROJECTS  ")).toEqual({ kind: "scroll", id: "projects" });
+    expect(runCommand("  WORK  ")).toEqual({ kind: "scroll", id: "work" });
   });
 
   it("ignores extra arguments after the first token", () => {
-    expect(runCommand("skills please")).toEqual({ kind: "scroll", id: "skills" });
+    expect(runCommand("about please")).toEqual({ kind: "scroll", id: "about" });
   });
 
   it("returns notfound with the raw first token, preserving case", () => {
@@ -73,10 +73,13 @@ describe("runCommand", () => {
     expect(runCommand("nope")).toEqual({ kind: "notfound", name: "nope" });
   });
 
-  // `about` was folded into the hero, so it is no longer a section or a command.
-  it("no longer recognizes about", () => {
-    expect(runCommand("about")).toEqual({ kind: "notfound", name: "about" });
-    expect((COMMANDS as readonly string[]).includes("about")).toBe(false);
+  // The sections `about` replaced. Neither is a scroll target any more — their content moved
+  // into About — so both have to miss rather than quietly scroll somewhere.
+  it("no longer recognizes the folded-in sections", () => {
+    for (const name of ["projects", "skills", "education"]) {
+      expect(runCommand(name)).toEqual({ kind: "notfound", name });
+      expect((COMMANDS as readonly string[]).includes(name)).toBe(false);
+    }
   });
 });
 
@@ -86,7 +89,7 @@ describe("complete", () => {
   });
 
   it("returns sorted prefix matches", () => {
-    expect(complete("e")).toEqual(["education", "experience"]);
+    expect(complete("c")).toEqual(["clear", "contact"]);
   });
 
   it("returns an empty array when nothing matches", () => {
@@ -94,11 +97,11 @@ describe("complete", () => {
   });
 
   it("matches on the first token only, ignoring trailing args", () => {
-    expect(complete("e xyz")).toEqual(["education", "experience"]);
+    expect(complete("c xyz")).toEqual(["clear", "contact"]);
   });
 
   it("matches on the first token case-insensitively when args follow", () => {
-    expect(complete("PROJ x")).toEqual(["projects"]);
+    expect(complete("WOR x")).toEqual(["work"]);
   });
 });
 

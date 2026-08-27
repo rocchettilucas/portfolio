@@ -4,14 +4,17 @@ import ProjectCard from "@/components/ProjectCard";
 import { homeProjects } from "@/lib/data";
 
 /**
- * `projects` — three cards of equal weight, each showing what the thing actually looks like,
- * then the way out. The home page deliberately shows only the head of the list: the rest of
- * it, with a screenshot and a paragraph each, lives on /projects behind the "view all work"
- * link. GasMap leads and wears a star; it does not get its own width.
+ * `work` — three cards of equal weight, each showing what the thing actually looks like, then
+ * the way out. The home page deliberately shows only the head of the list: the rest of it,
+ * with a screenshot and a paragraph each, lives on /projects behind the "view all work" link.
+ * GasMap leads and wears a star; it does not get its own width.
+ *
+ * The section is `work` and the route is still /projects — the heading names what these are,
+ * the URL names where they live, and neither had to move for the other.
  */
-export default function Projects() {
+export default function Work() {
   return (
-    <Section id="projects" command="projects" label="Projects">
+    <Section id="work" command="work" label="Selected work">
       <div className="grid gap-4">
         {/* One column on a phone, two at 641px, three at 901px. Written mobile-first with
             explicit min-widths because Tailwind v4 orders arbitrary `max-[…]` variants

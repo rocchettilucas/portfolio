@@ -1,8 +1,8 @@
-import Education from "@/components/Education";
+import About from "@/components/About";
+import Contact from "@/components/Contact";
 import Experience from "@/components/Experience";
 import Hero from "@/components/Hero";
-import Projects from "@/components/Projects";
-import Skills from "@/components/Skills";
+import Work from "@/components/Projects";
 import TopBar from "@/components/terminal/TopBar";
 import BottomBar from "@/components/terminal/BottomBar";
 import { projects } from "@/lib/data";
@@ -29,10 +29,10 @@ export default function Home() {
       <TopBar />
       <main id="main" className="page">
         <Hero />
-        <Projects />
+        <About />
+        <Work />
         <Experience />
-        <Skills />
-        <Education />
+        <Contact />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(appsJsonLd) }}

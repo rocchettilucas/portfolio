@@ -12,6 +12,16 @@ export const site = {
   description: "Software engineer in Toronto building apps and developer tools — GasMap, RocSpace, WinLane.GG.",
 };
 
+// The hero's typed line, cycled one after another by components/TypedRoles.tsx. Copy lives
+// here with the rest of the site's words rather than inside the component that animates it;
+// the first entry is what the server renders, so it is also the line seen without JS.
+export const ROLES = [
+  "Software Engineer",
+  "Full-stack developer",
+  "Building GasMap",
+  "UofT CS grad",
+] as const;
+
 export type SocialLabel = (typeof site.socials)[number]["label"];
 
 /**

@@ -17,10 +17,10 @@ export type Action =
 
 export const COMMANDS = [
   "help",
-  "projects",
+  "about",
+  "work",
   "experience",
-  "skills",
-  "education",
+  "contact",
   "github",
   "linkedin",
   "clear",
@@ -31,10 +31,10 @@ type Command = (typeof COMMANDS)[number];
 
 const DESCRIPTIONS: Record<Command, string> = {
   help: "list commands",
-  projects: "what I've built",
+  about: "who I am",
+  work: "selected work",
   experience: "where I've worked",
-  skills: "what I work with",
-  education: "where I studied",
+  contact: "get in touch",
   github: "open GitHub",
   linkedin: "open LinkedIn",
   clear: "clear the screen",
