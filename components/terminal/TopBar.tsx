@@ -1,19 +1,35 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { site } from "@/lib/site";
+import { useEffect, useState, type ComponentType, type SVGProps } from "react";
+import { site, socialHref } from "@/lib/site";
 import { SECTIONS } from "@/lib/sections";
+import VisitorCount from "@/components/VisitorCount";
+import {
+  BriefcaseIcon,
+  CodeIcon,
+  FolderIcon,
+  GitHubIcon,
+  GraduationIcon,
+  LinkedInIcon,
+  MailIcon,
+  UserIcon,
+} from "@/components/icons";
 
 // Scroll offset below which the hero still owns the viewport, so no section is marked active.
 const HERO_CLEAR = 200;
 
-// CommandPalette (mounted in the root layout) listens for this. Going through an event
-// rather than a prop keeps the bar free of palette internals and free of shared state.
-function openPalette() {
-  window.dispatchEvent(new CustomEvent("palette:open"));
-}
+// Keyed by section id, not by position, so SECTIONS can gain or lose an entry without
+// touching the render. An id with no glyph falls back to the folder rather than leaving a
+// hole where the icon should be — at 900px and up the label carries the meaning either way.
+const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
+  about: UserIcon,
+  projects: FolderIcon,
+  experience: BriefcaseIcon,
+  skills: CodeIcon,
+  education: GraduationIcon,
+  contact: MailIcon,
+};
 
 export default function TopBar() {
   // The sections only exist on the home page: off it the nav links have to carry a path
@@ -59,57 +75,75 @@ export default function TopBar() {
 
   return (
     <header className="bar bar-top">
-      <div className="bar-inner gap-4 text-[13px] max-sm:gap-3">
+      {/* The gaps are minimums, not the spacing: the nav is `flex-1` and centres itself in
+          whatever is left, so a small floor here buys the icon row room on a 390px phone
+          without changing how the bar looks anywhere it is not tight. */}
+      <div className="bar-inner gap-1 text-[13px] sm:gap-4">
         <Link
           href="/"
-          aria-label={`${site.name} — home`}
-          // py-1 is not decoration: it is what takes the 20px logo row up to a 24px+ target
-          // inside a bar whose own height is fixed at 40px, so nothing below moves.
-          className="flex min-h-6 shrink-0 items-center gap-2 py-1 text-fg hover:text-accent"
+          // py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose own
+          // height is fixed at 40px, so nothing below moves.
+          className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent"
         >
-          <Image src="/logo.png" alt="" width={20} height={20} priority />
-          <span aria-hidden className="whitespace-nowrap">
-            <span className="max-[860px]:hidden">lucas@portfolio:</span>~<span className="prompt">$</span>
-          </span>
+          {site.name.toLowerCase()}
         </Link>
 
-        {/* Below 860px this is a swipeable strip rather than a wrapped or truncated list. */}
-        <nav aria-label="Main" className="strip flex min-w-0 flex-1 items-center gap-4 max-sm:gap-3">
-          {SECTIONS.map((id) => (
-            <a
-              key={id}
-              href={onHome ? `#${id}` : `/#${id}`}
-              aria-current={active === id ? "location" : undefined}
-              // --muted is only 3.6:1 on the ground, so nav labels take --muted-strong;
-              // --muted stays for the hint button, which is a hint and not a destination.
-              // `py-1` (with the blockifying flex parent) is what makes a 20.8px line box
-              // into a 28.8px target; the bar's height is fixed, so it costs no chrome.
-              className={`whitespace-nowrap py-1 ${active === id ? "text-pink" : "text-muted-strong hover:text-fg"}`}
-            >
-              {id}
-            </a>
-          ))}
+        {/* Centred, like the reference. `strip` is insurance rather than the layout: the
+            labels are hidden below 900px, so this only ever scrolls if a section is added
+            to a viewport that was already exactly full. */}
+        <nav
+          aria-label="Main"
+          className="strip flex min-w-0 flex-1 items-center justify-center gap-0.5 sm:gap-1"
+        >
+          {SECTIONS.map((id) => {
+            const Icon = ICONS[id] ?? FolderIcon;
+            // The label span is display:none below 900px, so the accessible name has to
+            // come from somewhere that survives that. An aria-label identical to the
+            // visible text is the one spelling that stays correct at both widths.
+            const label = id.charAt(0).toUpperCase() + id.slice(1);
+            return (
+              <a
+                key={id}
+                href={onHome ? `#${id}` : `/#${id}`}
+                aria-current={active === id ? "location" : undefined}
+                aria-label={label}
+                className="nav-item whitespace-nowrap"
+              >
+                <Icon width={16} height={16} aria-hidden />
+                <span>{id}</span>
+              </a>
+            );
+          })}
         </nav>
 
-        {/* Two buttons, one per breakpoint, because the accessible name differs: the wide
-            one is already self-describing, and `>_` needs a spoken label. Only ever one of
-            them is displayed, so only one is in the tab order. 860px is where the full
-            prompt, all six labels and the wide hint stop fitting on one line. */}
-        <button
-          type="button"
-          onClick={openPalette}
-          className="min-h-6 shrink-0 whitespace-nowrap py-1 text-muted hover:text-fg max-[860px]:hidden"
-        >
-          press / for commands
-        </button>
-        <button
-          type="button"
-          onClick={openPalette}
-          aria-label="Open command palette"
-          className="inline-flex h-10 w-10 shrink-0 items-center justify-center text-muted hover:text-fg min-[860px]:hidden"
-        >
-          <span aria-hidden>&gt;_</span>
-        </button>
+        <div className="flex shrink-0 items-center gap-2 text-muted-strong sm:gap-3">
+          {/* `visitors: 1,024` is ~117px at 13px mono — the one item in the bar that is
+              both optional and wide enough to push the icon row into a scroll on a phone,
+              so it leaves at the same 900px the nav labels do. */}
+          {/* `empty:hidden` because VisitorCount renders nothing when there is no count to
+              show, and a zero-width flex item would still leave its gap behind. */}
+          <span className="max-[899px]:hidden empty:hidden">
+            <VisitorCount />
+          </span>
+          <a
+            href={socialHref("GitHub")}
+            aria-label="GitHub"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+          >
+            <GitHubIcon width={18} height={18} />
+          </a>
+          <a
+            href={socialHref("LinkedIn")}
+            aria-label="LinkedIn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+          >
+            <LinkedInIcon width={18} height={18} />
+          </a>
+        </div>
       </div>
     </header>
   );

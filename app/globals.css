@@ -3,8 +3,9 @@
    and emits a real utility for every class name they merely quote. */
 @source not "../docs";
 
-/* Dracula, disciplined. Purple is the one accent; pink is reserved for the `$` glyph and
-   the active nav item, cyan for links, green for the status dot. Nothing else gets colour.
+/* Dracula, disciplined. Purple is the one accent — cyan for links, green for the status
+   dot, and pink is now reserved for the `$` glyph alone: the active nav item is a purple
+   glow pill (`.nav-item` below), not pink text. Nothing else gets colour.
    Variant B (swap in place, one block): --bg:#16161e; --accent:#c9a6ff; --accent-rgb:201 166 255; */
 :root {
   --bg: #1a1b26;
@@ -94,8 +95,33 @@
   .strip { overflow-x: auto; scrollbar-width: none; }
   .strip::-webkit-scrollbar { display: none; }
 
-  /* The `$` that opens a prompt line — the only place pink appears outside active nav. */
+  /* The `$` that opens a prompt line — the only place pink appears at all. */
   .prompt { color: var(--pink); user-select: none; }
+
+  /* A nav destination: icon + label, and a rounded pill that lights up under the cursor.
+     Only three properties move, all on the same 250ms curve, so hover and the active state
+     are the same gesture at two intensities. The literal rgba() values are the accent at
+     the two alphas the glow needs; var(--accent) can't be given one inside a shadow. */
+  .nav-item {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 4px 10px; border-radius: 4px;
+    /* --muted is only 3.6:1 on the ground, and these are destinations, not hints. */
+    color: var(--muted-strong);
+    transition: background-color .25s, color .25s, box-shadow .25s;
+  }
+  .nav-item:hover { background: var(--accent-tint); color: var(--accent); }
+  .nav-item[aria-current] {
+    background: rgba(189, 147, 249, .18);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(189, 147, 249, .35), 0 0 14px rgba(189, 147, 249, .35);
+  }
+  /* Below 900px the icons stay and the words go: with labels the five items need ~540px,
+     which only clears beside the name and the right cluster at ~900px. Phones fit the
+     390px bar the same way. The <a> carries an aria-label spelling out the same word. */
+  @media (max-width: 899px) {
+    .nav-item { padding: 4px 8px; }
+    .nav-item span { display: none; }
+  }
 
   /* Blinks three times on load, then rests solid, the way a real shell caret settles. */
   .caret {
