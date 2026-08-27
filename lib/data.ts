@@ -4,12 +4,14 @@ export type Project = {
   title: string;
   blurb: string;            // exactly one sentence — the card line
   description: string[];    // 2-3 short sentences for /projects, one per array item
-  image: string;            // 16/10 screenshot for the /projects spotlight
+  image: string;            // 16/10 screenshot, shown on the home card and the /projects spotlight
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
   meta?: string;            // small muted line, product facts only
   // "featured" and "card" are what the home page renders; "list" only appears on /projects.
+  // The two differ by emphasis, not by size: a featured project gets a star beside its name
+  // and nothing else — the three home cards are the same card at the same width.
   placement: "featured" | "card" | "list";
 };
 
@@ -78,42 +80,39 @@ export const projects: Project[] = [
   },
 ];
 
-export const featuredProject = projects.find((p) => p.placement === "featured")!;
-export const cardProjects = projects.filter((p) => p.placement === "card");
+// What the home page lists, in the order written above — the "list" entries are held back for
+// /projects. Filtered rather than sliced so reordering the array reorders the page with it.
+export const homeProjects = projects.filter((p) => p.placement === "featured" || p.placement === "card");
 
-export type Role = { company: string; title: string; dates: string; site?: string; bullets: string[] };
+// One paragraph per role, not a bullet list: the numbers that would fill bullets are already
+// on the project cards, and repeating them here reads as padding.
+export type Role = { company: string; title: string; dates: string; site?: string; summary: string };
 export const experience: Role[] = [
   {
     company: "Olivance Platforms · GasMap",
     title: "Software Engineer",
     dates: "Jun 2026 – present",
     site: "https://gasmap.ai",
-    bullets: [
-      "Built and launched GasMap, a gas-price app for iOS and Android — 200+ downloads across Ontario in its first month.",
-      "React Native client and FastAPI geospatial API serving live prices for 3,000+ stations by radius, map bounds and location-verified reports.",
-      "Cut initial map load from 17.7 s to 234 ms by rewriting the station lookup to use an existing index — no schema change, no downtime.",
-    ],
+    summary:
+      "Building GasMap, a gas-price app for iOS and Android with live prices for stations across Ontario — the mobile app, the geospatial API behind it, and the work of keeping it fast.",
   },
   {
     company: "PathwayR",
     title: "Software Developer",
     dates: "Jan 2026 – Apr 2026",
     site: "https://pathwayr.com",
-    bullets: [
-      "Built role-based registration for students, mentors and professors on a research platform serving five Canadian universities.",
-      "Institutional-domain verification, admin approval and role-specific onboarding across 1,500+ professor profiles.",
-    ],
+    summary:
+      "Built registration and onboarding for a research-opportunity platform used at five Canadian universities — students, mentors and professors, each with their own way in.",
   },
 ];
 
-export type School = { name: string; logo: string; degree?: string; dates: string; lines: string[] };
+export type School = { name: string; logo: string; degree?: string; dates: string };
 export const education: School[] = [
   {
     name: "University of Toronto",
     logo: "/uoft.png",
-    degree: "Honours Bachelor of Science, Computer Science & Information Technology",
+    degree: "Honours Bachelor in Computer Science and Information Technology",
     dates: "2021 – 2026",
-    lines: ["GPA 3.78 / 4.00 · Dean's List", "Data Structures · Algorithms · Operating Systems · Machine Learning"],
   },
 ];
 

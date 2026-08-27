@@ -1,8 +1,10 @@
 import Prompt from "./Prompt";
 
-// Every section of the page is headed by the command that would have produced it. The
-// heading's visible text is that command, so `label` supplies the plain-language name the
-// screen reader announces instead ("About", "Projects", …).
+// Every section of the page is headed by the command that would have produced it — which is
+// the section's own id, and therefore exactly what the reader can type into the command
+// palette to jump here (see lib/commands.ts). The heading's visible text is that command, so
+// `label` supplies the plain-language name the screen reader announces instead ("Projects",
+// "Experience", …).
 export default function Section({
   id,
   command,

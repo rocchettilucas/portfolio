@@ -34,7 +34,7 @@ export default function ProjectsPage() {
           className="px-6 py-14 max-sm:px-4 max-md:py-10"
         >
           <h1 id="all-projects-title" aria-label="All projects" className="mb-2 text-[15px] font-normal">
-            <Prompt command="ls -la ~/projects" />
+            <Prompt command="projects --all" />
           </h1>
           <p className="mb-6">
             <Link href="/" className="text-cyan">

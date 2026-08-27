@@ -7,7 +7,7 @@ import { skillGroups } from "@/lib/data";
 // dark ground; `invert` turns each of them white without touching the colour marks.
 const INVERT = new Set(["/icons/rust.svg", "/icons/expo.svg", "/icons/tokio.svg"]);
 
-// The box titles are directory names, to match the `cat ~/.skills` framing — the data's
+// The box titles are directory names, to match the listing the heading implies — the data's
 // own titles ("Frameworks & runtimes") are prose and read wrong on a box header. Anything
 // added to `skillGroups` without an entry here falls back to a slug of its title.
 const DIRS: Record<string, string> = {
@@ -29,7 +29,7 @@ function dirName(title: string) {
  */
 export default function Skills() {
   return (
-    <Section id="skills" command="cat ~/.skills" label="Skills">
+    <Section id="skills" command="skills" label="Skills">
       {/* One column on a phone, three side by side from 641px — the same breakpoint the
           old single list used, written as an explicit min-width so it cannot be reordered
           out of effect by Tailwind's `max-*` variants. */}

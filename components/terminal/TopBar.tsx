@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, type ComponentType, type SVGProps } from "react";
+import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import { site, socialHref } from "@/lib/site";
 import { SECTIONS } from "@/lib/sections";
 import VisitorCount from "@/components/VisitorCount";
@@ -12,12 +12,13 @@ import {
   GitHubIcon,
   GraduationIcon,
   LinkedInIcon,
-  MailIcon,
   UserIcon,
 } from "@/components/icons";
 
 // Scroll offset below which the hero still owns the viewport, so no section is marked active.
 const HERO_CLEAR = 200;
+// Fraction of the viewport height below the top edge where a section counts as reached.
+const ACTIVE_LINE = 0.35;
 
 // Keyed by section id, not by position, so SECTIONS can gain or lose an entry without
 // touching the render. An id with no glyph falls back to the folder rather than leaving a
@@ -28,47 +29,78 @@ const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   experience: BriefcaseIcon,
   skills: CodeIcon,
   education: GraduationIcon,
-  contact: MailIcon,
 };
 
 export default function TopBar() {
   // The sections only exist on the home page: off it the nav links have to carry a path
-  // back to `/`, and there is nothing for the observer to watch.
+  // back to `/`, and there is nothing to track.
   const pathname = usePathname();
   const onHome = pathname === "/";
   const [active, setActive] = useState("");
+  // Non-zero from a nav click until the scroll it started has settled (see `update`): the
+  // id of the timeout that lifts the pin. Time-based rather than event-based because a click
+  // on a section already in view starts no scroll at all, and a pin nothing lifts is a bug.
+  const pinRef = useRef(0);
+  const pin = (ms: number) => {
+    window.clearTimeout(pinRef.current);
+    pinRef.current = window.setTimeout(() => {
+      pinRef.current = 0;
+    }, ms);
+  };
 
   useEffect(() => {
     if (!onHome) return;
     const sections = SECTIONS.map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
-    const io = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (visible) setActive(visible.target.id);
-        else if (window.scrollY < HERO_CLEAR) setActive("");
-      },
-      { rootMargin: "-40% 0px -50% 0px", threshold: [0, 0.25, 0.5] },
-    );
-    sections.forEach((s) => io.observe(s));
 
-    // The observer only fires on threshold crossings, so it never reports the hero coming
-    // back into view; clear the active item from a scroll listener instead.
+    // Computed from scroll position, not an IntersectionObserver. An observer callback only
+    // carries the entries whose visibility *changed*, so "the most visible section" picked
+    // from one callback is really "the section that most recently crossed a threshold" —
+    // scrolling down slowly through Experience left Skills marked active the moment its top
+    // edge entered the band. Here the active item is simply the last section whose top has
+    // scrolled past a line a third of the way down the viewport, which is what a reader's
+    // eye calls "the section I'm in".
     let frame = 0;
-    const clearNearTop = () => {
+    const update = () => {
       frame = 0;
-      if (window.scrollY < HERO_CLEAR) setActive("");
+      // A click on a nav item is the reader saying where they are; the position rule can
+      // disagree with that near the end of the page (two short sections sharing the last
+      // screenful), so it stays out of the way until the smooth scroll has finished.
+      if (pinRef.current) return;
+      if (window.scrollY < HERO_CLEAR) {
+        setActive("");
+        return;
+      }
+      // At the end of the document the last section may never reach the line — the page
+      // simply cannot scroll that far — so the bottom of the page counts as being in it.
+      const atEnd = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+      if (atEnd && sections.length) {
+        setActive(sections[sections.length - 1].id);
+        return;
+      }
+      const line = window.scrollY + window.innerHeight * ACTIVE_LINE;
+      let current = "";
+      for (const s of sections) {
+        if (s.offsetTop <= line) current = s.id;
+      }
+      setActive(current);
     };
     const onScroll = () => {
-      if (!frame) frame = requestAnimationFrame(clearNearTop);
+      if (pinRef.current) {
+        // Smooth scrolling fires a stream of events; the pin lifts once they stop.
+        pin(200);
+        return;
+      }
+      if (!frame) frame = requestAnimationFrame(update);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    clearNearTop();
+    window.addEventListener("resize", onScroll);
+    update();
 
     return () => {
-      io.disconnect();
       window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+      window.clearTimeout(pinRef.current);
+      pinRef.current = 0;
       if (frame) cancelAnimationFrame(frame);
     };
   }, [onHome]);
@@ -106,6 +138,11 @@ export default function TopBar() {
                 key={id}
                 href={onHome ? `#${id}` : `/#${id}`}
                 aria-current={active === id ? "location" : undefined}
+                onClick={() => {
+                  if (!onHome) return;
+                  setActive(id);
+                  pin(700);
+                }}
                 aria-label={label}
                 className="nav-item whitespace-nowrap"
               >

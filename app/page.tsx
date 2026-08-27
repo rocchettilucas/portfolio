@@ -1,4 +1,3 @@
-import Contact from "@/components/Contact";
 import Education from "@/components/Education";
 import Experience from "@/components/Experience";
 import Hero from "@/components/Hero";
@@ -34,7 +33,6 @@ export default function Home() {
         <Experience />
         <Skills />
         <Education />
-        <Contact />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: jsonLd(appsJsonLd) }}

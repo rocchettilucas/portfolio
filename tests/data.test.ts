@@ -1,20 +1,19 @@
 import fs from "node:fs";
 import path from "node:path";
 import { describe, it, expect } from "vitest";
-import { projects, featuredProject, cardProjects, experience, education, skillGroups } from "@/lib/data";
+import { projects, homeProjects, experience, education, skillGroups } from "@/lib/data";
 
 const BANNED = /sole engineer|co-founder|open to work|open to roles|scrap|crawler/i;
 const SENTENCES = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length;
 
 describe("projects", () => {
   it("has exactly one featured project (GasMap), listed first", () => {
-    expect(featuredProject.slug).toBe("gasmap");
     expect(projects[0].slug).toBe("gasmap");
     expect(projects.filter(p => p.placement === "featured")).toHaveLength(1);
   });
-  it("lists the four projects in order, with rocspace and winlane as home cards", () => {
+  it("lists the four projects in order, with three of them on the home page", () => {
     expect(projects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane", "pathwayr"]);
-    expect(cardProjects.map(p => p.slug)).toEqual(["rocspace", "winlane"]);
+    expect(homeProjects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane"]);
   });
   it("every project has a logo and a /projects/<slug>-shot.webp screenshot", () => {
     for (const p of projects) {
@@ -54,24 +53,24 @@ describe("projects", () => {
 });
 
 describe("experience", () => {
-  it("has the two current roles with 2-3 bullets each and no banned phrases", () => {
+  it("has the two current roles, each a single summary with no banned phrases", () => {
     expect(experience.map(r => r.company)).toEqual(["Olivance Platforms · GasMap", "PathwayR"]);
     for (const r of experience) {
       expect(r.title, r.company).toBe(r.company === "PathwayR" ? "Software Developer" : "Software Engineer");
       expect(r.site, r.company).toMatch(/^https:\/\//);
-      expect(r.bullets.length).toBeGreaterThanOrEqual(2);
-      expect(r.bullets.length).toBeLessThanOrEqual(3);
-      expect(BANNED.test(r.title + r.bullets.join(" "))).toBe(false);
+      expect(SENTENCES(r.summary), r.company).toBe(1);
+      expect(BANNED.test(`${r.title} ${r.summary}`), r.company).toBe(false);
     }
   });
 });
 
 describe("education & skills", () => {
-  it("lists University of Toronto only, with GPA and Dean's List", () => {
+  it("lists the University of Toronto degree and dates, and nothing else", () => {
     expect(education.map(e => e.name)).toEqual(["University of Toronto"]);
+    expect(education[0].degree).toBe("Honours Bachelor in Computer Science and Information Technology");
     expect(education[0].dates).toBe("2021 – 2026");
-    expect(education[0].lines.join(" ")).toMatch(/3\.78/);
-    expect(education[0].lines.join(" ")).toMatch(/Dean/);
+    // The GPA and coursework lines are gone: `lines` is no longer part of the shape.
+    expect("lines" in education[0]).toBe(false);
   });
   it("groups skills into languages, frameworks and databases", () => {
     expect(skillGroups.map(g => g.title)).toEqual(["Languages", "Frameworks & runtimes", "Databases & caching"]);
@@ -87,11 +86,14 @@ describe("education & skills", () => {
 describe("static assets", () => {
   const inPublic = (p: string) => fs.existsSync(path.join(process.cwd(), "public", p));
 
-  // Screenshots (`image`) and the newer skill icons arrive with their own tasks, so only the
-  // assets this module has always shipped are asserted to exist; the checks above cover shape.
   it("every referenced logo exists under public/", () => {
     for (const e of education) expect(inPublic(e.logo), e.logo).toBe(true);
     for (const p of projects) if (p.logo) expect(inPublic(p.logo), p.logo).toBe(true);
+  });
+  // Every project now shows its shot on the home page too, not only on /projects, so a
+  // missing file is a hole in the first screen rather than a slow page further in.
+  it("every project screenshot exists under public/", () => {
+    for (const p of projects) expect(inPublic(p.image), p.image).toBe(true);
   });
   it("drops the assets of the removed entries", () => {
     expect(inPublic("/gdsc.png")).toBe(false);

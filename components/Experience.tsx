@@ -3,23 +3,27 @@ import Section from "@/components/terminal/Section";
 import { experience } from "@/lib/data";
 
 /**
- * `cat ~/experience.log` — one box, read top to bottom as a log: newest role first, each
- * one a `[dates] Title @ Company` line over its own bullets. No tabs and no cards; a log
- * is a single stream, and splitting it into panels would hide most of it behind a click.
+ * `experience` — one box, newest role first, each a title line over a single paragraph. No
+ * bullets and no metrics: the numbers live on the project cards, and a role restated as four
+ * quantified bullets reads as the resume it was copied from rather than as a description of
+ * the work.
  *
- * The header is `flex flex-wrap` so the phone width can drop the dates onto their own line
- * instead of squeezing the title, and the bullets hang off an absolutely placed `▹` so a
- * wrapped line lines up under the first word rather than under the marker.
+ * The header is `flex flex-wrap justify-between` so the dates sit hard right on a wide row
+ * and drop onto their own line on a phone instead of squeezing the title.
  */
 export default function Experience() {
   return (
-    <Section id="experience" command="cat ~/experience.log" label="Experience">
-      <Box title="experience.log">
-        <ol className="grid gap-5">
-          {experience.map((role) => (
-            <li key={`${role.company}-${role.title}`}>
-              <div className="flex flex-wrap gap-x-2">
-                <span className="text-muted-strong">[{role.dates}]</span>
+    <Section id="experience" command="experience" label="Experience">
+      <Box>
+        <ol className="grid gap-6">
+          {experience.map((role, i) => (
+            <li
+              key={`${role.company}-${role.title}`}
+              // A hairline between entries, never above the first — the box's own top rule
+              // is already there and a second one would double it.
+              className={i === 0 ? undefined : "border-t border-border pt-6"}
+            >
+              <div className="flex flex-wrap justify-between gap-x-4">
                 <span>
                   <strong className="font-bold">{role.title}</strong>{" "}
                   <span className="text-accent">
@@ -33,17 +37,9 @@ export default function Experience() {
                     )}
                   </span>
                 </span>
+                <span className="text-muted-strong">{role.dates}</span>
               </div>
-              <ul className="mt-1 list-none">
-                {role.bullets.map((bullet) => (
-                  <li
-                    key={bullet}
-                    className="relative pl-5 before:absolute before:left-0 before:top-0 before:text-accent before:content-['▹']"
-                  >
-                    {bullet}
-                  </li>
-                ))}
-              </ul>
+              <p className="mt-1 max-w-[68ch]">{role.summary}</p>
             </li>
           ))}
         </ol>

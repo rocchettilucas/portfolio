@@ -1,65 +1,121 @@
 import Image from "next/image";
 import Box from "@/components/terminal/Box";
-import { ExternalIcon, FolderIcon, GitHubIcon } from "@/components/icons";
+import { ExternalIcon, FolderIcon, GitHubIcon, StarIcon } from "@/components/icons";
 import type { Project } from "@/lib/data";
 
 /**
- * One directory in the `ls ~/projects` listing. The card itself is not a link — there is no
- * project page to send anyone to — so only the two icons in the corner are interactive, at
- * 24px targets around 20px glyphs.
+ * One directory in the `projects` listing: the product shot on top, then the name, the
+ * one-sentence blurb and the stack. The card is not a link — there is no project page to send
+ * anyone to — so only the icons in the corner and the store buttons are interactive, at 24px
+ * targets around 20px glyphs.
+ *
+ * The shot sits flush against the frame with square corners and the same hairline the title
+ * strip uses, so it reads as the top pane of the box rather than a tile floating inside it;
+ * that is what `padding="none"` on Box buys, with the copy taking its own `p-4` below.
  *
  * `grid-rows-[auto_1fr]` is what lets the tech line sit at the bottom of every card in a row
  * regardless of how long the blurb ran: it hands Box's body the leftover height, and the
  * column inside pushes that last line down with `mt-auto`.
  */
 export default function ProjectCard({ project }: { project: Project }) {
-  const { slug, title, blurb, tech, links, logo } = project;
+  const { slug, title, blurb, image, tech, links, logo, placement } = project;
+  const hasStore = Boolean(links.appStore || links.googlePlay);
+
   return (
     <Box
       title={`${slug}/`}
+      padding="none"
       className="grid h-full grid-rows-[auto_1fr] transition-colors duration-[250ms] hover:border-accent"
     >
       <div className="flex h-full flex-col">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-2.5">
-            {logo ? (
-              <Image src={logo} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
-            ) : (
-              <FolderIcon width={28} height={28} className="shrink-0 text-accent" />
-            )}
-            {/* Wraps rather than truncates: in the two-column band just above 560px the
-                column is narrower than "NHL Player Dashboard", and a clipped project name
-                is worse than a name on two lines. */}
-            <h3 className="min-w-0 text-[15px] font-bold">{title}</h3>
-          </div>
-          <div className="flex shrink-0 items-center text-cyan">
-            {links.github ? (
-              <a
-                href={links.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${title} on GitHub`}
-                className="inline-flex h-6 w-6 items-center justify-center"
-              >
-                <GitHubIcon />
-              </a>
-            ) : null}
-            {links.site ? (
-              <a
-                href={links.site}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`${title} website`}
-                className="inline-flex h-6 w-6 items-center justify-center"
-              >
-                <ExternalIcon />
-              </a>
-            ) : null}
-          </div>
-        </div>
+        {/* The shot carries its intrinsic 1600×1000 through `width`/`height` rather than
+            `fill`, so the 16/10 box is reserved before the file arrives and nothing below it
+            moves. `sizes` names the three column widths the grid below actually produces. */}
+        <Image
+          src={image}
+          alt={`${title} screenshot`}
+          width={1600}
+          height={1000}
+          sizes="(max-width: 640px) 100vw, (max-width: 1040px) 50vw, 330px"
+          className="w-full border-b border-border"
+        />
 
-        <p className="mt-3">{blurb}</p>
-        <p className="mt-auto pt-4 text-muted-strong">{tech.join(" · ")}</p>
+        <div className="flex flex-1 flex-col p-4">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex min-w-0 items-center gap-2.5">
+              {logo ? (
+                <Image src={logo} alt="" width={28} height={28} className="h-7 w-7 shrink-0 object-contain" />
+              ) : (
+                <FolderIcon width={28} height={28} className="shrink-0 text-accent" />
+              )}
+              {/* Wraps rather than truncates: in the two-column band the column is narrower
+                  than some of the names, and a clipped project name is worse than a name on
+                  two lines. The star rides inside the heading so it wraps with the last word
+                  instead of being stranded on a line of its own. */}
+              <h3 className="min-w-0 text-[15px] font-bold">
+                {title}
+                {placement === "featured" ? (
+                  <>
+                    {" "}
+                    <StarIcon
+                      role="img"
+                      aria-label="Featured"
+                      width={14}
+                      height={14}
+                      className="inline-block align-[-0.1em] text-accent"
+                    />
+                  </>
+                ) : null}
+              </h3>
+            </div>
+            <div className="flex shrink-0 items-center text-cyan">
+              {links.github ? (
+                <a
+                  href={links.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${title} on GitHub`}
+                  className="inline-flex h-6 w-6 items-center justify-center"
+                >
+                  <GitHubIcon />
+                </a>
+              ) : null}
+              {links.site ? (
+                <a
+                  href={links.site}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${title} website`}
+                  className="inline-flex h-6 w-6 items-center justify-center"
+                >
+                  <ExternalIcon />
+                </a>
+              ) : null}
+            </div>
+          </div>
+
+          <p className="mt-3">{blurb}</p>
+          {/* The shared `.btn` from globals.css — the design's one text button. Only the
+              projects that ship in a store have anywhere for it to go. */}
+          {hasStore ? (
+            <p className="mt-auto flex flex-wrap items-center gap-3 pt-4">
+              {links.appStore ? (
+                <a href={links.appStore} target="_blank" rel="noopener noreferrer" className="btn">
+                  App Store
+                </a>
+              ) : null}
+              {links.googlePlay ? (
+                <a href={links.googlePlay} target="_blank" rel="noopener noreferrer" className="btn">
+                  Google Play
+                </a>
+              ) : null}
+            </p>
+          ) : null}
+          {/* Pinned to the bottom edge on every card: `mt-auto` here when there is no store row,
+              and a plain margin under the buttons when there is, so the tech lines of three
+              cards in a row sit on the same baseline. */}
+          <p className={`${hasStore ? "mt-3" : "mt-auto pt-4"} text-muted-strong`}>{tech.join(" · ")}</p>
+        </div>
       </div>
     </Box>
   );

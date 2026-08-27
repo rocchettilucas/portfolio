@@ -27,7 +27,6 @@ describe("runCommand", () => {
       experience: "where I've worked",
       skills: "what I work with",
       education: "where I studied",
-      contact: "how to reach me",
       github: "open GitHub",
       linkedin: "open LinkedIn",
       clear: "clear the screen",

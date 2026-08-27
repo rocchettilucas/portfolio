@@ -1,8 +1,8 @@
 # lucasrocchetti.com
 
-Personal portfolio for Lucas Rocchetti, built as a terminal. One page — hero, about,
-projects, experience, skills, education, contact — where every section heading is the
-command that would have produced it, framed by a fixed top and bottom status bar. The
+Personal portfolio for Lucas Rocchetti, built as a terminal. One page — hero, projects,
+experience, skills, education — where every section heading is the command that would
+have produced it, framed by a fixed top and bottom status bar. The
 hero pairs a build-time figlet banner with an ASCII portrait rendered to a canvas.
 Pressing `/` (or `~`, or the `>_` button on touch) opens a command palette that scrolls
 to any section, opens GitHub or LinkedIn, and answers `whoami`; nothing on the page is

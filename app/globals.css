@@ -133,13 +133,13 @@
      prompt rather than a finished line. Slightly narrower and shorter than the default
      because it sits against 40px display type instead of 15px body text. */
   .caret-hero {
-    width: 0.6em; height: 0.95em; margin-left: 0.35em; vertical-align: -0.08em;
+    width: 0.45em; height: 0.95em; margin-left: 0.35em; vertical-align: -0.08em;
     animation: caret-blink 1s step-end infinite;
   }
 
   /* The only text buttons in the design: a hairline in --border, the same 4px radius as
      every frame, cyan label. They fill with --accent-tint on hover; nothing lifts, tilts
-     or shadows. Used by the hero, Contact and the store links in ProjectFeatured. */
+     or shadows. Used by the hero and the store links on the project cards and spotlights. */
   .btn {
     display: inline-flex; align-items: center; gap: 8px;
     min-height: 24px; padding: 2px 10px;
