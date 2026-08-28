@@ -1,6 +1,6 @@
 import Box from "@/components/terminal/Box";
 import Section from "@/components/terminal/Section";
-import { GitHubIcon, LinkedInIcon, MailIcon } from "@/components/icons";
+import { LinkedInIcon, MailIcon } from "@/components/icons";
 import { site, socialHref } from "@/lib/site";
 
 /**
@@ -19,37 +19,17 @@ export default function Contact() {
           is short and centred, and 16px around it reads as a cramped card. */}
       <Box className="mx-auto max-w-[560px]" padding="none">
         <div className="p-8 text-center">
-          <p className="text-[17px]">Want to work together, or just say hi?</p>
-          <p className="mt-1 text-muted-strong">I read every email.</p>
-          <a className="btn mt-6" href={`mailto:${site.email}`}>
-            <MailIcon width={16} height={16} aria-hidden />
-            Email me
-          </a>
-          {/* The same 24px targets around 20px glyphs the top bar uses, so the two rows of
-              social icons are one control at two sizes rather than two designs. */}
-          <p className="mt-6 flex items-center justify-center gap-4">
-            <a
-              href={socialHref("GitHub")}
-              aria-label="GitHub"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
-            >
-              <GitHubIcon width={20} height={20} />
+          <p className="text-[17px]">Let&apos;s connect</p>
+          {/* Two ways in, both as buttons, both the same weight: no ranking of email over
+              LinkedIn, no address to copy — the buttons are the address. */}
+          <p className="mt-6 flex flex-wrap items-center justify-center gap-3">
+            <a className="btn" href={`mailto:${site.email}`}>
+              <MailIcon width={16} height={16} aria-hidden />
+              Email
             </a>
-            <a
-              href={socialHref("LinkedIn")}
-              aria-label="LinkedIn"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
-            >
-              <LinkedInIcon width={20} height={20} />
-            </a>
-          </p>
-          <p className="mt-4 text-[13px] text-muted-strong">
-            <a href={`mailto:${site.email}`} className="text-cyan">
-              {site.email}
+            <a className="btn" href={socialHref("LinkedIn")} target="_blank" rel="noopener noreferrer">
+              <LinkedInIcon width={16} height={16} aria-hidden />
+              LinkedIn
             </a>
           </p>
         </div>
