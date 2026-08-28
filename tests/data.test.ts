@@ -63,18 +63,32 @@ describe("projects", () => {
 });
 
 describe("experience", () => {
-  // Newest first by start date, which is what the section renders top to bottom.
-  it("has the three roles in order, each a single summary with no banned phrases", () => {
+  // Newest first by start date, which is the order the tab list runs in top to bottom.
+  it("has the three roles in order, each with 2-4 one-sentence bullets and no banned phrases", () => {
     expect(experience.map(r => r.company)).toEqual([
       "Olivance Platforms · GasMap",
       "PathwayR",
       "City of Mississauga",
     ]);
     for (const r of experience) {
-      expect(SENTENCES(r.summary), r.company).toBe(1);
-      expect(BANNED.test(`${r.title} ${r.summary}`), r.company).toBe(false);
+      expect(r.bullets.length, r.company).toBeGreaterThanOrEqual(2);
+      expect(r.bullets.length, r.company).toBeLessThanOrEqual(4);
+      for (const bullet of r.bullets) {
+        expect(SENTENCES(bullet), `${r.company}: ${bullet}`).toBe(1);
+        expect(bullet.endsWith("."), `${r.company}: ${bullet}`).toBe(true);
+        expect(BANNED.test(bullet), `${r.company}: ${bullet}`).toBe(false);
+      }
+      expect(BANNED.test(r.title), r.company).toBe(false);
       // `site` is optional — a role with no public product has nowhere to link the company.
       if (r.site) expect(r.site, r.company).toMatch(/^https:\/\//);
+    }
+  });
+  // `short` is the tab label, and the tab column is 200px wide: past ~20 characters at 13px
+  // it either wraps or pushes the phone row wider than the thumb that swipes it.
+  it("every role has a short tab label of at most 20 characters", () => {
+    for (const r of experience) {
+      expect(r.short.trim().length, r.company).toBeGreaterThan(0);
+      expect(r.short.length, r.company).toBeLessThanOrEqual(20);
     }
   });
 });
