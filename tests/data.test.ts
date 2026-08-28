@@ -96,7 +96,7 @@ describe("experience", () => {
   // Newest first by start date, which is the order the tab list runs in top to bottom.
   it("has the three roles in order, each with 2-4 one-sentence bullets and no banned phrases", () => {
     expect(experience.map(r => r.company)).toEqual([
-      "Olivance Platforms · GasMap",
+      "Olivance Platforms",
       "PathwayR",
       "City of Mississauga",
     ]);
