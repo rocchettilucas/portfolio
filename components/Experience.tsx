@@ -58,7 +58,7 @@ export default function Experience() {
             onKeyDown={onKeyDown}
             // `.strip` hides the scrollbar on the phone row; above 769px the row is a column
             // again and the hairline that separated nav items becomes the column's edge.
-            className="strip flex min-[769px]:block min-[769px]:overflow-x-visible min-[769px]:border-r min-[769px]:border-border"
+            className="strip flex min-[769px]:flex-col min-[769px]:overflow-x-visible min-[769px]:border-r min-[769px]:border-border"
           >
             {experience.map((r, i) => (
               <button
