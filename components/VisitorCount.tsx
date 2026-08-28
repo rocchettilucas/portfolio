@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { UserIcon } from "@/components/icons";
 
 // The bottom bar's all-time visitor total. It is a client component for one reason: the
 // count has to come from a POST (the request is what increments), which a server component
@@ -44,9 +45,9 @@ export default function VisitorCount() {
   if (count === null) return null;
 
   return (
-    <span aria-live="off">
-      <span aria-hidden className="chip-dot" />
-      {count === "loading" ? "—" : count.toLocaleString("en-CA")} visitors
+    <span aria-live="off" className="inline-flex items-center gap-2">
+      <UserIcon width={13} height={13} aria-hidden className="shrink-0 text-accent" />
+      <span>{count === "loading" ? "—" : count.toLocaleString("en-CA")} visitors</span>
     </span>
   );
 }
