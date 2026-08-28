@@ -15,6 +15,10 @@ const csp = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   images: { formats: ["image/avif", "image/webp"] },
+  // The listing was /projects until v2.1; anything that bookmarked or indexed it lands here.
+  async redirects() {
+    return [{ source: "/projects", destination: "/work", permanent: true }];
+  },
   async headers() {
     return [
       {

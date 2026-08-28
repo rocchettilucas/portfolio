@@ -4,7 +4,7 @@ export type Project = {
   title: string;
   blurb: string;            // exactly one sentence — the card line
   description: string[];    // 2-3 short sentences for /projects, one per array item
-  image: string;            // 16/10 screenshot, shown on the home card and the /projects spotlight
+  image: string;            // 16/10 screenshot, shown on the home card and the /work spotlight
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
@@ -86,32 +86,52 @@ export const projects: Project[] = [
 // /projects. Filtered rather than sliced so reordering the array reorders the page with it.
 export const homeProjects = projects.filter((p) => p.placement === "featured" || p.placement === "card");
 
-// One paragraph per role, not a bullet list: the numbers that would fill bullets are already
-// on the project cards, and repeating them here reads as padding.
-export type Role = { company: string; title: string; dates: string; site?: string; summary: string };
+// Two or three bullets per role rather than a paragraph: the section is a tab list now, and a
+// panel that swaps one block of prose for another gives the eye nothing to land on. `short` is
+// the tab label — the company name trimmed to what fits a 200px column.
+export type Role = {
+  company: string;
+  short: string;
+  title: string;
+  dates: string;
+  site?: string;
+  bullets: string[];        // 2-3 items, one sentence each
+};
 export const experience: Role[] = [
   {
     company: "Olivance Platforms · GasMap",
+    short: "GasMap",
     title: "Software Engineer",
     dates: "Jun 2026 – present",
     site: "https://gasmap.ai",
-    summary:
-      "Building GasMap, a gas-price app for iOS and Android with live prices for stations across Ontario — the mobile app, the geospatial API behind it, and the work of keeping it fast.",
+    bullets: [
+      "Launched GasMap on iOS and Android — 200+ downloads across Ontario in the first month.",
+      "Built the React Native app and the FastAPI geospatial backend serving live prices for 3,000+ stations.",
+      "Cut initial map load from 17.7 s to 234 ms by reworking the station lookup — no schema change, no downtime.",
+    ],
   },
   {
     company: "PathwayR",
+    short: "PathwayR",
     title: "Software Developer",
     dates: "Jan 2026 – Apr 2026",
     site: "https://pathwayr.com",
-    summary:
-      "Built registration and onboarding for a research-opportunity platform used at five Canadian universities — students, mentors and professors, each with their own way in.",
+    bullets: [
+      "Built role-based registration for students, mentors and professors across five Canadian universities.",
+      "Added institutional-email verification, admin approval and role-specific onboarding.",
+      "Supported verified sign-up across 1,500+ professor profiles and a 500+ scholarship catalog.",
+    ],
   },
   {
     company: "City of Mississauga",
+    short: "City of Mississauga",
     title: "Operations Coordinator",
     dates: "Jun 2023 – present",
-    summary:
-      "Operational planning for 70+ events a year at the Mississauga Sports and Entertainment Centre — venue setup, attendance forecasts and coordination across five municipal departments.",
+    bullets: [
+      "Plan operations for 70+ events a year at the Mississauga Sports and Entertainment Centre.",
+      "Define venue configurations and attendance forecasts across five municipal departments.",
+      "Coordinate facility teams and event staff for crowds of 5,000+.",
+    ],
   },
 ];
 

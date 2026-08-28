@@ -10,9 +10,9 @@ import { site } from "@/lib/site";
 // The root layout points `alternates.canonical` at "/", which would otherwise follow this
 // route down and tell search engines the listing is a copy of the home page.
 export const metadata: Metadata = {
-  title: "Projects",
+  title: "Work",
   description: site.description,
-  alternates: { canonical: "/projects" },
+  alternates: { canonical: "/work" },
 };
 
 /**
@@ -23,18 +23,18 @@ export const metadata: Metadata = {
  * `h1` — `Section` renders the `h2` a section of the home page under its own `h1` wants —
  * but the spacing is `Section`'s, so the two pages set out on the same grid.
  */
-export default function ProjectsPage() {
+export default function WorkPage() {
   return (
     <>
       <TopBar />
       <main id="main" className="page">
         <section
-          id="all-projects"
-          aria-labelledby="all-projects-title"
+          id="all-work"
+          aria-labelledby="all-work-title"
           className="px-6 py-14 max-sm:px-4 max-md:py-10"
         >
-          <h1 id="all-projects-title" aria-label="All projects" className="mb-2 text-[15px] font-normal">
-            <Prompt command="projects --all" />
+          <h1 id="all-work-title" aria-label="All work" className="mb-2 text-[15px] font-normal">
+            <Prompt command="work --all" />
           </h1>
           <p className="mb-6">
             <Link href="/" className="text-cyan">
