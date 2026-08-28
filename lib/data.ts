@@ -80,6 +80,36 @@ export const projects: Project[] = [
     logo: "/projects/pathwayr-192.png",
     placement: "list",
   },
+  // The two Unity projects have no product mark to sit beside the name, so `logo` is left
+  // undefined and the card falls back to the folder glyph the listing already draws.
+  {
+    slug: "hallway-duty",
+    title: "Hallway Duty",
+    blurb: "A first-person cleanup game set in a school hallway, where the job is to collect every piece of garbage left on the floor.",
+    description: [
+      "A first-person game about clearing a school hallway of litter, with a running count of the garbage collected and wet-floor hazards to work around.",
+      "Built in Unity with C#, with every 3D asset in the level — lockers, doors, bins and signage — modelled by hand in Autodesk Maya.",
+      "Submitted to itch.io.",
+    ],
+    image: "/projects/hallway-duty-shot.webp",
+    tech: ["Unity", "C#", "Autodesk Maya"],
+    links: { site: "https://lucasrocchetti.itch.io/hallway-duty" },
+    placement: "list",
+  },
+  {
+    slug: "office-outbreak",
+    title: "Office Outbreak",
+    blurb: "A first-person wave shooter — fight off rounds of zombies through an office building with an arsenal of guns.",
+    description: [
+      "A round-based survival FPS set in an office building, where each wave sends more zombies than the one before it.",
+      "Multiple weapons are available as the rounds escalate.",
+      "Built in Unity with C#.",
+    ],
+    image: "/projects/office-outbreak-shot.webp",
+    tech: ["Unity", "C#"],
+    links: {},
+    placement: "list",
+  },
 ];
 
 // What the home page lists, in the order written above — the "list" entries are held back for

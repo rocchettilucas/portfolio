@@ -11,16 +11,25 @@ describe("projects", () => {
     expect(projects[0].slug).toBe("gasmap");
     expect(projects.filter(p => p.placement === "featured")).toHaveLength(1);
   });
-  it("lists the four projects in order, with three of them on the home page", () => {
-    expect(projects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane", "pathwayr"]);
+  it("lists the six projects in order, with three of them on the home page", () => {
+    expect(projects.map(p => p.slug)).toEqual([
+      "gasmap", "rocspace", "winlane", "pathwayr", "hallway-duty", "office-outbreak",
+    ]);
     expect(homeProjects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane"]);
   });
-  it("every project has a logo and a /projects/<slug>-*.webp screenshot", () => {
-    // The suffix is free so a replaced image can take a new name and miss every cache.
+  it("every project has a /projects/<slug>-*.webp screenshot", () => {
+    // The suffix is free so a replaced image can take a new name and miss every cache. The
+    // slug itself may be hyphenated ("hallway-duty"), so it goes into the pattern verbatim
+    // rather than as a character class.
     for (const p of projects) {
-      expect(p.logo, p.slug).toBeTruthy();
       expect(p.image, p.slug).toMatch(new RegExp(`^/projects/${p.slug}-[a-z]+\\.webp$`));
     }
+  });
+  // The two Unity projects have no product mark of their own — the card and the spotlight
+  // both fall back to the folder glyph — so a logo is required only of the rest.
+  it("every project but the Unity pair carries a 192px logo", () => {
+    const noLogo = projects.filter(p => !p.logo).map(p => p.slug);
+    expect(noLogo).toEqual(["hallway-duty", "office-outbreak"]);
   });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
     for (const p of projects) {
@@ -59,6 +68,14 @@ describe("projects", () => {
     expect(projects.filter(p => p.links.github).map(p => p.slug)).toEqual(["rocspace"]);
     expect(projects.find(p => p.slug === "rocspace")!.links.github).toBe("https://github.com/rocchettilucas/RocSpace");
     for (const p of projects) for (const v of Object.values(p.links)) expect(v).not.toBe("#");
+  });
+  // Office Outbreak has nothing public to point at yet, so its icon row renders nothing at
+  // all — an entry with no links is a supported state, not a hole in the data.
+  it("office-outbreak carries no links, and hallway-duty only its itch.io page", () => {
+    const oo = projects.find(p => p.slug === "office-outbreak")!;
+    expect(Object.keys(oo.links)).toEqual([]);
+    const hd = projects.find(p => p.slug === "hallway-duty")!;
+    expect(hd.links).toEqual({ site: "https://lucasrocchetti.itch.io/hallway-duty" });
   });
 });
 
