@@ -161,6 +161,14 @@
   .pop { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
   .pop:hover { transform: scale(1.035); }
 
+  /* A product mark inline with typed text, recoloured to the text: the PNG is used as a
+     mask over a currentColor fill, so the logo's own green and orange never show. */
+  .role-mark {
+    display: inline-block; width: 1em; height: 1em; margin-left: 0.4em; vertical-align: -0.12em;
+    background: currentColor;
+    -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat;
+  }
+
   /* The only text buttons in the design: a hairline in --border, the same 4px radius as
      every frame, cyan label. They fill with --accent-tint on hover; nothing lifts, tilts
      or shadows. Used by the hero and the store links on the project cards and spotlights. */

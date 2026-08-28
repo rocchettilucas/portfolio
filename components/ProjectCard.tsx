@@ -18,7 +18,7 @@ import type { Project } from "@/lib/data";
  * column inside pushes that last line down with `mt-auto`.
  */
 export default function ProjectCard({ project }: { project: Project }) {
-  const { slug, title, blurb, image, tech, links, logo, meta, rating, placement } = project;
+  const { slug, title, blurb, image, tech, links, logo, meta, rating } = project;
 
   return (
     <Box
@@ -53,18 +53,6 @@ export default function ProjectCard({ project }: { project: Project }) {
                   instead of being stranded on a line of its own. */}
               <h3 className="min-w-0 text-[15px] font-bold">
                 {title}
-                {placement === "featured" ? (
-                  <>
-                    {" "}
-                    <StarIcon
-                      role="img"
-                      aria-label="Featured"
-                      width={14}
-                      height={14}
-                      className="inline-block align-[-0.1em] text-accent"
-                    />
-                  </>
-                ) : null}
               </h3>
             </div>
             <div className="flex shrink-0 items-center text-cyan">

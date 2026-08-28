@@ -113,6 +113,7 @@ export default function TopBar() {
             closed, typed line reset, counter re-read — where the `home` item beside it only
             scrolls. py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose
             own height is fixed at 40px, so nothing below moves. */}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- a full reload is the point */}
         <a href="/" className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent">
           {site.name.toLowerCase()}
         </a>
