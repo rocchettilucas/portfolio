@@ -164,7 +164,7 @@
   /* A product mark inline with typed text, recoloured to the text: the PNG is used as a
      mask over a currentColor fill, so the logo's own green and orange never show. */
   .role-mark {
-    display: inline-block; width: 1em; height: 1em; margin-left: 0.4em; vertical-align: -0.12em;
+    display: inline-block; width: 1em; height: 1em; margin: 0 0.15em 0 0.4em; vertical-align: -0.12em;
     background: currentColor;
     -webkit-mask: var(--mark) center / contain no-repeat; mask: var(--mark) center / contain no-repeat;
   }
