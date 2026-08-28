@@ -11,8 +11,8 @@ const HOLD_MS = 1800;
 const PAUSE_MS = 400;
 
 /**
- * The line under the greeting: a `$` prompt with one of `ROLES` typed after it, held, erased,
- * and replaced by the next — forever.
+ * The line under the greeting: a `$` prompt with one of `ROLES` typed after it and a caret
+ * riding the end of the text, held, erased, and replaced by the next — forever.
  *
  * The server renders the first role in full and the loop starts from there, already typed, so
  * the paragraph has its height before hydration and nothing shifts. Under
@@ -25,6 +25,9 @@ const PAUSE_MS = 400;
  */
 export default function TypedRoles() {
   const [text, setText] = useState<string>(ROLES[0]);
+  // True while characters are arriving or leaving. A terminal's caret sits solid while you
+  // type and only blinks once you stop, so the rests are the only time this one blinks.
+  const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -44,9 +47,11 @@ export default function TypedRoles() {
         if (count === 0) {
           deleting = false;
           index = (index + 1) % ROLES.length;
+          setBusy(false);
           timer = window.setTimeout(tick, PAUSE_MS);
           return;
         }
+        setBusy(true);
         timer = window.setTimeout(tick, DELETE_MS);
         return;
       }
@@ -54,9 +59,11 @@ export default function TypedRoles() {
       setText(role.slice(0, count));
       if (count === role.length) {
         deleting = true;
+        setBusy(false);
         timer = window.setTimeout(tick, HOLD_MS);
         return;
       }
+      setBusy(true);
       timer = window.setTimeout(tick, TYPE_MS);
     };
 
@@ -76,6 +83,9 @@ export default function TypedRoles() {
         $
       </span>
       {text}
+      {/* The prompt's own caret: solid while a role is being typed or erased, blinking on the
+          rests, exactly as a shell's does. Decorative — the label above already says it all. */}
+      <span aria-hidden className={`caret caret-typed${busy ? " caret-solid" : ""}`} />
     </p>
   );
 }

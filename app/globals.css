@@ -147,6 +147,15 @@
     animation: caret-blink 1s step-end infinite;
   }
 
+  /* The caret on the typed-roles line. Slimmer than the hero's: it sits against 17px text.
+     `.caret-solid` is applied while characters are moving, which stops the blink the way a
+     real caret stops blinking the moment you type. */
+  .caret-typed {
+    width: 0.5em; height: 1em; margin-left: 0.2em; vertical-align: -0.12em;
+    animation: caret-blink 1s step-end infinite;
+  }
+  .caret-typed.caret-solid { animation: none; opacity: 1; }
+
   /* The only text buttons in the design: a hairline in --border, the same 4px radius as
      every frame, cyan label. They fill with --accent-tint on hover; nothing lifts, tilts
      or shadows. Used by the hero and the store links on the project cards and spotlights. */
@@ -199,6 +208,7 @@
   .caret { animation: none; }
   /* The hero caret keeps blinking even here: one 1em block at 1Hz is a terminal idiom,
      not motion that moves content, and without it the greeting reads as a typo. */
-  .caret-hero { animation: caret-blink 1s step-end infinite !important; }
+  .caret-hero, .caret-typed { animation: caret-blink 1s step-end infinite !important; }
+  .caret-typed.caret-solid { animation: none !important; }
   .hero-in { animation: none; }
 }
