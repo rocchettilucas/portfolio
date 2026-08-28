@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ROLES } from "@/lib/site";
 
@@ -10,10 +11,9 @@ const DELETE_MS = 40;
 const HOLD_MS = 1800;
 const PAUSE_MS = 400;
 
-// A role that names a product shows the product's mark once it is fully typed — in the text
-// colour, not the brand colours, so it reads as part of the sentence. Keyed by the full
-// role string so the mark appears exactly when the word does and leaves with its first
-// erased character.
+// A role that names a product shows the product's mark once it is fully typed, in its own
+// colours. Keyed by the full role string so the mark appears exactly when the word does and
+// leaves with its first erased character.
 const ROLE_MARKS: Record<string, string> = { "Building GasMap": "/projects/gasmap-192.png" };
 
 /**
@@ -90,11 +90,7 @@ export default function TypedRoles() {
       </span>
       {text}
       {ROLE_MARKS[text] ? (
-        <span
-          aria-hidden
-          className="role-mark"
-          style={{ ["--mark" as string]: `url(${ROLE_MARKS[text]})` }}
-        />
+        <Image src={ROLE_MARKS[text]} alt="" width={18} height={18} className="role-mark" />
       ) : null}
       {/* The prompt's own caret: solid while a role is being typed or erased, blinking on the
           rests, exactly as a shell's does. Decorative — the label above already says it all. */}
