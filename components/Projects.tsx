@@ -16,7 +16,7 @@ export default function Work() {
   return (
     <Section
       id="work"
-      command="work"
+      command="selected work"
       label="Selected work"
       // On the heading row, not under the cards: the way out is announced where the section
       // is announced. The arrow is part of the sentence — the same "there is more this way"
