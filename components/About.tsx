@@ -21,10 +21,12 @@ const INVERT = new Set(["/icons/rust.svg", "/icons/expo.svg", "/icons/tokio.svg"
 export default function About() {
   return (
     <Section id="about" command="about me" label="About me">
-      <div className="grid gap-8 min-[769px]:grid-cols-[260px_1fr] min-[769px]:gap-10">
+      <div className="grid gap-8 min-[769px]:grid-cols-[1fr_260px] min-[769px]:gap-10">
         {/* The file is 900×1200, so the 3:4 box is reserved from the intrinsic size and
             nothing below it moves while the photo loads. */}
-        <figure className="m-0 w-full max-w-[260px] justify-self-center">
+        {/* Photo on the right at ≥769px, but first in the DOM (and first on a phone), so the
+            reading order stays photo → text; `order-2` only moves it visually. */}
+        <figure className="m-0 w-full max-w-[260px] justify-self-center min-[769px]:order-2">
           <Image
             src="/about/lucas.jpg"
             alt="Lucas Rocchetti"
