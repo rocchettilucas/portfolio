@@ -26,7 +26,7 @@ export const projects: Project[] = [
       "Reached 200+ downloads in its first month and holds a 5.0 rating on the App Store.",
       "React Native client on a FastAPI geospatial API backed by PostgreSQL/PostGIS and Redis.",
     ],
-    image: "/projects/gasmap-shot.webp",
+    image: "/projects/gasmap-hand.webp",
     tech: ["React Native", "Expo", "FastAPI", "PostgreSQL / PostGIS", "Redis"],
     links: {
       site: "https://gasmap.ai",
@@ -60,7 +60,7 @@ export const projects: Project[] = [
       "Ranks champion picks against an opponent's team composition across five roles, with 4,500+ indexed matchup pages.",
       "A FastAPI/PostgreSQL pipeline pulls Riot's Data Dragon after each patch and recomputes recommendations.",
     ],
-    image: "/projects/winlane-shot.webp",
+    image: "/projects/winlane-home.webp",
     tech: ["React", "TypeScript", "FastAPI", "PostgreSQL"],
     links: { site: "https://winlane.gg" },
     logo: "/projects/winlane-192.png",
