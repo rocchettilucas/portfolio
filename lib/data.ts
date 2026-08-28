@@ -143,7 +143,7 @@ export type Role = {
 };
 export const experience: Role[] = [
   {
-    company: "Olivance Platforms · GasMap",
+    company: "Olivance Platforms",
     short: "GasMap",
     title: "Software Engineer",
     dates: "Jun 2026 – present",
