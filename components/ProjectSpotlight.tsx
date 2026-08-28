@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Box from "@/components/terminal/Box";
-import { ExternalIcon, FolderIcon, GitHubIcon, StarIcon } from "@/components/icons";
+import { AppStoreIcon, ExternalIcon, FolderIcon, GitHubIcon, GooglePlayIcon, StarIcon } from "@/components/icons";
 import type { Project } from "@/lib/data";
 
 /**
@@ -47,6 +47,28 @@ export default function ProjectSpotlight({ project }: { project: Project }) {
               <GitHubIcon />
             </a>
           ) : null}
+          {links.appStore ? (
+            <a
+              href={links.appStore}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${title} on the App Store`}
+              className="inline-flex h-6 w-6 items-center justify-center"
+            >
+              <AppStoreIcon width={17} height={17} />
+            </a>
+          ) : null}
+          {links.googlePlay ? (
+            <a
+              href={links.googlePlay}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`${title} on Google Play`}
+              className="inline-flex h-6 w-6 items-center justify-center"
+            >
+              <GooglePlayIcon width={16} height={16} />
+            </a>
+          ) : null}
           {links.site ? (
             <a
               href={links.site}
@@ -76,7 +98,7 @@ export default function ProjectSpotlight({ project }: { project: Project }) {
                 height={12}
                 className="inline-block align-[-0.1em] text-accent"
               />{" "}
-              {rating.toFixed(1)} on the App Store
+              {rating.toFixed(1)}
             </>
           ) : null}
         </p>
@@ -87,21 +109,6 @@ export default function ProjectSpotlight({ project }: { project: Project }) {
           stack of one-sentence paragraphs. */}
       <p className="mt-3 max-w-[68ch]">{description.join(" ")}</p>
       <p className="mt-2 text-muted-strong">{tech.join(" · ")}</p>
-
-      {links.appStore || links.googlePlay ? (
-        <p className="mt-4 flex flex-wrap items-center gap-3">
-          {links.appStore ? (
-            <a href={links.appStore} target="_blank" rel="noopener noreferrer" className="btn">
-              App Store
-            </a>
-          ) : null}
-          {links.googlePlay ? (
-            <a href={links.googlePlay} target="_blank" rel="noopener noreferrer" className="btn">
-              Google Play
-            </a>
-          ) : null}
-        </p>
-      ) : null}
     </Box>
   );
 }

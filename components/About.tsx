@@ -20,7 +20,7 @@ const INVERT = new Set(["/icons/rust.svg", "/icons/expo.svg", "/icons/tokio.svg"
  */
 export default function About() {
   return (
-    <Section id="about" command="about" label="About">
+    <Section id="about" command="about me" label="About me">
       <div className="grid gap-8 min-[769px]:grid-cols-[260px_1fr] min-[769px]:gap-10">
         {/* The file is 900×1200, so the 3:4 box is reserved from the intrinsic size and
             nothing below it moves while the photo loads. */}
@@ -31,11 +31,11 @@ export default function About() {
             width={260}
             height={347}
             sizes="(max-width: 768px) 60vw, 260px"
-            className="h-auto w-full rounded-[4px] border border-border object-cover"
+            className="pop h-auto w-full rounded-[4px] border border-border object-cover"
           />
           {/* Where the photo was taken is where I am; the caption says so under it rather
               than in a record beside the text. */}
-          <figcaption className="mt-2 flex items-center gap-1.5 text-[13px] text-muted-strong">
+          <figcaption className="mt-2 flex items-center justify-center gap-1.5 text-[13px] text-muted-strong">
             <PinIcon width={13} height={13} aria-hidden className="shrink-0 text-accent" />
             Toronto, Canada
           </figcaption>

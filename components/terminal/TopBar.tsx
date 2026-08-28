@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState, type ComponentType, type SVGProps } from "react";
 import { site, socialHref } from "@/lib/site";
@@ -9,6 +8,7 @@ import {
   BriefcaseIcon,
   FolderIcon,
   GitHubIcon,
+  HomeIcon,
   LinkedInIcon,
   MailIcon,
   UserIcon,
@@ -109,23 +109,13 @@ export default function TopBar() {
           whatever is left, so a small floor here buys the icon row room on a 390px phone
           without changing how the bar looks anywhere it is not tight. */}
       <div className="bar-inner gap-1 text-[13px] sm:gap-4">
-        <Link
-          href="/"
-          // On the home page a click is "take me back to the top", not a navigation: the
-          // route would not change, so nothing would move. Scroll instead, and drop any
-          // section hash so a reload does not jump straight back down.
-          onClick={(e) => {
-            if (!onHome) return;
-            e.preventDefault();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            if (window.location.hash) history.replaceState(null, "", "/");
-          }}
-          // py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose own
-          // height is fixed at 40px, so nothing below moves.
-          className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent"
-        >
+        {/* A plain anchor on purpose: the name is "start over" — a full load of `/`, palette
+            closed, typed line reset, counter re-read — where the `home` item beside it only
+            scrolls. py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose
+            own height is fixed at 40px, so nothing below moves. */}
+        <a href="/" className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent">
           {site.name.toLowerCase()}
-        </Link>
+        </a>
 
         {/* Centred, like the reference. `strip` is insurance rather than the layout: the
             labels are hidden below 900px, so this only ever scrolls if a section is added
@@ -134,6 +124,23 @@ export default function TopBar() {
           aria-label="Main"
           className="strip flex min-w-0 flex-1 items-center justify-center gap-0.5 sm:gap-1"
         >
+          <a
+            href={onHome ? "#top" : "/#top"}
+            aria-current={onHome && active === "" ? "location" : undefined}
+            aria-label="Home"
+            className="nav-item whitespace-nowrap"
+            onClick={(e) => {
+              if (!onHome) return;
+              e.preventDefault();
+              setActive("");
+              pin(700);
+              window.scrollTo({ top: 0, behavior: "smooth" });
+              if (window.location.hash) history.replaceState(null, "", "/");
+            }}
+          >
+            <HomeIcon width={16} height={16} aria-hidden />
+            <span>home</span>
+          </a>
           {SECTIONS.map((id) => {
             const Icon = ICONS[id] ?? FolderIcon;
             // The label span is display:none below 900px, so the accessible name has to
@@ -188,6 +195,13 @@ export default function TopBar() {
             className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
           >
             <LinkedInIcon width={18} height={18} />
+          </a>
+          <a
+            href={socialHref("Email")}
+            aria-label="Email"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+          >
+            <MailIcon width={18} height={18} />
           </a>
         </div>
       </div>

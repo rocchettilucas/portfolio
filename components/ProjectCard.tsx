@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Box from "@/components/terminal/Box";
-import { ExternalIcon, FolderIcon, GitHubIcon, StarIcon } from "@/components/icons";
+import { AppStoreIcon, ExternalIcon, FolderIcon, GitHubIcon, GooglePlayIcon, StarIcon } from "@/components/icons";
 import type { Project } from "@/lib/data";
 
 /**
@@ -19,7 +19,6 @@ import type { Project } from "@/lib/data";
  */
 export default function ProjectCard({ project }: { project: Project }) {
   const { slug, title, blurb, image, tech, links, logo, meta, rating, placement } = project;
-  const hasStore = Boolean(links.appStore || links.googlePlay);
 
   return (
     <Box
@@ -80,6 +79,28 @@ export default function ProjectCard({ project }: { project: Project }) {
                   <GitHubIcon />
                 </a>
               ) : null}
+              {links.appStore ? (
+                <a
+                  href={links.appStore}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${title} on the App Store`}
+                  className="inline-flex h-6 w-6 items-center justify-center"
+                >
+                  <AppStoreIcon width={17} height={17} />
+                </a>
+              ) : null}
+              {links.googlePlay ? (
+                <a
+                  href={links.googlePlay}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={`${title} on Google Play`}
+                  className="inline-flex h-6 w-6 items-center justify-center"
+                >
+                  <GooglePlayIcon width={16} height={16} />
+                </a>
+              ) : null}
               {links.site ? (
                 <a
                   href={links.site}
@@ -109,33 +130,17 @@ export default function ProjectCard({ project }: { project: Project }) {
                     height={12}
                     className="inline-block align-[-0.1em] text-accent"
                   />{" "}
-                  {rating.toFixed(1)} on the App Store
+                  {rating.toFixed(1)}
                 </>
               ) : null}
             </p>
           ) : null}
 
           <p className="mt-3">{blurb}</p>
-          {/* The shared `.btn` from globals.css — the design's one text button. Only the
-              projects that ship in a store have anywhere for it to go. */}
-          {hasStore ? (
-            <p className="mt-auto flex flex-wrap items-center gap-3 pt-4">
-              {links.appStore ? (
-                <a href={links.appStore} target="_blank" rel="noopener noreferrer" className="btn">
-                  App Store
-                </a>
-              ) : null}
-              {links.googlePlay ? (
-                <a href={links.googlePlay} target="_blank" rel="noopener noreferrer" className="btn">
-                  Google Play
-                </a>
-              ) : null}
-            </p>
-          ) : null}
-          {/* Pinned to the bottom edge on every card: `mt-auto` here when there is no store row,
-              and a plain margin under the buttons when there is, so the tech lines of three
-              cards in a row sit on the same baseline. */}
-          <p className={`${hasStore ? "mt-3" : "mt-auto pt-4"} text-muted-strong`}>{tech.join(" · ")}</p>
+
+          {/* Pinned to the bottom edge on every card, so the tech lines of three cards in a
+              row sit on the same baseline. */}
+          <p className="mt-auto pt-4 text-muted-strong">{tech.join(" · ")}</p>
         </div>
       </div>
     </Box>

@@ -156,6 +156,11 @@
   }
   .caret-typed.caret-solid { animation: none; opacity: 1; }
 
+  /* The one thing on the page that lifts: the About photo swells a touch under the cursor.
+     Transform only, so nothing around it reflows. */
+  .pop { transition: transform .3s cubic-bezier(.2,.8,.2,1); }
+  .pop:hover { transform: scale(1.035); }
+
   /* The only text buttons in the design: a hairline in --border, the same 4px radius as
      every frame, cyan label. They fill with --accent-tint on hover; nothing lifts, tilts
      or shadows. Used by the hero and the store links on the project cards and spotlights. */
@@ -211,4 +216,6 @@
   .caret-hero, .caret-typed { animation: caret-blink 1s step-end infinite !important; }
   .caret-typed.caret-solid { animation: none !important; }
   .hero-in { animation: none; }
+  .pop { transition: none; }
+  .pop:hover { transform: none; }
 }
