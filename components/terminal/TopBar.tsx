@@ -111,6 +111,15 @@ export default function TopBar() {
       <div className="bar-inner gap-1 text-[13px] sm:gap-4">
         <Link
           href="/"
+          // On the home page a click is "take me back to the top", not a navigation: the
+          // route would not change, so nothing would move. Scroll instead, and drop any
+          // section hash so a reload does not jump straight back down.
+          onClick={(e) => {
+            if (!onHome) return;
+            e.preventDefault();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            if (window.location.hash) history.replaceState(null, "", "/");
+          }}
           // py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose own
           // height is fixed at 40px, so nothing below moves.
           className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent"
