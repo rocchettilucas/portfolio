@@ -15,10 +15,11 @@ describe("projects", () => {
     expect(projects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane", "pathwayr"]);
     expect(homeProjects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane"]);
   });
-  it("every project has a logo and a /projects/<slug>-shot.webp screenshot", () => {
+  it("every project has a logo and a /projects/<slug>-*.webp screenshot", () => {
+    // The suffix is free so a replaced image can take a new name and miss every cache.
     for (const p of projects) {
       expect(p.logo, p.slug).toBeTruthy();
-      expect(p.image, p.slug).toBe(`/projects/${p.slug}-shot.webp`);
+      expect(p.image, p.slug).toMatch(new RegExp(`^/projects/${p.slug}-[a-z]+\\.webp$`));
     }
   });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
