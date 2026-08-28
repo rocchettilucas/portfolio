@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Section from "@/components/terminal/Section";
-import { about, education, skills } from "@/lib/data";
+import { PinIcon } from "@/components/icons";
+import { about, skills } from "@/lib/data";
 
 // Devicon ships Rust's, Expo's and Tokio's marks in flat black, which disappears on the
 // dark ground; `invert` turns each of them white without touching the colour marks.
@@ -18,21 +19,27 @@ const INVERT = new Set(["/icons/rust.svg", "/icons/expo.svg", "/icons/tokio.svg"
  * measure; below it the two stack and the photo centres over the copy.
  */
 export default function About() {
-  const school = education[0];
-
   return (
     <Section id="about" command="about" label="About">
       <div className="grid gap-8 min-[769px]:grid-cols-[260px_1fr] min-[769px]:gap-10">
         {/* The file is 900×1200, so the 3:4 box is reserved from the intrinsic size and
             nothing below it moves while the photo loads. */}
-        <Image
-          src="/about/lucas.jpg"
-          alt="Lucas Rocchetti"
-          width={260}
-          height={347}
-          sizes="(max-width: 768px) 60vw, 260px"
-          className="h-auto w-full max-w-[260px] justify-self-center rounded-[4px] border border-border object-cover"
-        />
+        <figure className="m-0 w-full max-w-[260px] justify-self-center">
+          <Image
+            src="/about/lucas.jpg"
+            alt="Lucas Rocchetti"
+            width={260}
+            height={347}
+            sizes="(max-width: 768px) 60vw, 260px"
+            className="h-auto w-full rounded-[4px] border border-border object-cover"
+          />
+          {/* Where the photo was taken is where I am; the caption says so under it rather
+              than in a record beside the text. */}
+          <figcaption className="mt-2 flex items-center gap-1.5 text-[13px] text-muted-strong">
+            <PinIcon width={13} height={13} aria-hidden className="shrink-0 text-accent" />
+            Toronto, Canada
+          </figcaption>
+        </figure>
 
         <div className="min-w-0">
           {about.paragraphs.map((paragraph, i) => (
@@ -40,15 +47,6 @@ export default function About() {
               {paragraph}
             </p>
           ))}
-
-          {/* Keys in the muted tone and values in the body tone, on one two-column grid, so
-              the values line up down the page the way a shell prints a record. */}
-          <dl className="mt-5 grid grid-cols-[auto_1fr] gap-x-4 gap-y-1">
-            <dt className="text-muted-strong">location:</dt>
-            <dd>Toronto, Canada</dd>
-            <dt className="text-muted-strong">education:</dt>
-            <dd>{`${school.degree}, ${school.name} · ${school.dates}`}</dd>
-          </dl>
 
           <div className="mt-5">
             <p className="text-muted-strong">skills:</p>
