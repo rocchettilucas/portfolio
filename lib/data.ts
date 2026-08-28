@@ -8,6 +8,7 @@ export type Project = {
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
+  dates: string;            // when it was worked on, resume-style ("Jun 2026 – present")
   meta?: string;            // small muted line, product facts only
   rating?: number;          // store rating, rendered after `meta` behind a star
   // "featured" and "card" are what the home page renders; "list" only appears on /projects.
@@ -20,6 +21,7 @@ export const projects: Project[] = [
   {
     slug: "gasmap",
     title: "GasMap",
+    dates: "Jun 2026 – present",
     blurb: "Find the cheapest gas nearby, with live prices and trends for every station around you.",
     description: [
       "Cross-platform gas-price app for Ontario drivers, with live prices for 3,000+ stations.",
@@ -41,6 +43,7 @@ export const projects: Project[] = [
   {
     slug: "rocspace",
     title: "RocSpace",
+    dates: "May 2026 – Aug 2026",
     blurb: "A macOS agentic development environment that runs coding agents and shells side by side in persistent workspaces.",
     description: [
       "Open-source macOS workspace for running Claude Code, Codex and other CLI agents beside real shells, with task tracking that lives in the repository through a bundled MCP server.",
@@ -55,6 +58,7 @@ export const projects: Project[] = [
   {
     slug: "winlane",
     title: "WinLane.GG",
+    dates: "Apr 2026 – Jun 2026",
     blurb: "Champion-pick recommendations for League of Legends, ranked against the enemy team across 170+ champions.",
     description: [
       "Ranks champion picks against an opponent's team composition across five roles, with 4,500+ indexed matchup pages.",
@@ -69,6 +73,7 @@ export const projects: Project[] = [
   {
     slug: "pathwayr",
     title: "PathwayR",
+    dates: "Jan 2026 – Apr 2026",
     blurb: "Role-based registration and onboarding for a research-opportunity platform used at five Canadian universities.",
     description: [
       "Registration and onboarding for students, mentors and professors on a platform serving five universities.",
@@ -85,6 +90,7 @@ export const projects: Project[] = [
   {
     slug: "hallway-duty",
     title: "Hallway Duty",
+    dates: "Sep 2024 – Dec 2024",
     blurb: "A first-person cleanup game set in a school hallway, where the job is to collect every piece of garbage left on the floor.",
     description: [
       "A first-person game about clearing a school hallway of litter, with a running count of the garbage collected and wet-floor hazards to work around.",
@@ -99,6 +105,7 @@ export const projects: Project[] = [
   {
     slug: "office-outbreak",
     title: "Office Outbreak",
+    dates: "Feb 2025 – Apr 2025",
     blurb: "A first-person wave shooter — fight off rounds of zombies through an office building with an arsenal of guns.",
     description: [
       "A round-based survival FPS set in an office building, where each wave sends more zombies than the one before it.",

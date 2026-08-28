@@ -31,6 +31,9 @@ describe("projects", () => {
     const noLogo = projects.filter(p => !p.logo).map(p => p.slug);
     expect(noLogo).toEqual(["hallway-duty", "office-outbreak"]);
   });
+  it("every project has resume-style dates", () => {
+    for (const p of projects) expect(p.dates, p.slug).toMatch(/^[A-Z][a-z]{2} 20\d\d – ([A-Z][a-z]{2} 20\d\d|present)$/);
+  });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
     for (const p of projects) {
       expect(SENTENCES(p.blurb), p.slug).toBe(1);
