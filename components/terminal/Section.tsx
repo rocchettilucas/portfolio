@@ -9,18 +9,25 @@ export default function Section({
   id,
   command,
   label,
+  aside,
   children,
 }: {
   id: string;
   command: string;
   label: string;
+  // Optional right-hand end of the heading row — a link out of the section, set on the
+  // heading's own baseline so it reads as part of the command line, not as a footer.
+  aside?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <section id={id} aria-labelledby={`${id}-title`} className="px-6 py-14 max-sm:px-4 max-md:py-10">
-      <h2 id={`${id}-title`} aria-label={label} className="mb-6 text-[15px] font-normal">
-        <Prompt command={command} />
-      </h2>
+      <div className="mb-6 flex items-baseline justify-between gap-4">
+        <h2 id={`${id}-title`} aria-label={label} className="text-[15px] font-normal">
+          <Prompt command={command} />
+        </h2>
+        {aside}
+      </div>
       {children}
     </section>
   );
