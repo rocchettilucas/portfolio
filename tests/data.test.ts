@@ -25,6 +25,16 @@ describe("projects", () => {
       expect(p.image, p.slug).toMatch(new RegExp(`^/projects/${p.slug}-[a-z]+\\.webp$`));
     }
   });
+  // The /work-only shot, where a project has one. It is named like every other screenshot
+  // and must differ from `image` — pointing both at one file is the same as not setting it.
+  it("gasmap is the only project with a spotlight shot, and it is not the card's", () => {
+    expect(projects.filter(p => p.spotlightImage).map(p => p.slug)).toEqual(["gasmap"]);
+    for (const p of projects) {
+      if (!p.spotlightImage) continue;
+      expect(p.spotlightImage, p.slug).toMatch(new RegExp(`^/projects/${p.slug}-[a-z]+\\.webp$`));
+      expect(p.spotlightImage, p.slug).not.toBe(p.image);
+    }
+  });
   // The two Unity projects have no product mark of their own — the card and the spotlight
   // both fall back to the folder glyph — so a logo is required only of the rest.
   it("every project but the Unity pair carries a 192px logo", () => {
@@ -163,6 +173,11 @@ describe("static assets", () => {
   // missing file is a hole in the first screen rather than a slow page further in.
   it("every project screenshot exists under public/", () => {
     for (const p of projects) expect(inPublic(p.image), p.image).toBe(true);
+  });
+  // The spotlight shot is a second file, not a rename: the card's own image stays put.
+  it("every spotlight screenshot exists under public/, alongside the card's", () => {
+    for (const p of projects) if (p.spotlightImage) expect(inPublic(p.spotlightImage), p.spotlightImage).toBe(true);
+    expect(inPublic("/projects/gasmap-hand.webp")).toBe(true);
   });
   it("drops the assets of the removed entries", () => {
     expect(inPublic("/gdsc.png")).toBe(false);

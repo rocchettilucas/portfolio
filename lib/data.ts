@@ -5,6 +5,10 @@ export type Project = {
   blurb: string;            // exactly one sentence — the card line
   description: string[];    // 2-3 short sentences for /projects, one per array item
   image: string;            // 16/10 screenshot, shown on the home card and the /work spotlight
+  // An alternate 16/10 shot for the /work spotlight only. The card stays on `image` — the
+  // spotlight runs the full column width, which has room for a shot the card would shrink
+  // past reading. Left undefined, the spotlight falls back to `image` as before.
+  spotlightImage?: string;
   tech: string[];
   links: ProjectLinks;
   logo?: string;            // 192px PNG for the compact card
@@ -29,6 +33,9 @@ export const projects: Project[] = [
       "React Native client on a FastAPI geospatial API backed by PostgreSQL/PostGIS and Redis.",
     ],
     image: "/projects/gasmap-hand.webp",
+    // The home card keeps the hand shot; the spotlight gets the three screens the app is
+    // actually made of — home, map, station detail — which only read at full column width.
+    spotlightImage: "/projects/gasmap-trio.webp",
     tech: ["React Native", "Expo", "FastAPI", "PostgreSQL / PostGIS", "Redis"],
     links: {
       site: "https://gasmap.ai",

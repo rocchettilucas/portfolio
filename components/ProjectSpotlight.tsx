@@ -11,14 +11,18 @@ import type { Project } from "@/lib/data";
  *
  * The screenshot carries its intrinsic 1600×1000 through `width`/`height` rather than
  * `fill`, so the 16/10 box is reserved before the file arrives and nothing below it moves.
+ *
+ * A project may carry a second shot for this page alone: `spotlightImage` is what the full
+ * column width can hold, `image` what the home card can. Only GasMap has one so far — three
+ * app screens where the card shows one — and everything else falls through to its `image`.
  */
 export default function ProjectSpotlight({ project }: { project: Project }) {
-  const { slug, title, description, image, tech, links, logo, dates, meta, rating } = project;
+  const { slug, title, description, image, spotlightImage, tech, links, logo, dates, meta, rating } = project;
 
   return (
     <Box title={`${slug}/`}>
       <Image
-        src={image}
+        src={spotlightImage ?? image}
         alt={`${title} screenshot`}
         width={1600}
         height={1000}

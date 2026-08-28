@@ -17,10 +17,11 @@ import { site } from "@/lib/site";
  * `<h1>` is still the document's first heading — the portrait is decorative (aria-hidden) and
  * contributes nothing to the outline.
  *
- * From 900px the hero owns the first screen: it is at least the viewport minus the two 40px
- * bars, with the portrait and the greeting centred in it as a pair (the text column is capped
- * at 560px so the pair sits in the middle rather than the greeting drifting to the right edge).
- * The next section therefore starts below the fold instead of showing through it on load.
+ * From 900px the hero owns the first screen but not quite all of it: it is at least 84% of
+ * the viewport minus the two 40px bars, with the portrait and the greeting centred in it as a
+ * pair (the text column is capped at 560px so the pair sits in the middle rather than the
+ * greeting drifting to the right edge). The `$ about me` heading peeks in at the bottom edge on
+ * load — a hint that the page continues — without the About body intruding on the hero.
  *
  * 900px, not the `md` 768px: the portrait's CSS box jumps to its full 400px at 769px, so
  * splitting at `md` would leave the text column ~281px wide until ~900px.
@@ -29,7 +30,7 @@ export default function Hero() {
   return (
     <section
       id="top"
-      className="grid content-center gap-8 px-6 py-14 max-sm:px-4 max-md:py-10 min-[900px]:min-h-[calc(100dvh-80px)] min-[900px]:grid-cols-[auto_minmax(0,560px)] min-[900px]:items-center min-[900px]:justify-center min-[900px]:gap-14"
+      className="grid content-center gap-8 px-6 py-14 max-sm:px-4 max-md:py-10 min-[900px]:min-h-[calc(84dvh-80px)] min-[900px]:grid-cols-[auto_minmax(0,560px)] min-[900px]:items-center min-[900px]:justify-center min-[900px]:gap-14"
     >
       {/* `justify-self` keeps the canvas hugging its own width instead of stretching to the column. */}
       <div className="justify-self-center">
