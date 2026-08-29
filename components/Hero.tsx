@@ -45,7 +45,7 @@ export default function Hero() {
         <TypedRoles />
         <a href={`mailto:${site.email}`} className="btn mt-8">
           <MailIcon width={16} height={16} aria-hidden />
-          Email me
+          Contact me
         </a>
       </div>
     </section>
