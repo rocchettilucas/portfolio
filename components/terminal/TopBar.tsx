@@ -184,7 +184,7 @@ export default function TopBar() {
             aria-label="GitHub"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
           >
             <GitHubIcon width={18} height={18} />
           </a>
@@ -193,14 +193,14 @@ export default function TopBar() {
             aria-label="LinkedIn"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
           >
             <LinkedInIcon width={18} height={18} />
           </a>
           <a
             href={socialHref("Email")}
             aria-label="Email"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong hover:text-fg"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
           >
             <MailIcon width={18} height={18} />
           </a>
