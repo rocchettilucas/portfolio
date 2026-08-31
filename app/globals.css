@@ -119,8 +119,17 @@
      which only clears beside the name and the right cluster at ~900px. Phones fit the
      390px bar the same way. The <a> carries an aria-label spelling out the same word. */
   @media (max-width: 899px) {
-    .nav-item { padding: 4px 8px; }
+    /* 8px of vertical padding takes the 16px glyph to a 32px pill — a thumb-sized target
+       inside the 40px bar — now that the word beside it is gone. */
+    .nav-item { padding: 8px; }
     .nav-item span { display: none; }
+  }
+  /* Under 640px the five items, the wordmark and the three social glyphs are all bidding
+     for a 288px bar at 320px wide. 6px a side is what makes the row fit rather than
+     overflow — and `safe center` on the nav (TopBar) is the guard if it ever stops
+     fitting, since a centred overflow puts its first items out of reach of any scroll. */
+  @media (max-width: 639px) {
+    .nav-item { padding: 8px 6px; }
   }
 
   /* The visitor readout in the top bar: a hairline chip so it reads as an instrument, not

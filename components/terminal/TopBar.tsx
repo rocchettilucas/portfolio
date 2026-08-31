@@ -29,6 +29,11 @@ const ICONS: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
   contact: MailIcon,
 };
 
+// The wordmark, split so the surname can leave on a narrow phone. Lower-cased here rather
+// than in the markup because the two halves have to be cased the same way.
+const [first, ...restOfName] = site.name.toLowerCase().split(" ");
+const last = restOfName.join(" ");
+
 export default function TopBar() {
   // The sections only exist on the home page: off it the nav links have to carry a path
   // back to `/`, and there is nothing to track.
@@ -107,15 +112,28 @@ export default function TopBar() {
     <header className="bar bar-top">
       {/* The gaps are minimums, not the spacing: the nav is `flex-1` and centres itself in
           whatever is left, so a small floor here buys the icon row room on a 390px phone
-          without changing how the bar looks anywhere it is not tight. */}
-      <div className="bar-inner gap-1 text-[13px] sm:gap-4">
+          without changing how the bar looks anywhere it is not tight. Below `sm` the 8px
+          here and the 4px inside the social cluster are the 4/8 they used to be, spent the
+          other way round — the same total width. At 320px the bar is full to the pixel, and
+          the run has to read as nav | socials rather than as eight loose glyphs: the nav's
+          own mail icon otherwise sits flush against the mailto one. */}
+      <div className="bar-inner gap-2 text-[13px] sm:gap-4">
         {/* A plain anchor on purpose: the name is "start over" — a full load of `/`, palette
             closed, typed line reset, counter re-read — where the `home` item beside it only
             scrolls. py-1 takes the 20.8px line box up to a 28.8px target inside a bar whose
             own height is fixed at 40px, so nothing below moves. */}
+        {/* Below 640px the surname goes: at 320px the wordmark, the five nav glyphs and the
+            three social glyphs do not all fit, and the first name is the half that still
+            names the site. `aria-label` carries the whole thing at every width, since
+            `display: none` takes the surname away from a screen reader too. */}
         {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- a full reload is the point */}
-        <a href="/" className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent">
-          {site.name.toLowerCase()}
+        <a
+          href="/"
+          aria-label={site.name}
+          className="shrink-0 whitespace-nowrap py-1 text-fg hover:text-accent"
+        >
+          {first}
+          <span className="max-sm:hidden">{` ${last}`}</span>
         </a>
 
         {/* Centred, like the reference. `strip` is insurance rather than the layout: the
@@ -123,7 +141,7 @@ export default function TopBar() {
             to a viewport that was already exactly full. */}
         <nav
           aria-label="Main"
-          className="strip flex min-w-0 flex-1 items-center justify-center gap-0.5 sm:gap-1"
+          className="strip flex min-w-0 flex-1 items-center justify-center-safe gap-0.5 sm:gap-1"
         >
           <a
             href={onHome ? "#top" : "/#top"}
@@ -168,7 +186,7 @@ export default function TopBar() {
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2 text-muted-strong sm:gap-3">
+        <div className="flex shrink-0 items-center gap-1 text-muted-strong sm:gap-3">
           {/* The counter is a readout, not a destination, so it gets its own chip and a
               hairline between it and the two links instead of sitting in their row. It is
               ~120px at 12px mono — the one optional item wide enough to push the icon row
@@ -184,7 +202,7 @@ export default function TopBar() {
             aria-label="GitHub"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent max-[899px]:h-10"
           >
             <GitHubIcon width={18} height={18} />
           </a>
@@ -193,14 +211,14 @@ export default function TopBar() {
             aria-label="LinkedIn"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent max-[899px]:h-10"
           >
             <LinkedInIcon width={18} height={18} />
           </a>
           <a
             href={socialHref("Email")}
             aria-label="Email"
-            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent"
+            className="inline-flex h-6 w-6 items-center justify-center text-muted-strong transition-colors duration-200 hover:text-accent max-[899px]:h-10"
           >
             <MailIcon width={18} height={18} />
           </a>

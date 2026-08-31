@@ -28,12 +28,15 @@ export default function ProjectSpotlight({ project }: { project: Project }) {
   return (
     <Box title={`${slug}/`}>
       <div className="flex flex-col gap-4">
+        {/* Below 820px the shot is the column, not the viewport: the section's own inset and
+            the box's `p-4` take 64px out of it on a phone and 80px above 640px. Naming those
+            widths rather than a flat `100vw` is a bucket's worth of bytes on every shot. */}
         <Image
           src={spotlightImage ?? image}
           alt={`${title} screenshot`}
           width={1600}
           height={1000}
-          sizes="(max-width: 820px) 100vw, 760px"
+          sizes="(max-width: 640px) calc(100vw - 64px), (max-width: 820px) calc(100vw - 80px), 760px"
           className="mx-auto w-full max-w-[760px] rounded-[4px] border border-border"
         />
 

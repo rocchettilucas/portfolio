@@ -23,7 +23,10 @@ export default function About() {
     <Section id="about" command="about me" label="About me">
       <div className="grid gap-8 min-[769px]:grid-cols-[1fr_260px] min-[769px]:gap-10">
         {/* The file is 900×1200, so the 3:4 box is reserved from the intrinsic size and
-            nothing below it moves while the photo loads. */}
+            nothing below it moves while the photo loads. The box is 260px at every width —
+            `w-full` never gets past the cap, because even a 320px phone leaves 288px of
+            column — so `sizes` says so flatly; the 60vw it used to claim under-served the
+            photo on that phone and it arrived soft. */}
         {/* Photo on the right at ≥769px, but first in the DOM (and first on a phone), so the
             reading order stays photo → text; `order-2` only moves it visually. */}
         <figure className="m-0 w-full max-w-[260px] justify-self-center min-[769px]:order-2">
@@ -32,7 +35,7 @@ export default function About() {
             alt="Lucas Rocchetti"
             width={260}
             height={347}
-            sizes="(max-width: 768px) 60vw, 260px"
+            sizes="260px"
             className="pop h-auto w-full rounded-[4px] border border-border object-cover"
           />
           {/* Where the photo was taken is where I am; the caption says so under it rather
