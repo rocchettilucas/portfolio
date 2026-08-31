@@ -238,7 +238,7 @@ export default function CommandPalette() {
 
         <div className="flex shrink-0 items-baseline gap-2 border-t border-border px-4 py-3">
           <span aria-hidden className="prompt">
-            $
+            &gt;
           </span>
           <input
             ref={inputRef}

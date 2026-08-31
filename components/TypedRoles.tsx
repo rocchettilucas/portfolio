@@ -17,7 +17,7 @@ const PAUSE_MS = 400;
 const ROLE_MARKS: Record<string, string> = { "Building GasMap": "/projects/gasmap-192.png" };
 
 /**
- * The line under the greeting: a `$` prompt with one of `ROLES` typed after it and a caret
+ * The line under the greeting: a `>` prompt with one of `ROLES` typed after it and a caret
  * riding the end of the text, held, erased, and replaced by the next — forever.
  *
  * The server renders the first role in full and the loop starts from there, already typed, so
@@ -86,7 +86,7 @@ export default function TypedRoles() {
       {/* The same decorative `$` the section headings open with (components/terminal/Prompt.tsx);
           `mr-2` is that component's `gap-2` written for a line of running text. */}
       <span aria-hidden className="prompt mr-2">
-        $
+        &gt;
       </span>
       {text}
       {ROLE_MARKS[text] ? (

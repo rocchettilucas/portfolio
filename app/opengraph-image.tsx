@@ -71,12 +71,12 @@ export default async function OG() {
           {/* Same prompt the site's own top bar shows. */}
           <div style={{ display: "flex", fontSize: 24, color: FG }}>
             <span>lucas@portfolio:~</span>
-            <span style={{ color: PINK }}>$</span>
+            <span style={{ color: PINK }}>&gt;</span>
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", fontSize: 28 }}>
-              <span style={{ color: PINK }}>$</span>
+              <span style={{ color: PINK }}>&gt;</span>
               <span style={{ color: ACCENT }}>&nbsp;whoami</span>
             </div>
             <div style={{ fontSize: 64, fontWeight: 700, color: FG, marginTop: 20 }}>

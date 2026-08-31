@@ -4,7 +4,7 @@
 @source not "../docs";
 
 /* Tokyo Night, disciplined. Blue is the one accent — teal for links, green for the status
-   dot, and the theme's purple is reserved for the `$` glyph alone (it keeps the `--pink`
+   dot, and the theme's purple is reserved for the `>` glyph alone (it keeps the `--pink`
    name so the utility classes did not have to move): the active nav item is a blue glow
    pill (`.nav-item` below). Nothing else gets colour. */
 :root {
@@ -95,7 +95,7 @@
   .strip { overflow-x: auto; scrollbar-width: none; }
   .strip::-webkit-scrollbar { display: none; }
 
-  /* The `$` that opens a prompt line — the only place pink appears at all. */
+  /* The `>` that opens a prompt line — the only place pink appears at all. */
   .prompt { color: var(--pink); user-select: none; }
 
   /* A nav destination: icon + label, and a rounded pill that lights up under the cursor.
