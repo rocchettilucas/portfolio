@@ -140,10 +140,10 @@
   }
 
   /* The hero caret never settles — it keeps blinking, so the greeting reads as a live
-     prompt rather than a finished line. Slightly narrower and shorter than the default
-     because it sits against 40px display type instead of 15px body text. */
+     prompt rather than a finished line. An underscore rather than a block: a thin bar
+     sitting on the baseline, the way an `_` cursor rests under the next character. */
   .caret-hero {
-    width: 0.45em; height: 0.95em; margin-left: 0.35em; vertical-align: -0.08em;
+    width: 0.55em; height: 0.08em; margin-left: 0.35em; vertical-align: 0.02em;
     animation: caret-blink 1s step-end infinite;
   }
 

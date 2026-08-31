@@ -22,8 +22,14 @@ export default function Work() {
       // is announced. The arrow is part of the sentence — the same "there is more this way"
       // gesture a shell prompt makes, and it reads aloud as one.
       aside={
-        <Link href="/work" className="whitespace-nowrap text-[13px] text-cyan">
-          view all work →
+        <Link
+          href="/work"
+          className="group inline-flex items-center gap-1 whitespace-nowrap text-[13px] text-cyan transition-colors duration-200 hover:text-accent"
+        >
+          view all work
+          <span aria-hidden className="inline-block transition-transform duration-200 group-hover:translate-x-1">
+            →
+          </span>
         </Link>
       }
     >

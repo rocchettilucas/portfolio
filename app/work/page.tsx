@@ -42,7 +42,7 @@ export default function WorkPage() {
             </Link>
           </p>
 
-          <div className="grid gap-6">
+          <div className="grid gap-4">
             {projects.map((p) => (
               <ProjectSpotlight key={p.slug} project={p} />
             ))}

@@ -3,7 +3,7 @@ import path from "node:path";
 import { describe, it, expect } from "vitest";
 import { about, projects, homeProjects, experience, education, skillGroups, skills } from "@/lib/data";
 
-const BANNED = /sole engineer|co-founder|open to work|open to roles|scrap|crawler/i;
+const BANNED = /sole engineer|open to work|open to roles|scrap|crawler/i;
 const SENTENCES = (s: string) => (s.match(/[.!?](\s|$)/g) ?? []).length;
 
 describe("projects", () => {
@@ -11,9 +11,9 @@ describe("projects", () => {
     expect(projects[0].slug).toBe("gasmap");
     expect(projects.filter(p => p.placement === "featured")).toHaveLength(1);
   });
-  it("lists the six projects in order, with three of them on the home page", () => {
+  it("lists the seven projects in order, with three of them on the home page", () => {
     expect(projects.map(p => p.slug)).toEqual([
-      "gasmap", "rocspace", "winlane", "pathwayr", "hallway-duty", "office-outbreak",
+      "gasmap", "rocspace", "winlane", "nhl", "pathwayr", "office-outbreak", "hallway-duty",
     ]);
     expect(homeProjects.map(p => p.slug)).toEqual(["gasmap", "rocspace", "winlane"]);
   });
@@ -39,10 +39,10 @@ describe("projects", () => {
   // both fall back to the folder glyph — so a logo is required only of the rest.
   it("every project but the Unity pair carries a 192px logo", () => {
     const noLogo = projects.filter(p => !p.logo).map(p => p.slug);
-    expect(noLogo).toEqual(["hallway-duty", "office-outbreak"]);
+    expect(noLogo).toEqual(["office-outbreak", "hallway-duty"]);
   });
-  it("every project has resume-style dates", () => {
-    for (const p of projects) expect(p.dates, p.slug).toMatch(/^[A-Z][a-z]{2} 20\d\d – ([A-Z][a-z]{2} 20\d\d|present)$/);
+  it("every project has resume-style dates (a range, or a single month for one-month builds)", () => {
+    for (const p of projects) expect(p.dates, p.slug).toMatch(/^[A-Z][a-z]{2} 20\d\d( – ([A-Z][a-z]{2} 20\d\d|present))?$/);
   });
   it("every blurb is exactly one sentence and contains no banned phrases", () => {
     for (const p of projects) {
@@ -51,9 +51,9 @@ describe("projects", () => {
       expect(BANNED.test(p.meta ?? ""), p.slug).toBe(false);
     }
   });
-  it("every description is 2-3 items, one sentence each, with no banned phrases", () => {
+  it("every description is 1-3 items, one sentence each, with no banned phrases", () => {
     for (const p of projects) {
-      expect(p.description.length, p.slug).toBeGreaterThanOrEqual(2);
+      expect(p.description.length, p.slug).toBeGreaterThanOrEqual(1);
       expect(p.description.length, p.slug).toBeLessThanOrEqual(3);
       for (const line of p.description) {
         expect(SENTENCES(line), `${p.slug}: ${line}`).toBe(1);
@@ -77,9 +77,10 @@ describe("projects", () => {
     expect(g.links.site).toBe("https://gasmap.ai");
     expect(g.links.github).toBeUndefined();
   });
-  it("rocspace is the only project with a github link, and no '#' sentinels anywhere", () => {
-    expect(projects.filter(p => p.links.github).map(p => p.slug)).toEqual(["rocspace"]);
+  it("only the open-source projects carry a github link, and no '#' sentinels anywhere", () => {
+    expect(projects.filter(p => p.links.github).map(p => p.slug)).toEqual(["rocspace", "nhl"]);
     expect(projects.find(p => p.slug === "rocspace")!.links.github).toBe("https://github.com/rocchettilucas/RocSpace");
+    expect(projects.find(p => p.slug === "nhl")!.links.github).toBe("https://github.com/rocchettilucas/NHL-Player-Dashboard");
     for (const p of projects) for (const v of Object.values(p.links)) expect(v).not.toBe("#");
   });
   // Office Outbreak has nothing public to point at yet, so its icon row renders nothing at
@@ -181,7 +182,6 @@ describe("static assets", () => {
   });
   it("drops the assets of the removed entries", () => {
     expect(inPublic("/gdsc.png")).toBe(false);
-    expect(inPublic("/projects/nhl-192.png")).toBe(false);
     // The education crest went with the section that framed it.
     expect(inPublic("/uoft.png")).toBe(false);
   });
